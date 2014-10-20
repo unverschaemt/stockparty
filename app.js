@@ -13,7 +13,7 @@ var io = require('socket.io').listen(app.listen(3000));
 
 //JUST Some Test Code Following
 io.use(function(socket, next){
-    console.log(socket.request);
+    //console.log(socket.request);
     if (socket.request.headers.cookie) return next();
     next(new Error('Authentication error'));
 });
