@@ -16,61 +16,45 @@ m.addUser = function (userName, password, name, role) {
     });
 };
 
-m.deleteUser = function (id) {
-    var deferred = q.defer();
+m.deleteUser = function (id, error, cb) {
     User.findOne({
         _id: id
-    }, '_id name', function (err, user) {
+    }, function (err, user) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             if (!user) {
-                deferred.reject(true);
+                cb(true);
             } else {
                 user.remove(function () {
-                    deferred.resolve(true);
+                    cb(true);
                 });
             }
         }
     });
-    return deferred.promise;
 };
 
-m.getUser = function (id) {
-    var deferred = q.defer();
+m.getUser = function (id, error, cb) {
     User.findOne({
         _id: id
     }, function (err, user) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
-            if (!user) {
-                deferred.reject(true);
-            } else {
-                if (user.data && user.metadata) {
-                    deferred.resolve({
-                        "buffer": user.data,
-                        "metadata": user.metadata
-                    });
-                } else {
-                    deferred.reject(true);
-                }
-            }
+            cb(user);
         }
     });
-    return deferred.promise;
 };
 
-m.setUserInfo = function (id, data) {
-    var deferred = q.defer();
+m.setUserInfo = function (id, data, error, cb) {
     User.findOne({
         _id: id
     }, function (err, user) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             if (!user) {
-                deferred.reject(true);
+                cb(true);
             } else {
                 for (var k in data) {
                     if(k != "_id"){
@@ -80,13 +64,12 @@ m.setUserInfo = function (id, data) {
                 }
                 user.save(function (err, user) {
                     if (err) {
-                        deferred.reject(err);
+                        error(err);
                     } else {
-                        deferred.resolve(user._id);
+                        cb(user._id);
                     }
                 });
             }
         }
     });
-    return deferred.promise;
 };

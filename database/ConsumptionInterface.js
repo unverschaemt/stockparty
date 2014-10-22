@@ -16,12 +16,11 @@ m.addConsumption = function (guest, time, drink, quantity) {
     });
 };
 
-m.deleteAllConsumptionEntries = function () {
-    var deferred = q.defer();
+m.deleteAllConsumptionEntries = function (error, cb) {
     Consumption.find({
     }, function (err, consumptions) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             var c = 0;
             for(var i in consumptions){
@@ -30,70 +29,63 @@ m.deleteAllConsumptionEntries = function () {
                     consumption.remove(function () {
                         c++;
                         if(consumptions.length == c){
-                            deferred.resolve(c+" from "+consumptions.length+" deleted good!");
+                            cb(c+" from "+consumptions.length+" deleted good!");
                         }
                     });
                 }
             }
             if(consumptions.length < 1){
-                deferred.resolve(c+" from "+consumptions.length+" deleted good!");
+                cb(c+" from "+consumptions.length+" deleted good!");
             }
         }
     });
-    return deferred.promise;
 };
 
-m.deleteConsumption = function (id) {
-    var deferred = q.defer();
+m.deleteConsumption = function (id, error, cb) {
     Consumption.findOne({
         _id: id
-    }, '_id name', function (err, consumption) {
+    }, function (err, consumption) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             if (!consumption) {
-                deferred.reject(true);
+                cb(true);
             } else {
                 consumption.remove(function () {
-                    deferred.resolve(true);
+                    cb(true);
                 });
             }
         }
     });
-    return deferred.promise;
 };
 
-m.getConsumptionForGuest = function (guest) {
-    var deferred = q.defer();
+m.getConsumptionForGuest = function (guest, error, cb) {
     Consumption.find({guest: guest}, function (err, guests) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             var ex = {};
             for (var i in guests) {
                 ex[guests[i].time] = guests[i];
             }
             var temp = JSON.parse(JSON.stringify(ex));
-            deferred.resolve(temp);
+            cb(temp);
         }
     });
-    return deferred.promise;
 };
 
-m.getConsumption = function () {
-    var deferred = q.defer();
+m.getConsumption = function (error, cb) {
     Consumption.find({}, function (err, consumptionEntries) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             var ex = {};
             for (var i in consumptionEntries) {
                 ex[consumptionEntries[i].time] = consumptionEntries[i];
             }
             var temp = JSON.parse(JSON.stringify(ex));
-            deferred.resolve(temp);
+            cb(temp);
         }
     });
-    return deferred.promise;
 };
 

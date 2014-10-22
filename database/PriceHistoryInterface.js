@@ -15,12 +15,11 @@ m.addPriceHistory = function (time, drink, price) {
     });
 };
 
-m.deleteAllPriceHistory = function () {
-    var deferred = q.defer();
+m.deleteAllPriceHistory = function (error, cb) {
     PriceHistory.find({
     }, function (err, priceHistorys) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             var c = 0;
             for(var i in priceHistorys){
@@ -29,47 +28,41 @@ m.deleteAllPriceHistory = function () {
                     priceHistory.remove(function () {
                         c++;
                         if(priceHistorys.length == c){
-                            deferred.resolve(c+" from "+priceHistorys.length+" deleted good!");
+                            cb(c+" from "+priceHistorys.length+" deleted good!");
                         }
                     });
                 }
             }
             if(priceHistorys.length < 1){
-                deferred.resolve(c+" from "+priceHistorys.length+" deleted good!");
+                cb(c+" from "+priceHistorys.length+" deleted good!");
             }
         }
     });
-    return deferred.promise;
 };
 
-m.getPricesForTime = function (time) {
-    var deferred = q.defer();
+m.getPricesForTime = function (time, error, cb) {
     PriceHistory.find({time: time}, function (err, historyEntry) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
-            var ex = historyEntry;
-            var temp = JSON.parse(JSON.stringify(ex));
-            deferred.resolve(temp);
+            var temp = JSON.parse(JSON.stringify(historyEntry));
+            cb(temp);
         }
     });
-    return deferred.promise;
 };
 
-m.getPriceHistory = function () {
-    var deferred = q.defer();
+m.getPriceHistory = function (error, cb) {
     PriceHistory.find({}, function (err, priceHistoryEntries) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             var ex = {};
             for (var i in priceHistoryEntries) {
                 ex[priceHistoryEntries[i].time] = priceHistoryEntries[i];
             }
             var temp = JSON.parse(JSON.stringify(ex));
-            deferred.resolve(temp);
+            cb(temp);
         }
     });
-    return deferred.promise;
 };
 

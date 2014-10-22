@@ -15,32 +15,30 @@ m.addDrink = function (name, priceMin, priceMax) {
     });
 };
 
-m.deleteDrink = function (id) {
+m.deleteDrink = function (id, error, cb) {
     var deferred = q.defer();
     Drink.findOne({
         _id: id
-    }, '_id name', function (err, drink) {
+    }, function (err, drink) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             if (!drink) {
-                deferred.reject(true);
+                cb(true);
             } else {
                 drink.remove(function () {
-                    deferred.resolve(true);
+                    cb(true);
                 });
             }
         }
     });
-    return deferred.promise;
 };
 
-m.deleteAllDrinks = function () {
-    var deferred = q.defer();
+m.deleteAllDrinks = function (error, cb) {
     Drink.find({
     }, function (err, drinks) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             var c = 0;
             for(var i in drinks){
@@ -49,54 +47,39 @@ m.deleteAllDrinks = function () {
                     drink.remove(function () {
                         c++;
                         if(drinks.length == c){
-                            deferred.resolve(c+" from "+drinks.length+" deleted good!");
+                            cb(c+" from "+drinks.length+" deleted good!");
                         }
                     });
                 }
             }
             if(drinks.length < 1){
-                deferred.resolve(c+" from "+drinks.length+" deleted good!");
+                cb(c+" from "+drinks.length+" deleted good!");
             }
         }
     });
-    return deferred.promise;
 };
 
-m.getDrink = function (id) {
-    var deferred = q.defer();
+m.getDrink = function (id, error, cb) {
     Drink.findOne({
         _id: id
     }, function (err, drink) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
-            if (!drink) {
-                deferred.reject(true);
-            } else {
-                if (drink.data && drink.metadata) {
-                    deferred.resolve({
-                        "buffer": drink.data,
-                        "metadata": drink.metadata
-                    });
-                } else {
-                    deferred.reject(true);
-                }
-            }
+            cb(true);
         }
     });
-    return deferred.promise;
 };
 
-m.setDrinkInfo = function (id, data) {
-    var deferred = q.defer();
+m.setDrinkInfo = function (id, data, error, cb) {
     Drink.findOne({
         _id: id
     }, function (err, drink) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             if (!drink) {
-                deferred.reject(true);
+                cb(true);
             } else {
                 for (var k in data) {
                     if(k != "_id"){
@@ -106,30 +89,27 @@ m.setDrinkInfo = function (id, data) {
                 }
                 drink.save(function (err, drink) {
                     if (err) {
-                        deferred.reject(err);
+                        error(err);
                     } else {
-                        deferred.resolve(drink._id);
+                        cb(drink._id);
                     }
                 });
             }
         }
     });
-    return deferred.promise;
 };
 
-m.getAllDrinks = function () {
-    var deferred = q.defer();
+m.getAllDrinks = function (error, cb) {
     Drink.find({}, function (err, drinks) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             var ex = {};
             for (var i in drinks) {
                 ex[drinks[i].time] = drinks[i];
             }
             var temp = JSON.parse(JSON.stringify(ex));
-            deferred.resolve(temp);
+            cb(temp);
         }
     });
-    return deferred.promise;
 };

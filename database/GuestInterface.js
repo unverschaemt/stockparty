@@ -16,12 +16,11 @@ m.addGuest = function (idk, balance, name, birthDay) {
     });
 };
 
-m.deleteAllGuests = function () {
-    var deferred = q.defer();
+m.deleteAllGuests = function (error, cb) {
     Guest.find({
     }, function (err, guests) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             var c = 0;
             for(var i in guests){
@@ -30,81 +29,74 @@ m.deleteAllGuests = function () {
                     guest.remove(function () {
                         c++;
                         if(guests.length == c){
-                            deferred.resolve(c+" from "+guests.length+" deleted good!");
+                            cb(c+" from "+guests.length+" deleted good!");
                         }
                     });
                 }
             }
             if(guests.length < 1){
-                deferred.resolve(c+" from "+guests.length+" deleted good!");
+                cb(c+" from "+guests.length+" deleted good!");
             }
         }
     });
-    return deferred.promise;
 };
 
-m.deleteGuest = function (id) {
-    var deferred = q.defer();
+m.deleteGuest = function (id, error, cb) {
     Guest.findOne({
         _id: id
-    }, '_id name', function (err, guest) {
+    }, function (err, guest) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             if (!guest) {
-                deferred.reject(true);
+                cb(true);
             } else {
                 guest.remove(function () {
-                    deferred.resolve(true);
+                    cb(true);
                 });
             }
         }
     });
-    return deferred.promise;
 };
 
-m.getGuest = function (idk) {
-    var deferred = q.defer();
+m.getGuest = function (idk, error, cb) {
     Guest.findOne({
         idk: idk
     }, function (err, guest) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             if (!guest) {
-                deferred.reject(true);
+                cb(true);
             } else {
                 var temp = JSON.parse(JSON.stringify(guest));
-                deferred.resolve(temp);
+                cb(temp);
             }
         }
     });
-    return deferred.promise;
 };
 
-m.setGuestBalance = function (id, money) {
-    var deferred = q.defer();
+m.setGuestBalance = function (id, money, error, cb) {
     Guest.findOne({
         _id: id
     }, function (err, guest) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             if (!guest) {
-                deferred.reject(true);
+                cb(true);
             } else {
                 var newBalance = guest["balance"];
                 newBalance += money;
                 console.log("set new balance for " + guest.idk + ", new balance: " + newBalance);
                 guest.save(function (err, guest) {
                     if (err) {
-                        deferred.reject(err);
+                        error(err);
                     } else {
-                        deferred.resolve(guest._id);
+                        cb(guest._id);
                     }
                 });
             }
         }
     });
-    return deferred.promise;
 };

@@ -15,12 +15,11 @@ m.addAlcoholLevel = function (time, level, guest) {
     });
 };
 
-m.deleteAllAlcoholLevels = function () {
-    var deferred = q.defer();
+m.deleteAllAlcoholLevels = function (error, cb) {
     AlcoholLevel.find({
     }, function (err, alcoholLevels) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             var c = 0;
             for(var i in alcoholLevels){
@@ -29,57 +28,46 @@ m.deleteAllAlcoholLevels = function () {
                     alcoholLevel.remove(function () {
                         c++;
                         if(alcoholLevels.length == c){
-                            deferred.resolve(c+" from "+alcoholLevels.length+" deleted good!");
+                            error();
                         }
                     });
                 }
             }
             if(alcoholLevels.length < 1){
-                deferred.resolve(c+" from "+alcoholLevels.length+" deleted good!");
+                cb(c+" from "+alcoholLevels.length+" deleted good!");
             }
         }
     });
-    return deferred.promise;
 };
 
-m.getAlcoholLevel = function (id) {
-    var deferred = q.defer();
+m.getAlcoholLevel = function (id, error, cb) {
     AlcoholLevel.findOne({
         _id: id
-    }, '_id data metadata', function (err, alcoholLevel) {
+    }, function (err, alcoholLevel) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             if (!alcoholLevel) {
-                deferred.reject(true);
+                error();
             } else {
-                if (alcoholLevel.data && alcoholLevel.metadata) {
-                    deferred.resolve({
-                        "buffer": alcoholLevel.data,
-                        "metadata": alcoholLevel.metadata
-                    });
-                } else {
-                    deferred.reject(true);
-                }
+                cb(alcoholLevel);
             }
         }
+        cb(alcoholLevel);
     });
-    return deferred.promise;
 };
 
-m.getAllAlcoholLevels = function () {
-    var deferred = q.defer();
+m.getAllAlcoholLevels = function (error, cb) {
     AlcoholLevel.find({}, function (err, levels) {
         if (err) {
-            deferred.reject(err);
+            error(err);
         } else {
             var ex = {};
             for (var i in levels) {
                 ex[levels[i].time] = levels[i];
             }
             var temp = JSON.parse(JSON.stringify(ex));
-            deferred.resolve(temp);
+            cb(temp);
         }
     });
-    return deferred.promise;
 };
