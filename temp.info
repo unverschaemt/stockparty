@@ -1,0 +1,8 @@
+var mongoose = require('mongoose');
+
+
+// Create db connection
+var db = mongoose.connect("url");
+
+
+mongodb://localhost/bettervest-de

@@ -1,26 +1,27 @@
 {
-    "name": "stockparty",
-    "version": "1.0.0",
-    "description": "System for a Stock Party",
-    "main": "app.js",
-    "dependencies": {
-        "express": "^4.9.8",
-        "socket.io": "^1.1.0",
-        "socket.io-client": "^1.1.0"
-    },
-    "devDependencies": {},
-    "scripts": {
-        "start": "node app.js"
-    },
-    "keywords": [
+  "name": "stockparty",
+  "version": "1.0.0",
+  "description": "System for a Stock Party",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.9.8",
+    "mongoose": "^3.8.17",
+    "socket.io": "^1.1.0",
+    "socket.io-client": "^1.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [
     "stockparty",
     "party",
     "stock"
   ],
-    "author": "Team Stock Party at DHBW-Karlsruhe (David Ehlen, Robin Frischmann, Nils Hirsekorn, Dustin Hoffner)",
-    "license": "AGPL",
-    "repository": {
-        "type": "git",
-        "url": "https://bitbucket.org/stockings/stockparty.git"
-    }
+  "author": "Team Stock Party at DHBW-Karlsruhe (David Ehlen, Robin Frischmann, Nils Hirsekorn, Dustin Hoffner)",
+  "license": "AGPL",
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/stockings/stockparty.git"
+  }
 }
