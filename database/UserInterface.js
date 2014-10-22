@@ -1,4 +1,4 @@
-var User = require('./model/user');
+var User = require('./models/User');
 var q = require('q');
 
 var m = module.exports = {};
@@ -40,7 +40,7 @@ m.getUser = function (id) {
     var deferred = q.defer();
     User.findOne({
         _id: id
-    }, '_id data metadata', function (err, user) {
+    }, function (err, user) {
         if (err) {
             deferred.reject(err);
         } else {

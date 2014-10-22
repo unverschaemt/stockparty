@@ -1,11 +1,12 @@
-var Guest = require('./model/guest');
+var Guest = require('./models/Guest');
 var q = require('q');
 
 var m = module.exports = {};
 
-m.addGuest = function (idk, name, birthDay) {
+m.addGuest = function (idk, balance, name, birthDay) {
     var guest = new Guest({
         idk: idk,
+        balance: balance,
         name: name,
         birthDay: birthDay
     });
@@ -17,16 +18,25 @@ m.addGuest = function (idk, name, birthDay) {
 
 m.deleteAllGuests = function () {
     var deferred = q.defer();
-    Guest.find(function (err, guests) {
+    Guest.find({
+    }, function (err, guests) {
         if (err) {
             deferred.reject(err);
         } else {
-            if (!guests) {
-                deferred.reject(true);
-            } else {
-                guests.remove(function () {
-                    deferred.resolve(true);
-                });
+            var c = 0;
+            for(var i in guests){
+                var guest = guests[i];
+                if (guest) {
+                    guest.remove(function () {
+                        c++;
+                        if(guests.length == c){
+                            deferred.resolve(c+" from "+guests.length+" deleted good!");
+                        }
+                    });
+                }
+            }
+            if(guests.length < 1){
+                deferred.resolve(c+" from "+guests.length+" deleted good!");
             }
         }
     });
@@ -53,32 +63,26 @@ m.deleteGuest = function (id) {
     return deferred.promise;
 };
 
-m.getGuest = function (id) {
+m.getGuest = function (idk) {
     var deferred = q.defer();
     Guest.findOne({
-        _id: id
-    }, '_id data metadata', function (err, guest) {
+        idk: idk
+    }, function (err, guest) {
         if (err) {
             deferred.reject(err);
         } else {
             if (!guest) {
                 deferred.reject(true);
             } else {
-                if (guest.data && guest.metadata) {
-                    deferred.resolve({
-                        "buffer": guest.data,
-                        "metadata": guest.metadata
-                    });
-                } else {
-                    deferred.reject(true);
-                }
+                var temp = JSON.parse(JSON.stringify(guest));
+                deferred.resolve(temp);
             }
         }
     });
     return deferred.promise;
 };
 
-m.setGuestInfo = function (id, data) {
+m.setGuestBalance = function (id, money) {
     var deferred = q.defer();
     Guest.findOne({
         _id: id
@@ -89,12 +93,9 @@ m.setGuestInfo = function (id, data) {
             if (!guest) {
                 deferred.reject(true);
             } else {
-                for (var k in data) {
-                    if(k != "_id"){
-                        guest[k] = data[k];
-                        console.log("set guest "+k+" "+JSON.stringify(guest[k]));
-                    }
-                }
+                var newBalance = guest["balance"];
+                newBalance += money;
+                console.log("set new balance for " + guest.idk + ", new balance: " + newBalance);
                 guest.save(function (err, guest) {
                     if (err) {
                         deferred.reject(err);
