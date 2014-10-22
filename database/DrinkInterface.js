@@ -1,5 +1,4 @@
 var Drink = require('./models/Drink');
-var q = require('q');
 
 var m = module.exports = {};
 

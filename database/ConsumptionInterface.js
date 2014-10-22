@@ -1,5 +1,4 @@
 var Consumption = require('./models/Consumption');
-var q = require('q');
 
 var m = module.exports = {};
 

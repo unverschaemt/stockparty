@@ -1,5 +1,4 @@
 var User = require('./models/User');
-var q = require('q');
 
 var m = module.exports = {};
 

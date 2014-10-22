@@ -1,5 +1,4 @@
 var Guest = require('./models/Guest');
-var q = require('q');
 
 var m = module.exports = {};
 

@@ -1,5 +1,4 @@
 var AlcoholLevel = require('./models/AlcoholLevel');
-var q = require('q');
 
 var m = module.exports = {};
 

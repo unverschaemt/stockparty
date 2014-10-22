@@ -1,5 +1,4 @@
 var PriceHistory = require('./models/PriceHistory');
-var q = require('q');
 
 var m = module.exports = {};
 
