@@ -2,19 +2,18 @@ var PriceHistory = require('./models/PriceHistory');
 
 var m = module.exports = {};
 
-m.addPriceHistory = function (time, drink, price) {
+m.addPriceHistory = function (time, drinks) {
     var priceHistory = new PriceHistory({
         time: time,
-        drink: drink,
-        price: price
+        drinks: drinks
     });
     priceHistory.save(function (err, priceHistory) {
         if (err) return console.error(err);
-        console.log("saved");
+        console.log('saved');
     });
 };
 
-m.deleteAllPriceHistory = function (error, cb) {
+m.deleteAllPriceHistoryEntries = function (error, cb) {
     PriceHistory.find({
     }, function (err, priceHistorys) {
         if (err) {
@@ -27,13 +26,13 @@ m.deleteAllPriceHistory = function (error, cb) {
                     priceHistory.remove(function () {
                         c++;
                         if(priceHistorys.length == c){
-                            cb(c+" from "+priceHistorys.length+" deleted good!");
+                            cb(c+' from '+priceHistorys.length+' deleted good!');
                         }
                     });
                 }
             }
             if(priceHistorys.length < 1){
-                cb(c+" from "+priceHistorys.length+" deleted good!");
+                cb(c+' from '+priceHistorys.length+' deleted good!');
             }
         }
     });

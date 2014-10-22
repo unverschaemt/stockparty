@@ -15,7 +15,6 @@ m.addDrink = function (name, priceMin, priceMax) {
 };
 
 m.deleteDrink = function (id, error, cb) {
-    var deferred = q.defer();
     Drink.findOne({
         _id: id
     }, function (err, drink) {
@@ -65,7 +64,7 @@ m.getDrink = function (id, error, cb) {
         if (err) {
             error(err);
         } else {
-            cb(true);
+            cb(drink);
         }
     });
 };
@@ -105,7 +104,7 @@ m.getAllDrinks = function (error, cb) {
         } else {
             var ex = {};
             for (var i in drinks) {
-                ex[drinks[i].time] = drinks[i];
+                ex[drinks[i]._id] = drinks[i];
             }
             var temp = JSON.parse(JSON.stringify(ex));
             cb(temp);

@@ -2,18 +2,35 @@ var Guest = require('./models/Guest');
 
 var m = module.exports = {};
 
-m.addGuest = function (idk, balance, name, birthDay) {
-    var guest = new Guest({
-        idk: idk,
-        balance: balance,
-        name: name,
-        birthDay: birthDay
-    });
-    guest.save(function (err, guest) {
-        if (err) return console.error(err);
-        console.log("saved");
-    });
+m.addGuest = function (idk, balance, name, birthDate, error) {
+    if(idk){
+        Guest.findOne({
+            idk: idk
+        }, function (err, guest) {
+            if(!guest){
+                newGuest(idk, balance, name, birthDate);
+            }else{
+                error("Identification for this user already exists");
+            }
+        });
+    }else{
+        newGuest(idk, balance, name, birthDate);
+    }
 };
+
+newGuest = function(idk, balance, name, birthDate){
+    var guest = new Guest({
+                idk: idk,
+                balance: balance,
+                name: name,
+                birthDate: birthDate
+            });
+            guest.save(function (err, guest) {
+                if (err) return console.error(err);
+                    console.log("saved");
+                });
+}
+    
 
 m.deleteAllGuests = function (error, cb) {
     Guest.find({
@@ -40,9 +57,9 @@ m.deleteAllGuests = function (error, cb) {
     });
 };
 
-m.deleteGuest = function (id, error, cb) {
+m.deleteGuest = function (idk, error, cb) {
     Guest.findOne({
-        _id: id
+        idk: idk
     }, function (err, guest) {
         if (err) {
             error(err);
@@ -75,9 +92,9 @@ m.getGuest = function (idk, error, cb) {
     });
 };
 
-m.setGuestBalance = function (id, money, error, cb) {
+m.setGuestBalance = function (idk, money, error, cb) {
     Guest.findOne({
-        _id: id
+        idk: idk
     }, function (err, guest) {
         if (err) {
             error(err);
@@ -87,12 +104,13 @@ m.setGuestBalance = function (id, money, error, cb) {
             } else {
                 var newBalance = guest["balance"];
                 newBalance += money;
-                console.log("set new balance for " + guest.idk + ", new balance: " + newBalance);
+                guest["balance"] = newBalance;
                 guest.save(function (err, guest) {
                     if (err) {
                         error(err);
                     } else {
-                        cb(guest._id);
+                        console.log("set new balance for " + guest.idk + ", new balance: " + newBalance);
+                        cb(guest.idk); 
                     }
                 });
             }

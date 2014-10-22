@@ -10,7 +10,7 @@ m.addAlcoholLevel = function (time, level, guest) {
     });
     alcoholLevel.save(function (err, alcoholLevel) {
         if (err) return console.error(err);
-        console.log("saved");
+        console.log('saved');
     });
 };
 
@@ -25,34 +25,31 @@ m.deleteAllAlcoholLevels = function (error, cb) {
                 var alcoholLevel = alcoholLevels[i];
                 if (alcoholLevel) {
                     alcoholLevel.remove(function () {
-                        c++;
-                        if(alcoholLevels.length == c){
-                            error();
-                        }
+                        cb('deleted all');
                     });
                 }
             }
             if(alcoholLevels.length < 1){
-                cb(c+" from "+alcoholLevels.length+" deleted good!");
+                cb(c+' from '+alcoholLevels.length+' deleted good!');
             }
         }
     });
 };
 
-m.getAlcoholLevel = function (id, error, cb) {
-    AlcoholLevel.findOne({
-        _id: id
-    }, function (err, alcoholLevel) {
+m.getAlcoholLevelsForOneGuest = function (guest, error, cb) {
+    AlcoholLevel.find({
+        guest: guest
+    }, function (err, levels) {
         if (err) {
             error(err);
         } else {
-            if (!alcoholLevel) {
-                error();
-            } else {
-                cb(alcoholLevel);
+            var ex = {};
+            for (var i in levels) {
+                ex[levels[i].time] = levels[i];
             }
+            var temp = JSON.parse(JSON.stringify(ex));
+            cb(temp);
         }
-        cb(alcoholLevel);
     });
 };
 

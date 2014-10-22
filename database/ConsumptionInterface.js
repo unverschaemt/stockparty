@@ -11,7 +11,7 @@ m.addConsumption = function (guest, time, drink, quantity) {
     });
     consumption.save(function (err, consumption) {
         if (err) return console.error(err);
-        console.log("saved");
+        console.log('saved');
     });
 };
 
@@ -28,31 +28,13 @@ m.deleteAllConsumptionEntries = function (error, cb) {
                     consumption.remove(function () {
                         c++;
                         if(consumptions.length == c){
-                            cb(c+" from "+consumptions.length+" deleted good!");
+                            cb(c+' from '+consumptions.length+' deleted good!');
                         }
                     });
                 }
             }
             if(consumptions.length < 1){
-                cb(c+" from "+consumptions.length+" deleted good!");
-            }
-        }
-    });
-};
-
-m.deleteConsumption = function (id, error, cb) {
-    Consumption.findOne({
-        _id: id
-    }, function (err, consumption) {
-        if (err) {
-            error(err);
-        } else {
-            if (!consumption) {
-                cb(true);
-            } else {
-                consumption.remove(function () {
-                    cb(true);
-                });
+                cb(c+' from '+consumptions.length+' deleted good!');
             }
         }
     });
@@ -73,14 +55,14 @@ m.getConsumptionForGuest = function (guest, error, cb) {
     });
 };
 
-m.getConsumption = function (error, cb) {
+m.getAllConsumptionEntries = function (error, cb) {
     Consumption.find({}, function (err, consumptionEntries) {
         if (err) {
             error(err);
         } else {
             var ex = {};
             for (var i in consumptionEntries) {
-                ex[consumptionEntries[i].time] = consumptionEntries[i];
+                ex[consumptionEntries[i]._id] = consumptionEntries[i];
             }
             var temp = JSON.parse(JSON.stringify(ex));
             cb(temp);

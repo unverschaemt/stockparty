@@ -4,8 +4,7 @@ var Schema = mongoose.Schema;
 
 var fileSchema = new Schema({
     time: Number,
-    drink: Number,
-    price: Number
+    drinks: Array
 });
 
 module.exports = mongoose.model('PriceHistory', fileSchema);

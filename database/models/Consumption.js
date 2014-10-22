@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 var fileSchema = new Schema({
     guest: String,
     time: Number,
-    drink: Number,
+    drink: String,
     quantity: Number
 });
 
