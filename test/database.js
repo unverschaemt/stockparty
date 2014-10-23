@@ -149,4 +149,87 @@ describe('Database', function(){
             });
         })
     })
+    
+    describe('Drink Interface', function(){
+        var drinkToCreate = {'name': 'Name','priceMin': 5.00, 'priceMax': 8.00};
+        
+        afterEach(function(done){
+            drinkInterface.deleteAllDrinks(function error(err){}, function cb(obj){
+                done();    
+            });
+        })
+      
+        it('should add a drink to database', function(done){
+            drinkInterface.addDrink(drinkToCreate.name, drinkToCreate.priceMin, drinkToCreate.priceMax, function cb(){
+                
+                drinkInterface.getDrink(drinkToCreate.name, function error(err){}, function cb(obj){
+                    assert.equal(drinkToCreate.name, obj.name);
+                    assert.equal(drinkToCreate.priceMin, obj.priceMin);
+                    assert.equal(drinkToCreate.priceMax, obj.priceMax);
+                    done();
+                });
+            });
+        })
+        
+        it('should get all drinks', function(done){
+            var differentDrinkToCreate = {'name': 'DifferentName','priceMin': 5.00, 'priceMax': 8.00};
+            drinkInterface.addDrink(drinkToCreate.name, drinkToCreate.priceMin, drinkToCreate.priceMax, function cb(){
+                drinkInterface.addDrink(differentDrinkToCreate.name, differentDrinkToCreate.priceMin, differentDrinkToCreate.priceMax, function cb(){
+                    drinkInterface.getAllDrinks(function error(err){}, function cb(obj){
+                        console.log(obj);
+                        assert.equal(drinkToCreate.name, obj[drinkToCreate.name].name);
+                        assert.equal(drinkToCreate.priceMin, obj[drinkToCreate.name].priceMin);
+                        assert.equal(drinkToCreate.priceMax, obj[drinkToCreate.name].priceMax);
+                        assert.equal(differentDrinkToCreate.name, obj[differentDrinkToCreate.name].name);
+                        assert.equal(differentDrinkToCreate.priceMin, obj[differentDrinkToCreate.name].priceMin);
+                        assert.equal(differentDrinkToCreate.priceMax, obj[differentDrinkToCreate.name].priceMax);
+
+                        done();
+                    });
+                });
+            });
+        })
+        
+        it('should change the min price of a drink', function(done){
+            drinkInterface.addDrink(drinkToCreate.name, drinkToCreate.priceMin, drinkToCreate.priceMax, function cb(){
+
+                var drinkInformation = {'priceMin': 6};
+                drinkInterface.setDrinkInfo(drinkToCreate.name, drinkInformation, function error(err){}, function cb(obj){
+                    drinkInterface.getDrink(drinkToCreate.name, function error(err){}, function cb(obj){
+                        assert.equal(drinkInformation.priceMin, obj.priceMin);
+                        done();
+                    });
+                });
+            });
+        })
+        
+        it('should delete a drink', function(done){
+            drinkInterface.addDrink(drinkToCreate.name, drinkToCreate.priceMin, drinkToCreate.priceMax, function cb(){
+                drinkInterface.deleteDrink(drinkToCreate.name, function error(err){}, function cb(obj){
+                    drinkInterface.getDrink(drinkToCreate.name, function error(err){}, function cb(obj){
+                        assert.equal(obj, null);
+                        done();}
+                    );}
+                );
+            });
+        })
+        
+        it('should delete all drinks', function(done){
+            var differentDrinkToCreate = {'name': 'DifferentName','priceMin': 5.00, 'priceMax': 8.00};
+            drinkInterface.addDrink(drinkToCreate.name, drinkToCreate.priceMin, drinkToCreate.priceMax, function cb(){
+                drinkInterface.addDrink(differentDrinkToCreate.name, differentDrinkToCreate.priceMin, differentDrinkToCreate.priceMax, function cb(){
+
+                    drinkInterface.deleteAllDrinks(function error(err){}, function cb(obj){
+                        drinkInterface.getDrink(drinkToCreate.name, function error(err){}, function cb(obj){
+                            assert.equal(obj, null);
+                            drinkInterface.getDrink(differentDrinkToCreate.name, function error(err){}, function cb(obj){
+                                assert.equal(obj, null);
+                                done();
+                            });      
+                        });
+                    });
+                });
+            });
+        })
+    })
 })  
