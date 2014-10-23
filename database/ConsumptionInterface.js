@@ -2,7 +2,7 @@ var Consumption = require('./models/Consumption');
 
 var m = module.exports = {};
 
-m.addConsumption = function (guest, time, drink, quantity) {
+m.addConsumption = function (guest, time, drink, quantity, cb) {
     var consumption = new Consumption({
         guest: guest,
         time: time,
@@ -12,6 +12,7 @@ m.addConsumption = function (guest, time, drink, quantity) {
     consumption.save(function (err, consumption) {
         if (err) return console.error(err);
         console.log('saved');
+        cb(true);
     });
 };
 

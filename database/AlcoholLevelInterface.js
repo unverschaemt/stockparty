@@ -2,7 +2,7 @@ var AlcoholLevel = require('./models/AlcoholLevel');
 
 var m = module.exports = {};
 
-m.addAlcoholLevel = function (time, level, guest) {
+m.addAlcoholLevel = function (time, level, guest, cb) {
     var alcoholLevel = new AlcoholLevel({
         time: time,
         level: level,
@@ -11,6 +11,7 @@ m.addAlcoholLevel = function (time, level, guest) {
     alcoholLevel.save(function (err, alcoholLevel) {
         if (err) return console.error(err);
         console.log('saved');
+        cb(true);
     });
 };
 
@@ -20,18 +21,14 @@ m.deleteAllAlcoholLevels = function (error, cb) {
         if (err) {
             error(err);
         } else {
-            var c = 0;
             for(var i in alcoholLevels){
                 var alcoholLevel = alcoholLevels[i];
                 if (alcoholLevel) {
                     alcoholLevel.remove(function () {
-                        cb('deleted all');
                     });
                 }
             }
-            if(alcoholLevels.length < 1){
-                cb(c+' from '+alcoholLevels.length+' deleted good!');
-            }
+            cb('deleted all alcohol levels');
         }
     });
 };
@@ -49,6 +46,18 @@ m.getAlcoholLevelsForOneGuest = function (guest, error, cb) {
             }
             var temp = JSON.parse(JSON.stringify(ex));
             cb(temp);
+        }
+    });
+};
+
+m.getAlcoholLevel = function (time, error, cb) {
+    AlcoholLevel.findOne({
+        time: time
+    }, function (err, level) {
+        if (err) {
+            error(err);
+        } else {
+            cb(level);
         }
     });
 };

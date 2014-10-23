@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var userInterface = require('../database/UserInterface');
 var drinkInterface = require('../database/DrinkInterface');
 var guestInterface = require('../database/GuestInterface');
-var alcoholInterface = require('../database/AlcoholLevelInterface');
+var alcoholLevelInterface = require('../database/AlcoholLevelInterface');
 var consumptionInterface = require('../database/ConsumptionInterface');
 var priceHistoryInterface = require('../database/PriceHistoryInterface');
 
@@ -176,7 +176,6 @@ describe('Database', function(){
             drinkInterface.addDrink(drinkToCreate.name, drinkToCreate.priceMin, drinkToCreate.priceMax, function cb(){
                 drinkInterface.addDrink(differentDrinkToCreate.name, differentDrinkToCreate.priceMin, differentDrinkToCreate.priceMax, function cb(){
                     drinkInterface.getAllDrinks(function error(err){}, function cb(obj){
-                        console.log(obj);
                         assert.equal(drinkToCreate.name, obj[drinkToCreate.name].name);
                         assert.equal(drinkToCreate.priceMin, obj[drinkToCreate.name].priceMin);
                         assert.equal(drinkToCreate.priceMax, obj[drinkToCreate.name].priceMax);
@@ -227,6 +226,164 @@ describe('Database', function(){
                                 done();
                             });      
                         });
+                    });
+                });
+            });
+        })
+    })
+    
+    describe('AlcoholLevel Interface', function(){
+        var levelToCreate = {'time': 201410231228,'level': 2.00, 'guest': 'f23ab47c'};
+        
+        afterEach(function(done){
+            alcoholLevelInterface.deleteAllAlcoholLevels(function error(err){}, function cb(obj){
+                done();
+            });
+        })
+      
+        it('should add a level to database', function(done){
+            alcoholLevelInterface.addAlcoholLevel(levelToCreate.time, levelToCreate.level, levelToCreate.guest, function cb(){
+                
+                alcoholLevelInterface.getAlcoholLevel(levelToCreate.time, function error(err){}, function cb(obj){
+                    assert.equal(levelToCreate.time, obj.time);
+                    assert.equal(levelToCreate.level, obj.level);
+                    assert.equal(levelToCreate.guest, obj.guest);
+                    done();
+                });
+            });
+        })
+        
+        it('should get all levels for one person', function(done){
+            var differentLevelToCreate = {'time': 201410231229,'level': 2.00, 'guest': 'f23ab47c'};
+            var differentLevelForGuestToCreate = {'time': 201410231230,'level': 2.00, 'guest': 'f23ab47d'};
+            alcoholLevelInterface.addAlcoholLevel(levelToCreate.time, levelToCreate.level, levelToCreate.guest, function cb(){
+                alcoholLevelInterface.addAlcoholLevel(differentLevelToCreate.time, differentLevelToCreate.level, differentLevelToCreate.guest, function cb(){
+                    alcoholLevelInterface.addAlcoholLevel(differentLevelForGuestToCreate.time, differentLevelForGuestToCreate.level, differentLevelForGuestToCreate.guest, function cb(){
+                        alcoholLevelInterface.getAlcoholLevelsForOneGuest(levelToCreate.guest, function error(err){}, function cb(obj){
+                            assert.equal(levelToCreate.time, obj[levelToCreate.time].time);
+                            assert.equal(differentLevelToCreate.time, obj[differentLevelToCreate.time].time);
+                            assert.equal(obj[differentLevelForGuestToCreate.time], undefined);
+                            done();
+                        });
+                    });
+                });
+            });
+        })
+        
+        
+        it('should return all alcohol levels', function(done){
+            var differentLevelToCreate = {'time': 201410231229,'level': 2.00, 'guest': 'f23ab47c'};
+            var differentLevelForGuestToCreate = {'time': 201410231230,'level': 2.00, 'guest': 'f23ab47d'};
+            alcoholLevelInterface.addAlcoholLevel(levelToCreate.time, levelToCreate.level, levelToCreate.guest, function cb(){
+                alcoholLevelInterface.addAlcoholLevel(differentLevelToCreate.time, differentLevelToCreate.level, differentLevelToCreate.guest, function cb(){
+                    alcoholLevelInterface.addAlcoholLevel(differentLevelForGuestToCreate.time, differentLevelForGuestToCreate.level, differentLevelForGuestToCreate.guest, function cb(){
+                        alcoholLevelInterface.getAllAlcoholLevels(function error(err){}, function cb(obj){
+                            assert.equal(levelToCreate.time, obj[levelToCreate.time].time);
+                            assert.equal(differentLevelToCreate.time, obj[differentLevelToCreate.time].time);
+                            assert.equal(differentLevelForGuestToCreate.time, obj[differentLevelForGuestToCreate.time].time);
+                            done();
+                        });
+                    });
+                });
+            });
+        })
+    })
+    
+    describe('Consumption Interface', function(){
+        var consumptionToCreate = {'guest': 'f23ab47c', 'time': 201410231228,'drink': 'DrinkName', 'quantity': 2};
+        
+        afterEach(function(done){
+            consumptionInterface.deleteAllConsumptionEntries(function error(err){}, function cb(obj){
+                done();
+            });
+        })
+      
+        it('should add a consumption to database', function(done){
+            consumptionInterface.addConsumption(consumptionToCreate.guest, consumptionToCreate.time, consumptionToCreate.drink, consumptionToCreate.quantity, function cb(){
+                
+                consumptionInterface.getAllConsumptionEntries(function error(err){}, function cb(obj){
+                    for(var i in obj){
+                        assert.equal(consumptionToCreate.time, obj[i].time);
+                        assert.equal(consumptionToCreate.consumption, obj[i].consumption);
+                        assert.equal(consumptionToCreate.guest, obj[i].guest);
+                    }
+                    done();
+                });
+            });
+        })
+        
+        it('should get all consumptions for one person', function(done){
+            var differentConsumptionToCreate = {'guest': 'f23ab47c', 'time': 201410231229,'drink': 'DrinkName', 'quantity': 2};
+            var differentConsumptionForGuestToCreate = {'guest': 'f23ab47d', 'time': 201410231230,'drink': 'DrinkName', 'quantity': 2};
+            consumptionInterface.addConsumption(consumptionToCreate.guest, consumptionToCreate.time, consumptionToCreate.drink, consumptionToCreate.quantity, function cb(){
+                consumptionInterface.addConsumption(differentConsumptionToCreate.guest, differentConsumptionToCreate.time, differentConsumptionToCreate.drink, differentConsumptionToCreate.quantity, function cb(){
+                    consumptionInterface.addConsumption(differentConsumptionForGuestToCreate.guest, differentConsumptionForGuestToCreate.time, differentConsumptionForGuestToCreate.drink,     
+                                                        differentConsumptionForGuestToCreate.quantity, function cb(){
+                        consumptionInterface.getConsumptionForGuest(consumptionToCreate.guest, function error(err){}, function cb(obj){
+                            assert.equal(consumptionToCreate.guest, obj[consumptionToCreate.time].guest);
+                            assert.equal(differentConsumptionToCreate.guest, obj[differentConsumptionToCreate.time].guest);
+                            assert.equal(obj[differentConsumptionForGuestToCreate.time], undefined);
+                            done();
+                        });
+                    });
+                });
+            });
+        })
+        
+        it('should return all consumption entries', function(done){
+            var differentConsumptionToCreate = {'guest': 'f23ab47c', 'time': 201410231229,'drink': 'DrinkName', 'quantity': 2};
+            var differentConsumptionForGuestToCreate = {'guest': 'f23ab47d', 'time': 201410231230,'drink': 'DrinkName', 'quantity': 2};
+            consumptionInterface.addConsumption(consumptionToCreate.guest, consumptionToCreate.time, consumptionToCreate.drink, consumptionToCreate.quantity, function cb(){
+                consumptionInterface.addConsumption(differentConsumptionToCreate.guest, differentConsumptionToCreate.time, differentConsumptionToCreate.drink, differentConsumptionToCreate.quantity, function cb(){
+                    consumptionInterface.addConsumption(differentConsumptionForGuestToCreate.guest, differentConsumptionForGuestToCreate.time, differentConsumptionForGuestToCreate.drink,     
+                                                        differentConsumptionForGuestToCreate.quantity, function cb(){
+                        consumptionInterface.getAllConsumptionEntries(function error(err){}, function cb(obj){
+                            var length = 0;
+                            for(i in obj){
+                                length++;
+                            }
+                            assert.equal(length, 3);
+
+                            done();
+                        });
+                    });
+                });
+            });
+        })        
+    })
+    
+    describe('Price History Interface', function(){
+        var priceHistoryToCreate = {'time': 201410231228,'drinks': [{'name': 'Name', 'price': 2.00},{'name': 'DifferentDrink', 'price': 3.00}]};
+        
+        afterEach(function(done){
+            priceHistoryInterface.deleteAllPriceHistoryEntries(function error(err){}, function cb(obj){
+                done();
+            });
+        })
+      
+        it('should add a priceHistory to database', function(done){
+            priceHistoryInterface.addPriceHistory(priceHistoryToCreate.time, priceHistoryToCreate.drinks, function cb(){
+                
+                priceHistoryInterface.getPricesForTime(priceHistoryToCreate.time, function error(err){}, function cb(obj){
+                    for(var i in obj){
+                        assert.equal(priceHistoryToCreate.time, obj[i].time);
+                    }
+                    done();
+                });
+            });
+        })
+        
+        it('should get full priceHistory', function(done){
+            var differentPriceHistoryToCreate = {'time': 201410231229,'drinks': [{'name': 'Name', 'price': 2.50},{'name': 'DifferentDrink', 'price': 3.50}]};
+            priceHistoryInterface.addPriceHistory(priceHistoryToCreate.time, priceHistoryToCreate.drinks, function cb(){
+                priceHistoryInterface.addPriceHistory(differentPriceHistoryToCreate.time, differentPriceHistoryToCreate.drinks, function cb(){
+                    priceHistoryInterface.getPriceHistory(function error(err){}, function cb(obj){
+                        var length = 0;
+                        for(var i in obj){
+                            length++;
+                        }
+                        assert.equal(length, 2);
+                        done();
                     });
                 });
             });
