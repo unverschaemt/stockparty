@@ -10,7 +10,7 @@ var priceHistoryInterface = require('./database/PriceHistoryInterface');
 var db = mongoose.connect("mongodb://localhost/stockparty");
 
 //userInterface.addUser("Kkoile", "pass", "Nils", {"role": "Barkeeper"});
-//userInterface.getUser("5447f106856d2088b72ae70f", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
+//userInterface.getUser("UserName", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //userInterface.deleteUser("5447eb9420cdd3d0b916cf5e", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //userInterface.setUserInfo("5447f106856d2088b72ae70f", {"password": "geheimesPasswort"}, function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 

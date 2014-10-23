@@ -2,7 +2,7 @@ var User = require('./models/User');
 
 var m = module.exports = {};
 
-m.addUser = function (userName, password, name, role) {
+m.addUser = function (userName, password, name, role, cb) {
     var user = new User({
         userName: userName,
         password: password,
@@ -12,12 +12,13 @@ m.addUser = function (userName, password, name, role) {
     user.save(function (err, user) {
         if (err) return console.error(err);
         console.log("saved");
+        cb(true);
     });
 };
 
-m.deleteUser = function (id, error, cb) {
+m.deleteUser = function (userName, error, cb) {
     User.findOne({
-        _id: id
+        userName: userName
     }, function (err, user) {
         if (err) {
             error(err);
@@ -33,9 +34,9 @@ m.deleteUser = function (id, error, cb) {
     });
 };
 
-m.getUser = function (id, error, cb) {
+m.getUser = function (userName, error, cb) {
     User.findOne({
-        _id: id
+        userName: userName
     }, function (err, user) {
         if (err) {
             error(err);
@@ -45,9 +46,9 @@ m.getUser = function (id, error, cb) {
     });
 };
 
-m.setUserInfo = function (id, data, error, cb) {
+m.setUserInfo = function (userName, data, error, cb) {
     User.findOne({
-        _id: id
+        userName: userName
     }, function (err, user) {
         if (err) {
             error(err);
