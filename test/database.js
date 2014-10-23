@@ -17,7 +17,6 @@ describe('Database', function(){
         done();
     })
     
-    
     describe('User Interface', function(){
         var userToCreate = {'userName': 'UserName', 'password': 'Password', 'name': 'Name', 'role': {'role': 'role'}};
         
@@ -62,6 +61,91 @@ describe('Database', function(){
                         done();}
                     );}
                 );
+            });
+        })
+    })
+    
+    describe('Guest Interface', function(){
+        var guestToCreate = {'idk': 'f23ab47c','balance': 5.00, 'name': 'Name', 'birthDate': 12.12};
+        
+        afterEach(function(done){
+            guestInterface.deleteAllGuests(function error(err){}, function cb(obj){
+                done();    
+            });
+        })
+      
+        it('should add a guest to database', function(done){
+            guestInterface.addGuest(guestToCreate.idk, guestToCreate.balance, guestToCreate.name, guestToCreate.birthDate, function error(err){}, function cb(){
+                guestInterface.getGuest(guestToCreate.idk, function error(err){}, function cb(obj){
+                    assert.equal(guestToCreate.idk, obj.idk);
+                    assert.equal(guestToCreate.balance, obj.balance);
+                    assert.equal(guestToCreate.name, obj.name);
+                    assert.equal(guestToCreate.birthDate, obj.birthDate);
+                    done();}
+                );
+            });
+        })
+        
+        it('should not add two guests with the same idk', function(done){
+            guestInterface.addGuest(guestToCreate.idk, guestToCreate.balance, guestToCreate.name, guestToCreate.birthDate, function error(err){}, function cb(){
+                guestInterface.addGuest(guestToCreate.idk, guestToCreate.balance, guestToCreate.name, guestToCreate.birthDate, function error(err){ 
+                    done();
+                }, function cb(){});
+            });
+        })
+        
+        it('should add a guest, even if it has no idk', function(done){
+            guestInterface.addGuest('', guestToCreate.balance, guestToCreate.name, guestToCreate.birthDate, function error(err){}, function cb(){
+                guestInterface.getGuest('', function error(err){}, function cb(obj){
+                    assert.equal('', obj.idk);
+                    assert.equal(guestToCreate.balance, obj.balance);
+                    assert.equal(guestToCreate.name, obj.name);
+                    assert.equal(guestToCreate.birthDate, obj.birthDate);
+                    done();
+                });
+            });
+        })
+
+        it('should add balance to a guest', function(done){
+            guestInterface.addGuest(guestToCreate.idk, guestToCreate.balance, guestToCreate.name, guestToCreate.birthDate, function error(err){}, function cb(){
+
+                var balanceToAdd = 10;
+                guestInterface.setGuestBalance(guestToCreate.idk, balanceToAdd, function error(err){}, function cb(obj){
+                    guestInterface.getGuest(guestToCreate.idk, function error(err){}, function cb(obj){
+                        assert.equal(guestToCreate.balance + balanceToAdd, obj.balance);
+                        done();}
+                    );}
+                );
+            });
+        })
+        
+        it('should delete a guest', function(done){
+            guestInterface.addGuest(guestToCreate.idk, guestToCreate.balance, guestToCreate.name, guestToCreate.birthDate, function error(err){}, function cb(){
+
+                guestInterface.deleteGuest(guestToCreate.idk, function error(err){}, function cb(obj){
+                    guestInterface.getGuest(guestToCreate.idk, function error(err){}, function cb(obj){
+                        assert.equal(obj, null);
+                        done();}
+                    );}
+                );
+            });
+        })
+        it('should delete all guests', function(done){
+            var differentGuestToCreate = {'idk': 'f23ab47d','balance': 7.00, 'name': 'Name', 'birthDate': 12.12};
+
+            guestInterface.addGuest(guestToCreate.idk, guestToCreate.balance, guestToCreate.name, guestToCreate.birthDate, function error(err){}, function cb(){
+                guestInterface.addGuest(differentGuestToCreate.idk, differentGuestToCreate.balance, differentGuestToCreate.name, differentGuestToCreate.birthDate, function error(err){}, function cb(){
+
+                    guestInterface.deleteAllGuests(function error(err){}, function cb(obj){
+                        guestInterface.getGuest(guestToCreate.idk, function error(err){}, function cb(obj){
+                            assert.equal(obj, null);
+                            guestInterface.getGuest(differentGuestToCreate.idk, function error(err){}, function cb(obj){
+                                assert.equal(obj, null);
+                                done();}
+                            );}       
+                        );}
+                    );
+                });
             });
         })
     })

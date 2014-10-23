@@ -2,23 +2,23 @@ var Guest = require('./models/Guest');
 
 var m = module.exports = {};
 
-m.addGuest = function (idk, balance, name, birthDate, error) {
+m.addGuest = function (idk, balance, name, birthDate, error, cb) {
     if(idk){
         Guest.findOne({
             idk: idk
         }, function (err, guest) {
             if(!guest){
-                newGuest(idk, balance, name, birthDate);
+                newGuest(idk, balance, name, birthDate, cb);
             }else{
-                error("Identification for this user already exists");
+                error('Identification for this user already exists');
             }
         });
     }else{
-        newGuest(idk, balance, name, birthDate);
+        newGuest(idk, balance, name, birthDate, cb);
     }
 };
 
-newGuest = function(idk, balance, name, birthDate){
+newGuest = function(idk, balance, name, birthDate, cb){
     var guest = new Guest({
                 idk: idk,
                 balance: balance,
@@ -27,8 +27,9 @@ newGuest = function(idk, balance, name, birthDate){
             });
             guest.save(function (err, guest) {
                 if (err) return console.error(err);
-                    console.log("saved");
-                });
+                console.log('saved');
+                cb(true);
+            });
 }
     
 
@@ -45,13 +46,13 @@ m.deleteAllGuests = function (error, cb) {
                     guest.remove(function () {
                         c++;
                         if(guests.length == c){
-                            cb(c+" from "+guests.length+" deleted good!");
+                            cb(c+' from '+guests.length+' deleted good!');
                         }
                     });
                 }
             }
             if(guests.length < 1){
-                cb(c+" from "+guests.length+" deleted good!");
+                cb(c+' from '+guests.length+' deleted good!');
             }
         }
     });
@@ -83,7 +84,7 @@ m.getGuest = function (idk, error, cb) {
             error(err);
         } else {
             if (!guest) {
-                cb(true);
+                cb(null);
             } else {
                 var temp = JSON.parse(JSON.stringify(guest));
                 cb(temp);
@@ -102,14 +103,14 @@ m.setGuestBalance = function (idk, money, error, cb) {
             if (!guest) {
                 cb(true);
             } else {
-                var newBalance = guest["balance"];
+                var newBalance = guest['balance'];
                 newBalance += money;
-                guest["balance"] = newBalance;
+                guest['balance'] = newBalance;
                 guest.save(function (err, guest) {
                     if (err) {
                         error(err);
                     } else {
-                        console.log("set new balance for " + guest.idk + ", new balance: " + newBalance);
+                        console.log('set new balance for ' + guest.idk + ', new balance: ' + newBalance);
                         cb(guest.idk); 
                     }
                 });
