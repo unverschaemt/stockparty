@@ -10,10 +10,15 @@ var priceHistoryInterface = require('../database/PriceHistoryInterface');
 // Create db connection
 var db;
 
-describe('Database', function(){
+describe('Database Interfaces', function(){
     
     before(function(done){
         db = mongoose.connect('mongodb://localhost/stockparty');
+        done();
+    })
+    
+    after(function(done){
+        mongoose.connection.close();   
         done();
     })
     
