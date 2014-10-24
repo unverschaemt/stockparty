@@ -20,7 +20,7 @@ describe('Price Calculator', function(){
         })
         
         it('should write new prices in price history', function(done){
-            priceCalculator.calculatePrice();
+            priceCalculator.calculatePrices();
             priceHistoryInterface.getPriceHistory(function error(err){}, function cb(obj){
                 var length = 0;
                 for(var i in obj){

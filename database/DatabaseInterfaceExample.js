@@ -9,7 +9,7 @@ m.addDocument = function () {
     });
     file.save(function (err, file) {
         if (err) return console.error(err);
-        console.log("saved");
+        console.log('saved');
     });
 };
 
@@ -71,7 +71,7 @@ m.copyFile = function (id, name) {
                 if (file.type) {
                     filecopy.type = file.type;
                 }
-                filecopy.parent = "";
+                filecopy.parent = '';
                 if (filecopy.type == 1 || filecopy.type == 0) {
                     filecopy.content = [];
                 }
@@ -125,13 +125,13 @@ m.deleteCached = function (id) {
                     file.remove(function () {
                         c++;
                         if(files.length == c){
-                            deferred.resolve(c+" from "+files.length+" deleted good!");
+                            deferred.resolve(c+' from '+files.length+' deleted good!');
                         }
                     });
                 }
             }
             if(files.length < 1){
-                deferred.resolve(c+" from "+files.length+" deleted good!");
+                deferred.resolve(c+' from '+files.length+' deleted good!');
             }
         }
     });
@@ -173,8 +173,8 @@ m.getFile = function (id) {
             } else {
                 if (file.data && file.metadata) {
                     deferred.resolve({
-                        "buffer": file.data,
-                        "metadata": file.metadata
+                        'buffer': file.data,
+                        'metadata': file.metadata
                     });
                 } else {
                     deferred.reject(true);
@@ -248,9 +248,9 @@ m.setFileInfo = function (id, data) {
                 deferred.reject(true);
             } else {
                 for (var k in data) {
-                    if(k != "_id"){
+                    if(k != '_id'){
                         file[k] = data[k];
-                        console.log("set file "+k+" "+JSON.stringify(file[k]));
+                        console.log('set file '+k+' '+JSON.stringify(file[k]));
                     }
                 }
                 file.save(function (err, file) {
