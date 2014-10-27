@@ -2,7 +2,7 @@ var PriceHistory = require('./models/PriceHistory');
 
 var m = module.exports = {};
 
-m.addPriceHistory = function (time, drinks) {
+m.addPriceHistory = function (time, drinks, cb) {
     var priceHistory = new PriceHistory({
         time: time,
         drinks: drinks
@@ -10,6 +10,7 @@ m.addPriceHistory = function (time, drinks) {
     priceHistory.save(function (err, priceHistory) {
         if (err) return console.error(err);
         console.log('saved');
+        cb(true);
     });
 };
 
@@ -43,8 +44,7 @@ m.getPricesForTime = function (time, error, cb) {
         if (err) {
             error(err);
         } else {
-            var temp = JSON.parse(JSON.stringify(historyEntry));
-            cb(temp);
+            cb(historyEntry);
         }
     });
 };

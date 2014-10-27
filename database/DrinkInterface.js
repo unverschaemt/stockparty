@@ -2,7 +2,7 @@ var Drink = require('./models/Drink');
 
 var m = module.exports = {};
 
-m.addDrink = function (name, priceMin, priceMax) {
+m.addDrink = function (name, priceMin, priceMax, cb) {
     var drink = new Drink({
         name: name,
         priceMin: priceMin,
@@ -11,12 +11,13 @@ m.addDrink = function (name, priceMin, priceMax) {
     drink.save(function (err, drink) {
         if (err) return console.error(err);
         console.log("saved");
+        cb(true);
     });
 };
 
-m.deleteDrink = function (id, error, cb) {
+m.deleteDrink = function (name, error, cb) {
     Drink.findOne({
-        _id: id
+        name: name
     }, function (err, drink) {
         if (err) {
             error(err);
@@ -57,9 +58,9 @@ m.deleteAllDrinks = function (error, cb) {
     });
 };
 
-m.getDrink = function (id, error, cb) {
+m.getDrink = function (name, error, cb) {
     Drink.findOne({
-        _id: id
+        name: name
     }, function (err, drink) {
         if (err) {
             error(err);
@@ -69,9 +70,9 @@ m.getDrink = function (id, error, cb) {
     });
 };
 
-m.setDrinkInfo = function (id, data, error, cb) {
+m.setDrinkInfo = function (name, data, error, cb) {
     Drink.findOne({
-        _id: id
+        name: name
     }, function (err, drink) {
         if (err) {
             error(err);
@@ -104,7 +105,7 @@ m.getAllDrinks = function (error, cb) {
         } else {
             var ex = {};
             for (var i in drinks) {
-                ex[drinks[i]._id] = drinks[i];
+                ex[drinks[i].name] = drinks[i];
             }
             var temp = JSON.parse(JSON.stringify(ex));
             cb(temp);
