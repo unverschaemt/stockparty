@@ -3,8 +3,10 @@ var drinkInterface = require('./database/DrinkInterface');
 
 var m = module.exports = {};
 
-var refreshInterval =3;
-var status = 'pause';
+var refreshInterval =5;
+var calculating = false;
+var timeOut;
+var manuallySetPrices = [];
 
 m.calculatePrices = function () {
     drinkInterface.getAllDrinks(function error(err){}, function cb(obj){
@@ -18,10 +20,18 @@ m.calculatePrices = function () {
 
 m.setRefreshInterval = function (interval) {
     refreshInterval = interval;
+    if(calculating){
+        clearInterval(timeOut);
+        goCalculate();
+    }
 };
 
 m.getRefreshInterval = function () {
     return refreshInterval;
+};
+
+m.setPrice = function (drinkID, price) {
+    manuallySetPrices[drinkID] = price;
 };
 
 m.triggerStockCrash = function (decision) {
@@ -33,22 +43,22 @@ m.triggerStockCrash = function (decision) {
 };
 
 m.start = function () {
-    status = 'run';
+    calculating = true;
     goCalculate();
 };
 
 m.pause = function () {
-    status = 'pause';
+    calculating = false;
 };
 
-m.getStatus = function () {
-    return status;
+m.isWorking = function () {
+    return calculating;
 };
 
 goCalculate = function(){
     
-        var timeOut = setInterval(function loop(){
-            if(status == 'run'){
+        timeOut = setInterval(function loop(){
+            if(calculating){
             	m.calculatePrices();
             }else{
                 clearInterval(timeOut);
@@ -72,8 +82,14 @@ enableStockCrash = function (){
 
 calcPriceForDrink = function(drink){    
     //TODO: create an useful algorithm
-    var price = Math.random() * (drink.priceMax - drink.priceMin) + drink.priceMin;
-    
+    var price;
+    var manualPrice = manuallySetPrices[drink.name];
+    if(manualPrice){
+        price = manualPrice;
+        delete manuallySetPrices[drink.name];
+    }else{
+        price = Math.random() * (drink.priceMax - drink.priceMin) + drink.priceMin;
+    }
     return price;
 }
 

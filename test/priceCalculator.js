@@ -90,12 +90,12 @@ describe('Price Calculator', function(){
         
         it('should pause the calculation algorithm', function(){
             priceCalculator.triggerStockCrash(true);
-            assert.equal(priceCalculator.getStatus(), 'pause');
+            assert.equal(priceCalculator.getStatus(), false);
         })
         
         it('should start the calculation algorithm', function(){
             priceCalculator.triggerStockCrash(false);
-            assert.equal(priceCalculator.getStatus(), 'run');
+            assert.equal(priceCalculator.getStatus(), true);
         })
     })
     
@@ -103,7 +103,7 @@ describe('Price Calculator', function(){
         
         it('should start the calculation algorithm', function(){
             priceCalculator.start();
-            assert.equal(priceCalculator.getStatus(), 'run');
+            assert.equal(priceCalculator.getStatus(), true);
         })
     })
     
@@ -111,7 +111,7 @@ describe('Price Calculator', function(){
         
         it('should pause the calculation algorithm', function(){
             priceCalculator.pause();
-            assert.equal(priceCalculator.getStatus(), 'pause');
+            assert.equal(priceCalculator.getStatus(), false);
         })
     })
     

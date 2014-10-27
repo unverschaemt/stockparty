@@ -2,23 +2,23 @@ var Guest = require('./models/Guest');
 
 var m = module.exports = {};
 
-m.addGuest = function (idk, balance, name, birthDate, error, cb) {
+m.addGuest = function (idk, name, birthDate, error, cb) {
     if(idk){
         Guest.findOne({
             idk: idk
         }, function (err, guest) {
             if(!guest){
-                newGuest(idk, balance, name, birthDate, cb);
+                newGuest(idk, name, birthDate, cb);
             }else{
                 error('Identification for this user already exists');
             }
         });
     }else{
-        newGuest(idk, balance, name, birthDate, cb);
+        newGuest(idk, name, birthDate, cb);
     }
 };
 
-newGuest = function(idk, balance, name, birthDate, cb){
+newGuest = function(idk, name, birthDate, cb){
     var guest = new Guest({
                 idk: idk,
                 balance: balance,
@@ -88,32 +88,6 @@ m.getGuest = function (idk, error, cb) {
             } else {
                 var temp = JSON.parse(JSON.stringify(guest));
                 cb(temp);
-            }
-        }
-    });
-};
-
-m.setGuestBalance = function (idk, money, error, cb) {
-    Guest.findOne({
-        idk: idk
-    }, function (err, guest) {
-        if (err) {
-            error(err);
-        } else {
-            if (!guest) {
-                cb(true);
-            } else {
-                var newBalance = guest['balance'];
-                newBalance += money;
-                guest['balance'] = newBalance;
-                guest.save(function (err, guest) {
-                    if (err) {
-                        error(err);
-                    } else {
-                        console.log('set new balance for ' + guest.idk + ', new balance: ' + newBalance);
-                        cb(guest.idk); 
-                    }
-                });
             }
         }
     });

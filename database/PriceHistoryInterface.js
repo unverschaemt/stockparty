@@ -64,3 +64,12 @@ m.getPriceHistory = function (error, cb) {
     });
 };
 
+m.getLatestEntry = function (error, cb) {
+    PriceHistory.findOne({}, {}, { sort: { 'time' : -1 } }, function(err, lastEntry) {
+        if (err) {
+            error(err);
+        } else {
+            cb(lastEntry);
+        }
+    });
+};

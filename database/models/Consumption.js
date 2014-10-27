@@ -4,9 +4,10 @@ var Schema = mongoose.Schema;
 
 var fileSchema = new Schema({
     guest: String,
-    time: Number,
+    priceID: Number,
     drink: String,
-    quantity: Number
+    quantity: Number,
+    time: Number
 });
 
 module.exports = mongoose.model('Consumption', fileSchema);

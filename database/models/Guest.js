@@ -4,7 +4,6 @@ var Schema = mongoose.Schema;
 
 var fileSchema = new Schema({
     idk: String,
-    balance: Number,
     name: String,
     birthDate: Number
 });

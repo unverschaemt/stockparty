@@ -295,7 +295,7 @@ describe('Database Interfaces', function(){
     })
     
     describe('Consumption Interface', function(){
-        var consumptionToCreate = {'guest': 'f23ab47c', 'time': 201410231228,'drink': 'DrinkName', 'quantity': 2};
+        var consumptionToCreate = {'guest': 'f23ab47c', 'priceID': 201410231228,'drink': 'DrinkName', 'quantity': 2, 'time': 201410231328};
         
         afterEach(function(done){
             consumptionInterface.deleteAllConsumptionEntries(function error(err){}, function cb(obj){
@@ -304,11 +304,11 @@ describe('Database Interfaces', function(){
         })
       
         it('should add a consumption to database', function(done){
-            consumptionInterface.addConsumption(consumptionToCreate.guest, consumptionToCreate.time, consumptionToCreate.drink, consumptionToCreate.quantity, function cb(){
+            consumptionInterface.addConsumption(consumptionToCreate.guest, consumptionToCreate.priceID, consumptionToCreate.drink, consumptionToCreate.quantity, consumption.time, function cb(){
                 
                 consumptionInterface.getAllConsumptionEntries(function error(err){}, function cb(obj){
                     for(var i in obj){
-                        assert.equal(consumptionToCreate.time, obj[i].time);
+                        assert.equal(consumptionToCreate.priceID, obj[i].priceID);
                         assert.equal(consumptionToCreate.consumption, obj[i].consumption);
                         assert.equal(consumptionToCreate.guest, obj[i].guest);
                     }
@@ -318,16 +318,17 @@ describe('Database Interfaces', function(){
         })
         
         it('should get all consumptions for one person', function(done){
-            var differentConsumptionToCreate = {'guest': 'f23ab47c', 'time': 201410231229,'drink': 'DrinkName', 'quantity': 2};
-            var differentConsumptionForGuestToCreate = {'guest': 'f23ab47d', 'time': 201410231230,'drink': 'DrinkName', 'quantity': 2};
-            consumptionInterface.addConsumption(consumptionToCreate.guest, consumptionToCreate.time, consumptionToCreate.drink, consumptionToCreate.quantity, function cb(){
-                consumptionInterface.addConsumption(differentConsumptionToCreate.guest, differentConsumptionToCreate.time, differentConsumptionToCreate.drink, differentConsumptionToCreate.quantity, function cb(){
-                    consumptionInterface.addConsumption(differentConsumptionForGuestToCreate.guest, differentConsumptionForGuestToCreate.time, differentConsumptionForGuestToCreate.drink,     
-                                                        differentConsumptionForGuestToCreate.quantity, function cb(){
+            var differentConsumptionToCreate = {'guest': 'f23ab47c', 'priceID': 201410231229,'drink': 'DrinkName', 'quantity': 2, 'time': 201410231328};
+            var differentConsumptionForGuestToCreate = {'guest': 'f23ab47d', 'priceID': 201410231230,'drink': 'DrinkName', 'quantity': 2, 'time': 201410231328};
+            consumptionInterface.addConsumption(consumptionToCreate.guest, consumptionToCreate.priceID, consumptionToCreate.drink, consumptionToCreate.quantity, consumptionToCreate.time, function cb(){
+                consumptionInterface.addConsumption(differentConsumptionToCreate.guest, differentConsumptionToCreate.priceID, differentConsumptionToCreate.drink, differentConsumptionToCreate.quantity,
+                                                    differentConsumptionToCreate.time, function cb(){
+                    consumptionInterface.addConsumption(differentConsumptionForGuestToCreate.guest, differentConsumptionForGuestToCreate.priceID, differentConsumptionForGuestToCreate.drink,     
+                                                        differentConsumptionForGuestToCreate.quantity, differentConsumptionForGuestToCreate.time, function cb(){
                         consumptionInterface.getConsumptionForGuest(consumptionToCreate.guest, function error(err){}, function cb(obj){
-                            assert.equal(consumptionToCreate.guest, obj[consumptionToCreate.time].guest);
-                            assert.equal(differentConsumptionToCreate.guest, obj[differentConsumptionToCreate.time].guest);
-                            assert.equal(obj[differentConsumptionForGuestToCreate.time], undefined);
+                            assert.equal(consumptionToCreate.guest, obj[consumptionToCreate.priceID].guest);
+                            assert.equal(differentConsumptionToCreate.guest, obj[differentConsumptionToCreate.priceID].guest);
+                            assert.equal(obj[differentConsumptionForGuestToCreate.priceID], undefined);
                             done();
                         });
                     });
@@ -336,12 +337,13 @@ describe('Database Interfaces', function(){
         })
         
         it('should return all consumption entries', function(done){
-            var differentConsumptionToCreate = {'guest': 'f23ab47c', 'time': 201410231229,'drink': 'DrinkName', 'quantity': 2};
-            var differentConsumptionForGuestToCreate = {'guest': 'f23ab47d', 'time': 201410231230,'drink': 'DrinkName', 'quantity': 2};
-            consumptionInterface.addConsumption(consumptionToCreate.guest, consumptionToCreate.time, consumptionToCreate.drink, consumptionToCreate.quantity, function cb(){
-                consumptionInterface.addConsumption(differentConsumptionToCreate.guest, differentConsumptionToCreate.time, differentConsumptionToCreate.drink, differentConsumptionToCreate.quantity, function cb(){
-                    consumptionInterface.addConsumption(differentConsumptionForGuestToCreate.guest, differentConsumptionForGuestToCreate.time, differentConsumptionForGuestToCreate.drink,     
-                                                        differentConsumptionForGuestToCreate.quantity, function cb(){
+            var differentConsumptionToCreate = {'guest': 'f23ab47c', 'priceID': 201410231229,'drink': 'DrinkName', 'quantity': 2, 'time': 201410231328};
+            var differentConsumptionForGuestToCreate = {'guest': 'f23ab47d', 'priceID': 201410231230,'drink': 'DrinkName', 'quantity': 2, 'time': 201410231328};
+            consumptionInterface.addConsumption(consumptionToCreate.guest, consumptionToCreate.priceID, consumptionToCreate.drink, consumptionToCreate.quantity,consumptionToCreate.time, function cb(){
+                consumptionInterface.addConsumption(differentConsumptionToCreate.guest, differentConsumptionToCreate.priceID, differentConsumptionToCreate.drink, differentConsumptionToCreate.quantity,   
+                                                    differentConsumptionToCreate.time, function cb(){
+                    consumptionInterface.addConsumption(differentConsumptionForGuestToCreate.guest, differentConsumptionForGuestToCreate.priceID, differentConsumptionForGuestToCreate.drink,     
+                                                        differentConsumptionForGuestToCreate.quantity, differentConsumptionForGuestToCreate.time, function cb(){
                         consumptionInterface.getAllConsumptionEntries(function error(err){}, function cb(obj){
                             var length = 0;
                             for(i in obj){
