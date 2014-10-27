@@ -40,7 +40,7 @@ m.deleteAllPriceHistoryEntries = function (error, cb) {
 };
 
 m.getPricesForTime = function (time, error, cb) {
-    PriceHistory.find({time: time}, function (err, historyEntry) {
+    PriceHistory.findOne({time: time}, function (err, historyEntry) {
         if (err) {
             error(err);
         } else {

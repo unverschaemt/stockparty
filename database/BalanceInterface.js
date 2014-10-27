@@ -1,10 +1,10 @@
-var Guest = require('./models/Balance');
+var Balance = require('./models/Balance');
 
 var m = module.exports = {};
 
-m.addBalance = function (idk, time, balance, cb) {
+m.addBalance = function (guest, time, balance, cb) {
     var balance = new Balance({
-                idk: idk,
+                guest: guest,
                 time: time,
                 balance: balance
             });
@@ -17,7 +17,7 @@ m.addBalance = function (idk, time, balance, cb) {
 };    
 
 m.getAllEntriesForGuest = function (guest, error, cb) {
-    Consumption.find({guest: guest}, function (err, guests) {
+    Balance.find({guest: guest}, function (err, guests) {
         if (err) {
             error(err);
         } else {
@@ -32,7 +32,7 @@ m.getAllEntriesForGuest = function (guest, error, cb) {
 };
 
 m.getTotalForGuest = function (guest, error, cb) {
-    Consumption.find({guest: guest}, function (err, guests) {
+    Balance.find({guest: guest}, function (err, guests) {
         if (err) {
             error(err);
         } else {

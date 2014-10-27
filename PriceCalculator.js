@@ -3,7 +3,7 @@ var drinkInterface = require('./database/DrinkInterface');
 
 var m = module.exports = {};
 
-var refreshInterval =5;
+var refreshInterval =2;
 var calculating = false;
 var timeOut;
 var manuallySetPrices = [];
@@ -12,7 +12,7 @@ m.calculatePrices = function () {
     drinkInterface.getAllDrinks(function error(err){}, function cb(obj){
         var drinksWithPrices = [];
         for(var i in obj){
-            drinksWithPrices.push({'id': obj[i]._id, 'price': calcPriceForDrink(obj[i])});
+            drinksWithPrices.push({'id': obj[i].name, 'price': calcPriceForDrink(obj[i])});
         }
         saveNewDrinkPricesToDatabase(drinksWithPrices);
     });
