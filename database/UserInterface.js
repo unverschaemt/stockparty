@@ -11,7 +11,7 @@ m.addUser = function (userName, password, name, role, cb) {
     });
     user.save(function (err, user) {
         if (err) return console.error(err);
-        console.log("saved");
+        console.log("saved user");
         cb(true);
     });
 };

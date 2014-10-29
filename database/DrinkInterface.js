@@ -10,7 +10,7 @@ m.addDrink = function (name, priceMin, priceMax, cb) {
     });
     drink.save(function (err, drink) {
         if (err) return console.error(err);
-        console.log("saved");
+        console.log('saved drink');
         cb(true);
     });
 };

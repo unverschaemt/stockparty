@@ -12,7 +12,7 @@ m.addConsumption = function (guest, priceID, drink, quantity, time, cb) {
     });
     consumption.save(function (err, consumption) {
         if (err) return console.error(err);
-        console.log('saved');
+        console.log('saved consumption');
         cb(true);
     });
 };

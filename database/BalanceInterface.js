@@ -10,7 +10,7 @@ m.addBalance = function (guest, time, balance, cb) {
             });
             balance.save(function (err, balance) {
                 if (err) return console.error(err);
-                console.log('saved');
+                console.log('saved balance');
                 cb(true);
             });
        

@@ -27,7 +27,7 @@ newGuest = function(idk, name, birthDate, cb){
             });
             guest.save(function (err, guest) {
                 if (err) return console.error(err);
-                console.log('saved');
+                console.log('saved guest');
                 cb(true);
             });
 }

@@ -9,7 +9,7 @@ m.addPriceHistory = function (time, drinks, cb) {
     });
     priceHistory.save(function (err, priceHistory) {
         if (err) return console.error(err);
-        console.log('saved');
+        console.log('saved price history entry');
         cb(true);
     });
 };
