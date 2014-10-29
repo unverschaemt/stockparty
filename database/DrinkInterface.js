@@ -79,7 +79,7 @@ m.setDrinkInfo = function (id, data, error, cb) {
             error(err);
         } else {
             if (!drink) {
-                cb(true);
+                cb(false);
             } else {
                 for (var k in data) {
                     if(k != "_id"){
@@ -91,7 +91,7 @@ m.setDrinkInfo = function (id, data, error, cb) {
                     if (err) {
                         error(err);
                     } else {
-                        cb(drink._id);
+                        cb(true);
                     }
                 });
             }

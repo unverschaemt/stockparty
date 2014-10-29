@@ -12,7 +12,7 @@ var m = module.exports = {};
 // iddscan: event => expected: {'hid': 'Hardware-ID','idk':'scanned rfid key (IDentificationKey)'}
 
 m.use = function (socket) {
-    socket.priceUpdate = function (all) {
+    socket.priceUpdate = function (all, entry) {
         if (all) {
             priceHistoryInterface.getPriceHistory(function (err) {
                 console.error('ERROR: Failed to load price Data! ERR: '+JSON.stringify(err)+''.red);
@@ -22,6 +22,7 @@ m.use = function (socket) {
                 });
             });
         } else {
+            if(!entry){
             drinkInterface.getPriceEntry(function (err) {
                 console.error('ERROR: Failed to get price Entry! ERR: '+JSON.stringify(err)+''.red);
             }, function (priceEntry) {
@@ -29,6 +30,11 @@ m.use = function (socket) {
                     'priceEntry': priceEntry
                 });
             });
+            } else {
+                socket.emit('priceupdate', {
+                    'priceEntry': entry
+                });
+            }
         }
     };
     // Initial Data Push
