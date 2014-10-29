@@ -1,16 +1,29 @@
 
 var express = require('express');
+var welcome = require('./welcome.js');
 var connection = require('./connection/connection.js');
+var configfunctions = require('./connection/configfunctions.js');
+var config = require('./connection/config.js');
 require('socket.io-client');
 var app = express();
+
+//Loading Config:
+configfunctions.loadInitialConfigSync(__dirname+"/config.json");
+
 
 app.get('/socket.io.js', function (req, res) {
     res.sendFile(__dirname + '/node_modules/socket.io-client/socket.io.js');
 });
 
+app.get('/server.txt', function (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.send('StockParty Server by David Ehlen, Robin Frischmann, Nils Hirsekorn, Dustin Hoffner');
+});
+
 app.use(express.static(__dirname + '/public'));
 
-var io = require('socket.io').listen(app.listen(3000));
+var io = require('socket.io').listen(app.listen(config.data.global.port));
 
 
 // Login check
@@ -32,6 +45,20 @@ io.use(function (socket, next) {
     console.log(data);
   });
 });*/
+
+/*
+
+var seto = function(arr, obj, to){
+    if(arr.length>1){
+         var x = arr.shift();
+         seto(arr, obj[x], to);
+    } else {
+         obj[arr[0]] = to;
+    }
+}
+
+*/
+
 
 var counter = 0;
 

@@ -1,4 +1,4 @@
-/*var socket = io('http://localhost:3000/?username=karl&password=test223'); //&password=test223
+var socket = io('http://localhost:4217/?username=karl&password=test223'); //&password=test223
 socket.on('connect', function () {
 
 });
@@ -18,7 +18,7 @@ var temo = {};
 socket.on('configupdate', function (data) {
     console.warn(data);
     temo = data;
-});*/
+});
 
 var siocon = function (url, username, password, error) {
     var socket = io(url + '?username=' + username + '&password=' + password); //&password=test223

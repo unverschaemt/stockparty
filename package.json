@@ -4,6 +4,7 @@
   "description": "System for a Stock Party",
   "main": "app.js",
   "dependencies": {
+    "colors": "^1.0.3",
     "express": "^4.9.8",
     "hidstream": "0.0.5",
     "johnny-five": "^0.8.19",

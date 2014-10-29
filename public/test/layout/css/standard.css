@@ -1,0 +1,117 @@
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -o-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -ms-font-smoothing: antialiased;
+    -o-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+}
+html,
+body {
+    width: 100%;
+    height: 100%;
+    font-size: 15px;
+    font-family: Lato;
+    overflow: hidden;
+}
+body {
+    background: url('../image/background.jpg');
+    background-size: cover;
+}
+.adminPanel {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.adminPanel li {
+    float: left;
+    color: #ffffff;
+    font-size: 18px;
+    font-family: Helvetica;
+    padding: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+    -webkit-transition: ease-in-out 0.1s;
+    cursor: pointer;
+    border-bottom: 10px solid transparent;
+    border-top: 0px solid rgb(26, 82, 114);
+}
+
+.adminPanel li:hover {
+    border-top: 10px solid rgb(33, 107, 149); /*rgba(88, 132, 158, 0.7);*/
+    border-bottom: 0px solid transparent;
+}
+
+.content {
+    position: absolute;
+    top: 80px;
+    left: 80px;
+    right: 80px;
+    min-height: 300px;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+}
+
+.box {
+    position: relative;
+    width: 260px;
+    height: 90px;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.34);
+    padding: 5px;
+    color: #fff;
+    font-size: 14px;
+    font-family: monospace;
+}
+
+.select {
+    padding: 4px;
+    min-width: 100px;
+}
+.checkboxOne {
+	width: 40px;
+	height: 10px;
+	background: #fff;
+	position: relative;
+	border-radius: 3px;
+}
+.checkboxOne label {
+	display: block;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	-webkit-transition: all .2s ease;
+	-moz-transition: all .2s ease;
+	-o-transition: all .2s ease;
+	-ms-transition: all .2s ease;
+	transition: all .2s ease;
+	cursor: pointer;
+	position: absolute;
+	top: -3px;
+	left: -3px;
+	background: #c4c4c4;
+}
+.checkboxOne input[type=checkbox]:checked + label {
+	left: 27px;
+}
+
+.table td{
+    min-height: 20px;
+}
