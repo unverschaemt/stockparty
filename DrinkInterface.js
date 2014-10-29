@@ -9,7 +9,9 @@ var m = module.exports = {};
 var priceEntryCache = {};
 
 m.getPriceEntry = function (callBack) {
-    priceHistoryInterface.getLatestEntry(function error(err){console.log(err)}, function cb(obj){
+    priceHistoryInterface.getLatestEntry(function error(err) {
+        console.log(err)
+    }, function cb(obj) {
         callBack(obj);
     })
 };
@@ -17,15 +19,15 @@ m.getPriceEntry = function (callBack) {
 m.buyDrinks = function (data, callBack) {
     var price = 0;
     var received = 0;
-    for(var i in data.drinks){
-        getPriceOfDrink(data.priceID, data.drinks[i].drinkID, function cb(obj){
-            price += obj*data.drinks[i].quantity;
+    for (var i in data.drinks) {
+        getPriceOfDrink(data.priceID, data.drinks[i].drinkID, function cb(obj) {
+            price += obj * data.drinks[i].quantity;
             received++;
-            if(data.drinks.length == received){
-                guestInterface.getBalanceOfGuest(data.guestID, function cb(obj){
-                    if(price < obj){
+            if (data.drinks.length == received) {
+                guestInterface.getBalanceOfGuest(data.guestID, function cb(obj) {
+                    if (price < obj) {
                         addConsumption(data.drinks, data.guestID, data.priceID, callBack);
-                    }else{
+                    } else {
                         callBack(false);
                     }
                 });
@@ -34,8 +36,10 @@ m.buyDrinks = function (data, callBack) {
     }
 };
 
-m.getAllDrinks = function (error, cb){
-    drinkDatabaseInterface.getAllDrinks(function err(err){error(err)}, cb);
+m.getAllDrinks = function (error, cb) {
+    drinkDatabaseInterface.getAllDrinks(function err(err) {
+        error(err)
+    }, cb);
 };
 
 m.addDrink = function (drink, cb) {
@@ -43,7 +47,10 @@ m.addDrink = function (drink, cb) {
 };
 
 m.removeDrink = function (drinkID, cb) {
-    drinkDatabaseInterface.deleteDrink(drinkID, function err(err){cb(false);console.log(err);}, cb);
+    drinkDatabaseInterface.deleteDrink(drinkID, function err(err) {
+        cb(false);
+        console.log(err);
+    }, cb);
 };
 
 m.setPrice = function (data) {
@@ -51,34 +58,35 @@ m.setPrice = function (data) {
 };
 
 m.setDrink = function (data, cb) {
-    drinkDatabaseInterface.setDrinkInfo(data.drinkID, data, function error(err){cb(false);console.log(err);}, cb);
+    drinkDatabaseInterface.setDrinkInfo(data.drinkID, data, function error(err) {
+        cb(false);
+        console.log(err);
+    }, cb);
 };
 
 m.triggerStockCrash = function (decision) {
     priceCalculator.triggerStockCrash(decision);
 };
 
-getPriceOfDrink = function (priceID, drinkID, callBack){
+getPriceOfDrink = function (priceID, drinkID, callBack) {
     //TODO: implement price entry cache, so you don't have to make a database request when several drinks are bought with the same priceID
-    priceHistoryInterface.getPricesForID(priceID, function error(err){console.log(err)}, function cb(obj){
-        for(var i in obj.drinks){
-              if(obj.drinks[i].id == drinkID){
-                callBack(obj.drinks[i].price);
-              }
-        }
+    priceHistoryInterface.getPricesForID(priceID, function error(err) {
+        console.log(err)
+    }, function cb(obj) {
+        callBack(obj.drinks[drinkID].price);
         callBack(false);
     });
 };
 
-addConsumption = function(drinks, guestID, priceID, callBack){
+addConsumption = function (drinks, guestID, priceID, callBack) {
     var saved = 0;
     var time = new Date().getTime();
-    for(var i in drinks){
-        consumptionInterface.addConsumption(guestID, priceID, drinks[i].drinkID, drinks[i].quantity, time, function cb(obj){
+    for (var i in drinks) {
+        consumptionInterface.addConsumption(guestID, priceID, drinks[i].drinkID, drinks[i].quantity, time, function cb(obj) {
             saved++;
-            if(drinks.length == saved){
-                callBack(true);   
+            if (drinks.length == saved) {
+                callBack(true);
             }
         });
-    }   
+    }
 };

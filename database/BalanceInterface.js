@@ -5,7 +5,7 @@ var m = module.exports = {};
 
 m.addBalance = function (data, cb) {
     if (data.balance < 0) {
-        guestInterface.getBalanceOfGuest(data.guest, callBack(total) {
+        guestInterface.getBalanceOfGuest(data.guest, function callBack(total) {
             if (total - data.balance < 0) {
                 cb(false);
             } else {
@@ -17,7 +17,7 @@ m.addBalance = function (data, cb) {
     }
 };
 
-saveBalance = function (data, cb) {
+m.saveBalance = function (data, cb) {
     var balance = new Balance({
         guest: data.guest,
         time: new Date().getTime(),
@@ -28,7 +28,7 @@ saveBalance = function (data, cb) {
         console.log('saved balance');
         cb(true);
     });
-}
+};
 
 m.getAllEntriesForGuest = function (guest, error, cb) {
     Balance.find({

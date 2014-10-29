@@ -1,14 +1,19 @@
 
-var express = require('express');
+
 var welcome = require('./welcome.js');
-var connection = require('./connection/connection.js');
+//Loading Config:
 var configfunctions = require('./connection/configfunctions.js');
+configfunctions.loadInitialConfigSync(__dirname+"/config.json");
+
+var express = require('express');
+var connection = require('./connection/connection.js');
 var config = require('./connection/config.js');
+var mongoose = require('mongoose');
 require('socket.io-client');
 var app = express();
 
-//Loading Config:
-configfunctions.loadInitialConfigSync(__dirname+"/config.json");
+// Loading Database:
+var db = mongoose.connect('mongodb://localhost/stockparty');
 
 
 app.get('/socket.io.js', function (req, res) {
