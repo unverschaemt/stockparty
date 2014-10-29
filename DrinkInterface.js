@@ -35,15 +35,15 @@ m.buyDrinks = function (data, callBack) {
 };
 
 m.getAllDrinks = function (error, cb){
-    drinkDatabaseInterface.getAllDrinks(function err(err){error(err)}, function callback(obj){cb(obj)});
+    drinkDatabaseInterface.getAllDrinks(function err(err){error(err)}, cb);
 };
 
-m.addDrink = function (drink) {
-    drinkDatabaseInterface.addDrink(drink.name, drink.priceMin, drink.priceMax, function cb(){});
+m.addDrink = function (drink, cb) {
+    drinkDatabaseInterface.addDrink(drink.name, drink.priceMin, drink.priceMax, cb);
 };
 
-m.removeDrink = function (drinkID) {
-    drinkDatabaseInterface.removeDrink(drinkID);
+m.removeDrink = function (drinkID, cb) {
+    drinkDatabaseInterface.deleteDrink(drinkID, function err(){}, cb);
 };
 
 m.setPrice = function (drinkID, price) {
