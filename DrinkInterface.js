@@ -33,6 +33,10 @@ m.buyDrinks = function (priceID, guestID, drinks, callBack) {
     }
 };
 
+m.getAllDrinks = function (error, cb){
+    drinkDatabaseInterface.getAllDrinks(function err(err){error(err)}, function callback(obj){cb(obj)});
+};
+
 m.addDrink = function (drink) {
     drinkDatabaseInterface.addDrink(drink.name, drink.priceMin, drink.priceMax, function cb(){});
 };
