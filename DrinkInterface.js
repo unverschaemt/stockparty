@@ -43,15 +43,15 @@ m.addDrink = function (drink, cb) {
 };
 
 m.removeDrink = function (drinkID, cb) {
-    drinkDatabaseInterface.deleteDrink(drinkID, function err(){}, cb);
+    drinkDatabaseInterface.deleteDrink(drinkID, function err(err){cb(false);console.log(err);}, cb);
 };
 
-m.setPrice = function (drinkID, price) {
-    priceCalculator.setPrice(drinkID, price);
+m.setPrice = function (data) {
+    priceCalculator.setPrice(data.drinkID, data.price);
 };
 
-m.setDrink = function (drinkID, data) {
-    drinkDatabaseInterface.setDrinkInfo(drinkID, data, function error(err){console.log(err)}, function cb(obj){console.log(obj)});
+m.setDrink = function (data, cb) {
+    drinkDatabaseInterface.setDrinkInfo(data.drinkID, data, function error(err){cb(false);console.log(err);}, cb);
 };
 
 m.triggerStockCrash = function (decision) {

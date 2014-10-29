@@ -6,7 +6,8 @@ m.addDrink = function (name, priceMin, priceMax, cb) {
     var drink = new Drink({
         name: name,
         priceMin: priceMin,
-        priceMax: priceMax
+        priceMax: priceMax,
+        soldOut: true
     });
     drink.save(function (err, drink) {
         if (err) return console.error(err);
