@@ -62,7 +62,6 @@ socket.configdata = {
         }
     }
 };
-var deviceNumber = 0;
 
 socket.emit = function (a, b) {
     console.log(a + ' => ' + b.hid);
@@ -87,8 +86,8 @@ rfidApi.listenForScan = function () {
                     getmac.getMac(function (err, macAddress) {
                         if (err) console.error(err);
                         socket.emit('iddscan', {
-                            'hid': '' + macAddress + devices[i].serialNumber+'',
-                            'idk': '' + code+''
+                            'hid': '' + macAddress + devices[i].serialNumber + '',
+                            'idk': '' + code + ''
                         });
                     });
 
@@ -104,54 +103,77 @@ rfidApi.listenForScan = function () {
     }
 
 }
-
+/* Hier nur richtige serialnumber vergabe bei 2 readern ==> verallgemeinern */
 monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', function (scannedDevices, err) {
+    if (devices.length == 0) {
+        scannedDevices.serialNumber = '0';
+                            devices.push(scannedDevices);
 
-    scannedDevices.serialNumber = '' + deviceNumber;
+    } else {
+        for (var i in devices) {
+            if (devices[i] == null) {
+                scannedDevices.serialNumber = '' + i;
+                    devices[i] = scannedDevices;
+                break;
 
-    devices.push(scannedDevices);
 
-                getmac.getMac(function (err, macAddress) {
+            } else {
+                scannedDevices.serialNumber = '' + devices.length;
+                    devices.push(scannedDevices);
+
+            }
+        }
+    }
+
+    getmac.getMac(function (err, macAddress) {
         if (err) console.error(err);
         if (socket.configdata.global.configmode == true) {
             socket.emit('iddplugin', {
-                'hid': '' + macAddress + '-' + deviceNumber+''
+                'hid': '' + macAddress + '-' + scannedDevices.serialNumber + ''
             });
         } else {
             for (var dev in socket.configdata.devices) {
-                if (socket.configdata.devices[dev].hid === '' + macAddress + '-' + devices.length) {
+                if (socket.configdata.devices[dev].hid === '' + macAddress + '-' + scannedDevices.serialNumber) {
                     socket.emit('iddplugin', {
-                        'hid': '' + macAddress + '-' + deviceNumber+''
+                        'hid': '' + macAddress + '-' + scannedDevices.serialNumber + ''
                     });
                 }
             }
         }
-        deviceNumber++;
-
     });
 
 
 });
 
 monitor.on('remove:' + constants.VENDORID + ':' + constants.PRODUCTID + '', function (scannedDevices, err) {
+                var serNumber = getDevice(scannedDevices.locationId).serialNumber;
+                 nullDevice(scannedDevices.locationId);
     getmac.getMac(function (err, macAddress) {
         if (err) throw err;
         socket.emit('iddremove', {
-                
-            'hid': '' + macAddress + '-' + getDevice(scannedDevices.path).serialNumber+''
+
+            'hid': '' + macAddress + '-' + serNumber + ''
         });
     });
 });
-                
-                function getDevice(dPath) {
-                    for(var i in devices) {
-                      if(devices[i].path === dPath) {
-                        devices[i].path = ''; //Bei remove altes gerät path löschen, damit bei neuem verbinden auf gleichen path nur 1 Gerät gefunden wird
-                        return devices[i];    
-                    }
-                }
-                }
-               
+
+function getDevice(locId) {
+    for (var i in devices) {
+        if (devices[i].locationId === locId) {
+            return devices[i];
+        }
+    }
+}
+
+function nullDevice(locId) {
+    for (var i in devices) {
+        if (devices[i].locationId === locId) {
+            devices[i] = null;
+            console.log("nulled index:"+i);
+        }
+    }
+}
+
 
 /*
 socket.on(‘disconnect’, function (data) {

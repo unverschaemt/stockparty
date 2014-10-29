@@ -11,6 +11,8 @@ m.loadInitialConfigSync = function (file) {
     var data = fs.readFileSync(file);
     config.data = JSON.parse(data);
     config.data.global.configfilepath = file;
+    config.data.global.running = false;
+    config.data.global.stockcrash = false;
     console.log(('Loaded Config File from '+config.data.global.configfilepath).green);
 };
 

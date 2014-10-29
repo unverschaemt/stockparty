@@ -1,7 +1,7 @@
 var priceHistoryInterface = require('./database/PriceHistoryInterface');
 var drinkInterface = require('./database/DrinkInterface');
 var config = require('./connection/config.js');
-var triggerFunctions = require('./triggerfunctions.js');
+var triggerFunctions = require('./connection/triggerfunctions.js');
 
 var m = module.exports = {};
 
