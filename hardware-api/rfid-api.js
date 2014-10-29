@@ -103,11 +103,10 @@ rfidApi.listenForScan = function () {
     }
 
 }
-/* Hier nur richtige serialnumber vergabe bei 2 readern ==> verallgemeinern */
 monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', function (scannedDevices, err) {
     if (devices.length == 0) {
         scannedDevices.serialNumber = '0';
-                            devices.push(scannedDevices);
+                devices.push(scannedDevices);
 
     } else {
         for (var i in devices) {
@@ -169,7 +168,6 @@ function nullDevice(locId) {
     for (var i in devices) {
         if (devices[i].locationId === locId) {
             devices[i] = null;
-            console.log("nulled index:"+i);
         }
     }
 }
