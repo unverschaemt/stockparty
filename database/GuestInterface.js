@@ -98,29 +98,26 @@ m.getGuest = function (idk, error, cb) {
     });
 };
 
-m.getBalanceOfGuest = function (guestID, callBack) {
+getBalanceOfGuest = function (guestID, callBack){
     var totalBalance = 0;
-    balanceInterface.getTotalForGuest(guestID, function error(err) {
-            console.log(err)
-        }, function cb(balance) {
-            totalBalance = balance;
-            consumptionInterface.getConsumptionForGuest(guestID, function error(err) {
-                    console.log(err)
-                }, function cb(consumptionEntries) {
-                    var empty = true;
-                    for (var i in consumptionEntries) {
-                        empty = false;
-                        priceHistoryInterface.getPricesForID(consumptionEntries[i].priceID, function error(err) {
-                                console.log(err)
-                            }, function cb(priceEntry) {
-                                totalBalance -= priceEntry.drinks[consumptionEntries[i].drink].price * consumptionEntries[i].quantity;
-                            }
-                            callBack(totalBalance);
-                        });
-                }
-                if (empty) {
+    balanceInterface.getTotalForGuest(guestID, function error(err){console.log(err)}, function cb(balance){
+        totalBalance = balance;
+        consumptionInterface.getConsumptionForGuest(guestID, function error(err){console.log(err)}, function cb(consumptionEntries){
+            var empty = true;
+            for(var i in consumptionEntries){
+                empty = false;
+                priceHistoryInterface.getPricesForTime(consumptionEntries[i].priceID, function error(err){console.log(err)}, function cb(priceEntry){
+                    for(var j in priceEntry.drinks){
+                        if(priceEntry.drinks[j].id == consumptionEntries[i].drink){
+                            totalBalance -= priceEntry.drinks[j].price * consumptionEntries[i].quantity;
+                        }
+                    }
                     callBack(totalBalance);
-                }
-            });
+                });
+            }
+            if(empty){
+                callBack(totalBalance);
+            }
+        });
     });
 };
