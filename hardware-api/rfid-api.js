@@ -14,6 +14,54 @@ var code = '';
 
 var rfidApi = {};
 var socket = {};
+socket.configdata = {
+    "global": {
+        "configmode": true,
+        "devicenameprefix": "device",
+        "clientnameprefix": "client",
+        "configfilepath": "/Users/hex0r/BitBucket/stockings/source/config.json",
+        "port": 4217
+    },
+    "clients": {
+        "client00": {
+            "_id": "client00",
+            "name": "ADMIN",
+            "type": "adminpanel",
+            "maxsockets": 99999,
+            "view": "adminpanel"
+        },
+        "client01": {
+            "_id": "client01",
+            "name": "Kasse 1",
+            "type": "cashpanel",
+            "maxsockets": 1,
+            "idd": "device01",
+            "view": "cashpanel"
+        },
+        "client02": {
+            "_id": "client02",
+            "name": "Kasse 2",
+            "type": "cashpanel",
+            "maxsockets": 1,
+            "idd": "device02",
+            "view": "cashpanel"
+        }
+    },
+    "devices": {
+        "device01": {
+            "_id": "device01",
+            "type": "idd",
+            "name": "RFID Device1",
+            "hid": "USB_02xd82jf"
+        },
+        "device02": {
+            "_id": "device02",
+            "type": "idd",
+            "name": "RFID Device2",
+            "hid": "USB_02xd82jh"
+        }
+    }
+};
 var deviceNumber = 0;
 
 socket.emit = function (a, b) {
@@ -39,8 +87,8 @@ rfidApi.listenForScan = function () {
                     getmac.getMac(function (err, macAddress) {
                         if (err) console.error(err);
                         socket.emit('iddscan', {
-                            'hid': '' + macAddress + devices[i].serialNumber,
-                            'idk': '' + code
+                            'hid': '' + macAddress + devices[i].serialNumber+'',
+                            'idk': '' + code+''
                         });
                     });
 
@@ -60,40 +108,50 @@ rfidApi.listenForScan = function () {
 monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', function (scannedDevices, err) {
 
     scannedDevices.serialNumber = '' + deviceNumber;
+
     devices.push(scannedDevices);
-    getmac.getMac(function (err, macAddress) {
+
+                getmac.getMac(function (err, macAddress) {
         if (err) console.error(err);
         if (socket.configdata.global.configmode == true) {
             socket.emit('iddplugin', {
-                'hid': '' + macAddress + '-' + deviceNumber
+                'hid': '' + macAddress + '-' + deviceNumber+''
             });
         } else {
             for (var dev in socket.configdata.devices) {
                 if (socket.configdata.devices[dev].hid === '' + macAddress + '-' + devices.length) {
                     socket.emit('iddplugin', {
-                        'hid': '' + macAddress + '-' + deviceNumber
+                        'hid': '' + macAddress + '-' + deviceNumber+''
                     });
                 }
             }
         }
+        deviceNumber++;
 
     });
 
-    deviceNumber++;
-    for (var i in devices) {
-        console.log(devices[i].serialNumber);
-    }
+
 });
 
 monitor.on('remove:' + constants.VENDORID + ':' + constants.PRODUCTID + '', function (scannedDevices, err) {
     getmac.getMac(function (err, macAddress) {
         if (err) throw err;
         socket.emit('iddremove', {
-            'hid': '' + macAddress + '-' + scannedDevices.serialNumber,
-            'idk': '' + code
+                
+            'hid': '' + macAddress + '-' + getDevice(scannedDevices.path).serialNumber+''
         });
     });
 });
+                
+                function getDevice(dPath) {
+                    for(var i in devices) {
+                      if(devices[i].path === dPath) {
+                        devices[i].path = ''; //Bei remove altes gerät path löschen, damit bei neuem verbinden auf gleichen path nur 1 Gerät gefunden wird
+                        return devices[i];    
+                    }
+                }
+                }
+               
 
 /*
 socket.on(‘disconnect’, function (data) {
