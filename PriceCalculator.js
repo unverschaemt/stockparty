@@ -1,6 +1,7 @@
 var priceHistoryInterface = require('./database/PriceHistoryInterface');
 var drinkInterface = require('./database/DrinkInterface');
 var config = require('./connection/config.js');
+var triggerFunctions = require('./triggerfunctions.js');
 
 var m = module.exports = {};
 
@@ -86,7 +87,8 @@ calcPriceForDrink = function (drink) {
 }
 
 saveNewDrinkPricesToDatabase = function (drinks) {
-    priceHistoryInterface.addPriceHistory(new Date().getTime(), drinks, function cb() {
-        //TODO: notify new history entry was created
+    var data = {'time': new Date().getTime(), 'drinks': drinks};
+    priceHistoryInterface.addPriceHistory(data, function cb() {
+        triggerFunctions.onNewPriceEntry(data);
     });
 }

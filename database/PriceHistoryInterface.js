@@ -2,10 +2,10 @@ var PriceHistory = require('./models/PriceHistory');
 
 var m = module.exports = {};
 
-m.addPriceHistory = function (time, drinks, cb) {
+m.addPriceHistory = function (data, cb) {
     var priceHistory = new PriceHistory({
-        time: time,
-        drinks: drinks
+        time: data.time,
+        drinks: data.drinks
     });
     priceHistory.save(function (err, priceHistory) {
         if (err) return console.error(err);
