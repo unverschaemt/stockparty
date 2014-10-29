@@ -14,17 +14,17 @@ m.getPriceEntry = function (callBack) {
     })
 };
 
-m.buyDrinks = function (priceID, guestID, drinks, callBack) {
+m.buyDrinks = function (data, callBack) {
     var price = 0;
     var received = 0;
-    for(var i in drinks){
-        getPriceOfDrink(priceID, drinks[i].drinkID, function cb(obj){
-            price += obj*drinks[i].quantity;
+    for(var i in data.drinks){
+        getPriceOfDrink(data.priceID, data.drinks[i].drinkID, function cb(obj){
+            price += obj*data.drinks[i].quantity;
             received++;
-            if(drinks.length == received){
-                guestInterface.getBalanceOfGuest(guestID, function cb(obj){
+            if(data.drinks.length == received){
+                guestInterface.getBalanceOfGuest(data.guestID, function cb(obj){
                     if(price < obj){
-                        addConsumption(drinks, guestID, priceID, callBack);
+                        addConsumption(data.drinks, data.guestID, data.priceID, callBack);
                     }else{
                         callBack(false);
                     }

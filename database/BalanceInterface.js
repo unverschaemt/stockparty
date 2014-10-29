@@ -3,25 +3,25 @@ var guestInterface = require('./GuestInterface');
 
 var m = module.exports = {};
 
-m.addBalance = function (guest, balance, cb) {
-    if (balance < 0) {
-        guestInterface.getBalanceOfGuest(guest, callBack(total) {
-            if (total - balance < 0) {
+m.addBalance = function (data, cb) {
+    if (data.balance < 0) {
+        guestInterface.getBalanceOfGuest(data.guest, callBack(total) {
+            if (total - data.balance < 0) {
                 cb(false);
             } else {
-                saveBalance(guest, balance, cb);
+                saveBalance(data, cb);
             }
         });
     } else {
-        saveBalance(guest, balance, cb);
+        saveBalance(data, cb);
     }
 };
 
-saveBalance = function (guest, balance, cb) {
+saveBalance = function (data, cb) {
     var balance = new Balance({
-        guest: guest,
+        guest: data.guest,
         time: new Date().getTime(),
-        balance: balance
+        balance: data.balance
     });
     balance.save(function (err, balance) {
         if (err) return cb(false);
