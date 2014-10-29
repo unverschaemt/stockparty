@@ -10,8 +10,7 @@ m.device = function (_id, type, name, hid, client) {
     this.client = client;
 };
 
-m.client = function (_id, type, name, devices) {
-    var devices = (devices && true) || false;
+m.client = function (_id, type, name) {
     this._id = _id;
     this.name = name;
     this.type = type;
@@ -19,29 +18,24 @@ m.client = function (_id, type, name, devices) {
     case 'adminpanel':
         this.maxsockets = 9999999;
         this.view = 'adminpanel';
-        this.devices = false;
         break;
     case 'cashpanel':
         this.maxsockets = 1;
         this.idd = '';
         this.cashscreen = '';
         this.view = 'cashpanel';
-        this.devices = devices;
         break;
     case 'cashscreen':
         this.maxsockets = 1;
         this.view = 'cashscreen';
-        this.devices = devices;
         break;
     case 'monitor':
         this.maxsockets = 1;
         this.view = 'monitor';
-        this.devices = devices;
         break;
     case 'connector':
         this.maxsockets = 9999999;
         this.view = 'adminpanel';
-        this.devices = devices;
         break;
     }
 };
@@ -58,8 +52,7 @@ m.data = {
             'name': 'ADMIN',
             'type': 'adminpanel',
             'maxsockets': 99999,
-            'view': 'adminpanel',
-            'devices': false
+            'view': 'adminpanel'
         },
         'client01': {
             '_id': 'client01',
@@ -67,8 +60,7 @@ m.data = {
             'type': 'cashpanel',
             'maxsockets': 1,
             'idd': 'device01',
-            'view': 'cashpanel',
-            'devices': true
+            'view': 'cashpanel'
         },
         'client02': {
             '_id': 'client02',
@@ -76,9 +68,8 @@ m.data = {
             'type': 'cashpanel',
             'maxsockets': 1,
             'idd': 'device02',
-            'view': 'cashpanel',
-            'devices': false
-        },
+            'view': 'cashpanel'
+        }
     },
     'devices': {
         'device01': {
@@ -92,7 +83,7 @@ m.data = {
             'type': 'idd',
             'name': 'RFID Device2',
             'hid': 'USB_02xd82jh'
-        },
+        }
     }
 }
 m.runtime = {

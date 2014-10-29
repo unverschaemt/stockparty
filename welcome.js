@@ -1,0 +1,23 @@
+
+var colors = require('colors');
+console.log('>');
+console.log('>  =================================================================='.green.bold);
+console.log('>  || - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  ||'.blue.bold);
+console.log('>  ||  $$$$$$$$$$  $$$$$$$$$$   $$$$$$$$   $$$$$$$$$$  $$     $$$  ||'.blue.bold);
+console.log('>  ||  $$              $$      $$      $$  $$          $$   $$$    ||'.blue.bold);
+console.log('>  ||  $$              $$      $$      $$  $$          $$ $$$      ||'.blue.bold);
+console.log('>  ||  $$$$$$$$$$      $$      $$      $$  $$          $$$$        ||'.blue.bold);
+console.log('>  ||          $$      $$      $$      $$  $$          $$ $$$      ||'.blue.bold);
+console.log('>  ||          $$      $$      $$      $$  $$          $$   $$$    ||'.blue.bold);
+console.log('>  ||  $$$$$$$$$$      $$       $$$$$$$$   $$$$$$$$$$  $$     $$$  ||'.blue.bold);
+console.log('>  ||                                                              ||'.blue.bold);
+console.log('>  ||  $$$$$$$$     $$$$$$$$   $$$$$$$$    $$$$$$$$$$  $$      $$  ||'.blue.bold);
+console.log('>  ||  $$      $$  $$      $$  $$      $$      $$       $$    $$   ||'.blue.bold);
+console.log('>  ||  $$      $$  $$      $$  $$      $$      $$        $$  $$    ||'.blue.bold);
+console.log('>  ||  $$$$$$$$    $$$$$$$$$$  $$$$$$$$        $$         $$$$     ||'.blue.bold);
+console.log('>  ||  $$          $$      $$  $$ $$$          $$          $$      ||'.blue.bold);
+console.log('>  ||  $$          $$      $$  $$   $$$        $$          $$      ||'.blue.bold);
+console.log('>  ||  $$          $$      $$  $$     $$$      $$          $$      ||'.blue.bold);
+console.log('>  || - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  ||'.blue.bold);
+console.log('>  =================================================================='.green.bold);
+console.log('>');

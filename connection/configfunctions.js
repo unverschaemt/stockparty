@@ -1,7 +1,31 @@
 var utils = require('../utils.js');
 var config = require('./config.js');
+var colors = require('colors');
+var fs = require('fs');
 
 var m = module.exports = {};
+
+m.loadInitialConfigSync = function (file) {
+    console.log(('Loading Config File from '+file+'... ').yellow);
+    var file = file || __dirname+'/config.json';
+    var data = fs.readFileSync(file);
+    config.data = JSON.parse(data);
+    config.data.global.configfilepath = file;
+    console.log(('Loaded Config File from '+config.data.global.configfilepath).green);
+};
+
+m.saveConfig = function () {
+    fs.writeFile(config.data.global.configfilepath, JSON.stringify(config.data), function(err){
+        if(err) {
+            console.log(('ERROR: Failed to save Config File to '+config.data.global.configfilepath).red);
+
+        }
+        console.log(('Saved Config File to '+config.data.global.configfilepath).green);
+    });
+    console.log(('Saving Config File to '+config.data.global.configfilepath+'...').yellow);
+    //config.data = JSON.parse(data);
+    //config.data.global.configfilepath = file;
+};
 
 m.setConfig = function (conf) {
     config.data = conf;
@@ -25,6 +49,7 @@ m.getSerializedRuntime = function () {
 };
 
 m.updateConfigAll = function (arr) {
+    m.saveConfig();
     var runtime = m.getSerializedRuntime();
     for (var cid in config.data.clients) {
         if (config.runtime[cid] && config.runtime[cid].sockets && config.runtime[cid].sockets.length > 0) {
@@ -37,8 +62,7 @@ m.updateConfigAll = function (arr) {
     }
 };
 
-m.createClient = function (type, name, devices) {
-    var devices = (devices && true) || false;
+m.createClient = function (type, name) {
     if (config.data.global.configmode) {
         var cid = '';
         var found = false;
@@ -54,7 +78,7 @@ m.createClient = function (type, name, devices) {
             console.error('looped to long [createClient] in connection/config.js');
             return false;
         }
-        config.data.clients[cid] = new config.client(cid, type, name, devices);
+        config.data.clients[cid] = new config.client(cid, type, name);
         m.updateConfigAll(['clients', cid]);
         return cid;
     } else {
