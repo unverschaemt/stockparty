@@ -1,7 +1,7 @@
 var priceHistoryInterface = require('./database/PriceHistoryInterface');
 var drinkDatabaseInterface = require('./database/DrinkInterface');
 var consumptionInterface = require('./database/ConsumptionInterface');
-var guestInterface = requre('./database/GuestInterface');
+var guestInterface = require('./database/GuestInterface');
 var balanceInterface = require('./database/BalanceInterface');
 var priceCalculator = require('./PriceCalculator');
 

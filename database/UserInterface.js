@@ -2,12 +2,12 @@ var User = require('./models/User');
 
 var m = module.exports = {};
 
-m.addUser = function (userName, password, name, role, cb) {
+m.addUser = function (data, cb) {
     var user = new User({
-        userName: userName,
-        password: password,
-        name: name,
-        role: role
+        userName: data.userName,
+        password: data.password,
+        name: data.name,
+        role: data.role
     });
     user.save(function (err, user) {
         if (err) return console.error(err);
@@ -46,9 +46,9 @@ m.getUser = function (userName, error, cb) {
     });
 };
 
-m.setUserInfo = function (userName, data, error, cb) {
+m.setUserInfo = function (data, error, cb) {
     User.findOne({
-        userName: userName
+        userName: data.userName
     }, function (err, user) {
         if (err) {
             error(err);
