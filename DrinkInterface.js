@@ -60,7 +60,7 @@ m.triggerStockCrash = function (decision) {
 
 getPriceOfDrink = function (priceID, drinkID, callBack){
     //TODO: implement price entry cache, so you don't have to make a database request when several drinks are bought with the same priceID
-    priceHistoryInterface.getPricesForTime(priceID, function error(err){console.log(err)}, function cb(obj){
+    priceHistoryInterface.getPricesForID(priceID, function error(err){console.log(err)}, function cb(obj){
         for(var i in obj.drinks){
               if(obj.drinks[i].id == drinkID){
                 callBack(obj.drinks[i].price);

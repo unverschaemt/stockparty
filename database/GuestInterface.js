@@ -104,7 +104,7 @@ m.getBalanceOfGuest = function (guestID, callBack){
             var empty = true;
             for(var i in consumptionEntries){
                 empty = false;
-                priceHistoryInterface.getPricesForTime(consumptionEntries[i].priceID, function error(err){console.log(err)}, function cb(priceEntry){
+                priceHistoryInterface.getPricesForID(consumptionEntries[i].priceID, function error(err){console.log(err)}, function cb(priceEntry){
                     for(var j in priceEntry.drinks){
                         if(priceEntry.drinks[j].id == consumptionEntries[i].drink){
                             totalBalance -= priceEntry.drinks[j].price * consumptionEntries[i].quantity;
