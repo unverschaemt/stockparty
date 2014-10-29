@@ -12,12 +12,9 @@ var manuallySetPrices = [];
 
 m.calculatePrices = function () {
     drinkInterface.getAllDrinks(function error(err) {}, function cb(obj) {
-        var drinksWithPrices = [];
+        var drinksWithPrices = {};
         for (var i in obj) {
-            drinksWithPrices.push({
-                'id': obj[i]._id,
-                'price': calcPriceForDrink(obj[i])
-            });
+            drinksWithPrices[obj[i]._id] = {'id': obj[i]._id, 'price': calcPriceForDrink(obj[i])};
         }
         saveNewDrinkPricesToDatabase(drinksWithPrices);
     });
