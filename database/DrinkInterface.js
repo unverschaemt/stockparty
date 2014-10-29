@@ -15,9 +15,9 @@ m.addDrink = function (name, priceMin, priceMax, cb) {
     });
 };
 
-m.deleteDrink = function (name, error, cb) {
+m.deleteDrink = function (id, error, cb) {
     Drink.findOne({
-        name: name
+        _id: id
     }, function (err, drink) {
         if (err) {
             error(err);
@@ -58,9 +58,9 @@ m.deleteAllDrinks = function (error, cb) {
     });
 };
 
-m.getDrink = function (name, error, cb) {
+m.getDrink = function (id, error, cb) {
     Drink.findOne({
-        name: name
+        _id: id
     }, function (err, drink) {
         if (err) {
             error(err);
@@ -70,9 +70,9 @@ m.getDrink = function (name, error, cb) {
     });
 };
 
-m.setDrinkInfo = function (name, data, error, cb) {
+m.setDrinkInfo = function (id, data, error, cb) {
     Drink.findOne({
-        name: name
+        _id: id
     }, function (err, drink) {
         if (err) {
             error(err);
@@ -105,7 +105,7 @@ m.getAllDrinks = function (error, cb) {
         } else {
             var ex = {};
             for (var i in drinks) {
-                ex[drinks[i].name] = drinks[i];
+                ex[drinks[i]._id] = drinks[i];
             }
             var temp = JSON.parse(JSON.stringify(ex));
             cb(temp);

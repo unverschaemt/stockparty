@@ -12,7 +12,7 @@ m.calculatePrices = function () {
     drinkInterface.getAllDrinks(function error(err){}, function cb(obj){
         var drinksWithPrices = [];
         for(var i in obj){
-            drinksWithPrices.push({'id': obj[i].name, 'price': calcPriceForDrink(obj[i])});
+            drinksWithPrices.push({'id': obj[i]._id, 'price': calcPriceForDrink(obj[i])});
         }
         saveNewDrinkPricesToDatabase(drinksWithPrices);
     });
@@ -70,7 +70,7 @@ goCalculate = function(){
 enableStockCrash = function (){
     this.pause();
     
-    drinkInterface.getAllDrinks(function error(err){}, function cb(obj){
+    drinkInterface.getAllDrinks(function error(err){console.log(err)}, function cb(obj){
         var drinksWithPrices = [];
         for(var i in obj){
             drinksWithPrices.push({'id': obj[i]._id, 'price': obj[i].priceMin});
@@ -83,10 +83,10 @@ enableStockCrash = function (){
 calcPriceForDrink = function(drink){    
     //TODO: create an useful algorithm
     var price;
-    var manualPrice = manuallySetPrices[drink.name];
+    var manualPrice = manuallySetPrices[drink._id];
     if(manualPrice){
         price = manualPrice;
-        delete manuallySetPrices[drink.name];
+        delete manuallySetPrices[drink._id];
     }else{
         price = Math.random() * (drink.priceMax - drink.priceMin) + drink.priceMin;
     }
