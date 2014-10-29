@@ -1,6 +1,7 @@
 var priceHistoryInterface = require('./database/PriceHistoryInterface');
 var drinkDatabaseInterface = require('./database/DrinkInterface');
 var consumptionInterface = require('./database/ConsumptionInterface');
+var guestInterface = requre('./database/GuestInterface');
 var balanceInterface = require('./database/BalanceInterface');
 var priceCalculator = require('./PriceCalculator');
 
@@ -21,7 +22,7 @@ m.buyDrinks = function (priceID, guestID, drinks, callBack) {
             price += obj*drinks[i].quantity;
             received++;
             if(drinks.length == received){
-                getBalanceOfGuest(guestID, function cb(obj){
+                guestInterface.getBalanceOfGuest(guestID, function cb(obj){
                     if(price < obj){
                         addConsumption(drinks, guestID, priceID, callBack);
                     }else{
@@ -55,30 +56,6 @@ m.setDrink = function (drinkID, data) {
 
 m.triggerStockCrash = function (decision) {
     priceCalculator.triggerStockCrash(decision);
-};
-
-getBalanceOfGuest = function (guestID, callBack){
-    var totalBalance = 0;
-    balanceInterface.getTotalForGuest(guestID, function error(err){console.log(err)}, function cb(balance){
-        totalBalance = balance;
-        consumptionInterface.getConsumptionForGuest(guestID, function error(err){console.log(err)}, function cb(consumptionEntries){
-            var empty = true;
-            for(var i in consumptionEntries){
-                empty = false;
-                priceHistoryInterface.getPricesForTime(consumptionEntries[i].priceID, function error(err){console.log(err)}, function cb(priceEntry){
-                    for(var j in priceEntry.drinks){
-                        if(priceEntry.drinks[j].id == consumptionEntries[i].drink){
-                            totalBalance -= priceEntry.drinks[j].price * consumptionEntries[i].quantity;
-                        }
-                    }
-                    callBack(totalBalance);
-                });
-            }
-            if(empty){
-                callBack(totalBalance);
-            }
-        });
-    });
 };
 
 getPriceOfDrink = function (priceID, drinkID, callBack){
