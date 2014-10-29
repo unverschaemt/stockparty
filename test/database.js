@@ -371,7 +371,7 @@ describe('Database Interfaces', function(){
         it('should add a priceHistory to database', function(done){
             priceHistoryInterface.addPriceHistory(priceHistoryToCreate.time, priceHistoryToCreate.drinks, function cb(){
                 
-                priceHistoryInterface.getPricesForTime(priceHistoryToCreate.time, function error(err){}, function cb(obj){
+                priceHistoryInterface.getPricesForID(priceHistoryToCreate.time, function error(err){}, function cb(obj){
                     for(var i in obj){
                         assert.equal(priceHistoryToCreate.time, obj[i].time);
                     }

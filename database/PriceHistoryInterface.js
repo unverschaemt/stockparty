@@ -39,8 +39,8 @@ m.deleteAllPriceHistoryEntries = function (error, cb) {
     });
 };
 
-m.getPricesForTime = function (time, error, cb) {
-    PriceHistory.findOne({time: time}, function (err, historyEntry) {
+m.getPricesForID = function (id, error, cb) {
+    PriceHistory.findOne({_id: id}, function (err, historyEntry) {
         if (err) {
             error(err);
         } else {

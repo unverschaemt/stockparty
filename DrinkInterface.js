@@ -1,6 +1,7 @@
 var priceHistoryInterface = require('./database/PriceHistoryInterface');
 var drinkDatabaseInterface = require('./database/DrinkInterface');
 var consumptionInterface = require('./database/ConsumptionInterface');
+var guestInterface = requre('./database/GuestInterface');
 var balanceInterface = require('./database/BalanceInterface');
 var priceCalculator = require('./PriceCalculator');
 
@@ -13,17 +14,17 @@ m.getPriceEntry = function (callBack) {
     })
 };
 
-m.buyDrinks = function (priceID, guestID, drinks, callBack) {
+m.buyDrinks = function (data, callBack) {
     var price = 0;
     var received = 0;
-    for(var i in drinks){
-        getPriceOfDrink(priceID, drinks[i].drinkID, function cb(obj){
-            price += obj*drinks[i].quantity;
+    for(var i in data.drinks){
+        getPriceOfDrink(data.priceID, data.drinks[i].drinkID, function cb(obj){
+            price += obj*data.drinks[i].quantity;
             received++;
-            if(drinks.length == received){
-                getBalanceOfGuest(guestID, function cb(obj){
+            if(data.drinks.length == received){
+                guestInterface.getBalanceOfGuest(data.guestID, function cb(obj){
                     if(price < obj){
-                        addConsumption(drinks, guestID, priceID, callBack);
+                        addConsumption(data.drinks, data.guestID, data.priceID, callBack);
                     }else{
                         callBack(false);
                     }
@@ -57,33 +58,9 @@ m.triggerStockCrash = function (decision) {
     priceCalculator.triggerStockCrash(decision);
 };
 
-getBalanceOfGuest = function (guestID, callBack){
-    var totalBalance = 0;
-    balanceInterface.getTotalForGuest(guestID, function error(err){console.log(err)}, function cb(balance){
-        totalBalance = balance;
-        consumptionInterface.getConsumptionForGuest(guestID, function error(err){console.log(err)}, function cb(consumptionEntries){
-            var empty = true;
-            for(var i in consumptionEntries){
-                empty = false;
-                priceHistoryInterface.getPricesForTime(consumptionEntries[i].priceID, function error(err){console.log(err)}, function cb(priceEntry){
-                    for(var j in priceEntry.drinks){
-                        if(priceEntry.drinks[j].id == consumptionEntries[i].drink){
-                            totalBalance -= priceEntry.drinks[j].price * consumptionEntries[i].quantity;
-                        }
-                    }
-                    callBack(totalBalance);
-                });
-            }
-            if(empty){
-                callBack(totalBalance);
-            }
-        });
-    });
-};
-
 getPriceOfDrink = function (priceID, drinkID, callBack){
     //TODO: implement price entry cache, so you don't have to make a database request when several drinks are bought with the same priceID
-    priceHistoryInterface.getPricesForTime(priceID, function error(err){console.log(err)}, function cb(obj){
+    priceHistoryInterface.getPricesForID(priceID, function error(err){console.log(err)}, function cb(obj){
         for(var i in obj.drinks){
               if(obj.drinks[i].id == drinkID){
                 callBack(obj.drinks[i].price);
