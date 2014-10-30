@@ -11,6 +11,7 @@ var m = module.exports = {};
 m.use = function (socket) {
 
     socket.on('iddplugin', function (data) {
+        console.log('iddplugin',data);
         var client = config.data.clients[socket.clientid];
         var found = false;
         var deviceId = "";
@@ -23,11 +24,12 @@ m.use = function (socket) {
         }
         if (!found) {
             console.log("New Device");
-            config.createDevice('idd', 'IDD Device', data.hid, socket.clientid);
+            configfunctions.createDevice('idd', 'IDD Device', data.hid, socket.clientid);
         }
     });
 
     socket.on('iddremove', function (data) {
+        console.log('iddremove',data);
         var client = config.data.clients[socket.clientid];
         for (var did in config.data.devices) {
             if (config.data.devices[did].type === 'idd' && config.data.devices[did].hid === data.hid) {

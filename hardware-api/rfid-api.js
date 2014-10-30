@@ -12,9 +12,9 @@ var devices = [];
 
 var code = '';
 
-var rfidApi = {};
-var socket = {};
-socket.configdata = {
+var rfidApi = module.exports = {};
+//var socket = {};
+/*socket.configdata = {
     "global": {
         "configmode": true,
         "devicenameprefix": "device",
@@ -61,11 +61,11 @@ socket.configdata = {
             "hid": "USB_02xd82jh"
         }
     }
-};
+};*/
 
-socket.emit = function (a, b) {
+/*socket.emit = function (a, b) {
     console.log(a + ' => ' + b.hid);
-}
+}*/
 
 
 rfidApi.use = function (socket) {
@@ -97,7 +97,7 @@ rfidApi.listenForScan = function () {
                         console.log(code);
                         getmac.getMac(function (err, macAddress) {
                             if (err) console.error(err);
-                            socket.emit('iddscan', {
+                            rfidApi.socket.emit('iddscan', {
                                 'hid': '' + macAddress + devices[i].serialNumber + '',
                                 'idk': '' + code + ''
                             });
@@ -140,14 +140,14 @@ monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', functio
 
     getmac.getMac(function (err, macAddress) {
         if (err) console.error(err);
-        if (socket.configdata.global.configmode == true) {
-            socket.emit('iddplugin', {
+        if (rfidApi.socket.configdata.config.global.configmode == true) {
+            rfidApi.socket.emit('iddplugin', {
                 'hid': '' + macAddress + '-' + scannedDevices.serialNumber + ''
             });
         } else {
-            for (var dev in socket.configdata.devices) {
-                if (socket.configdata.devices[dev].hid === '' + macAddress + '-' + scannedDevices.serialNumber) {
-                    socket.emit('iddplugin', {
+            for (var dev in rfidApi.socket.configdata.config.devices) {
+                if (rfidApi.socket.configdata.config.devices[dev].hid === '' + macAddress + '-' + scannedDevices.serialNumber) {
+                    rfidApi.socket.emit('iddplugin', {
                         'hid': '' + macAddress + '-' + scannedDevices.serialNumber + ''
                     });
                 }
@@ -163,7 +163,7 @@ monitor.on('remove:' + constants.VENDORID + ':' + constants.PRODUCTID + '', func
     nullDevice(scannedDevices.locationId);
     getmac.getMac(function (err, macAddress) {
         if (err) throw err;
-        socket.emit('iddremove', {
+        rfidApi.socket.emit('iddremove', {
             'hid': '' + macAddress + '-' + serNumber + ''
         });
     });
@@ -195,5 +195,5 @@ socket.on(‘disconnect’, function (data) {
 
 
 
-rfidApi.use(socket);
+//rfidApi.use(socket);
 //rfidApi.listenForScan();
