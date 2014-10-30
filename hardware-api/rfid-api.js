@@ -1,4 +1,3 @@
-var hid = require('hidstream');
 var getmac = require('getmac');
 var monitor = require('usb-detection');
 
@@ -12,9 +11,11 @@ var devices = [];
 
 var code = '';
 
-var rfidApi = module.exports = {};
-//var socket = {};
-/*socket.configdata = {
+var rfidApi = {};
+/*
+var socket = {};
+
+socket.configdata = {
     "global": {
         "configmode": true,
         "devicenameprefix": "device",
@@ -61,12 +62,12 @@ var rfidApi = module.exports = {};
             "hid": "USB_02xd82jh"
         }
     }
-};*/
+};
 
-/*socket.emit = function (a, b) {
-    console.log(a + ' => ' + b.hid);
-}*/
-
+socket.emit = function (a, b) {
+    console.log(a + ' => ' + b);
+}
+*/
 
 rfidApi.use = function (socket) {
     rfidApi.socket = socket;
@@ -75,45 +76,6 @@ rfidApi.use = function (socket) {
 
 /* Listens for a scan on all available RFID Readers */
 rfidApi.listenForScan = function () {
-    var pathIndex = -1;
-    var allDevices = hid.devices();
-    var devicePaths = [];
-    for (var j in allDevices) {
-        if (allDevices[j].productId === constants.PRODUCTID && allDevices[j].vendorId === constants.VENDORID) {
-            devicePaths.push(allDevices[j].path);
-        }
-    }
-    for (var i in devices) {
-        if (devices[i]) {
-            pathIndex++;
-
-            var rfidReader = new hid.device(devicePaths[pathIndex]);
-
-            rfidReader.on('data', function (dat) {
-                var c = dat.charCodes[0];
-                if (c != null) {
-                    if (c === '\n') { // /n at the end of every code
-                        console.log('data.received:');
-                        console.log(code);
-                        getmac.getMac(function (err, macAddress) {
-                            if (err) console.error(err);
-                            rfidApi.socket.emit('iddscan', {
-                                'hid': '' + macAddress + devices[i].serialNumber + '',
-                                'idk': '' + code + ''
-                            });
-                        });
-
-                        code = '';
-                    } else {
-                        code += c;
-                    }
-                }
-            });
-            rfidReader.on('error', function (err) {
-                console.warn(err);
-            });
-        }
-    }
 
 }
 //TODO: Pfad holen und listener registrieren, Pfad mit node-hid möglich ?!
@@ -126,27 +88,26 @@ monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', functio
         for (var i in devices) {
             if (devices[i] == null) {
                 scannedDevices.serialNumber = '' + i;
-                devices[i] = scannedDevices;
+                devices[i] = scannedDevices;				
                 break;
 
 
             } else {
                 scannedDevices.serialNumber = '' + devices.length;
-                devices.push(scannedDevices);
+                devices.push(scannedDevices);				
 
             }
         }
     }
-
     getmac.getMac(function (err, macAddress) {
         if (err) console.error(err);
-        if (rfidApi.socket.configdata.config.global.configmode == true) {
+        if (rfidApi.socket.configdata.global.configmode == true) {
             rfidApi.socket.emit('iddplugin', {
                 'hid': '' + macAddress + '-' + scannedDevices.serialNumber + ''
             });
         } else {
-            for (var dev in rfidApi.socket.configdata.config.devices) {
-                if (rfidApi.socket.configdata.config.devices[dev].hid === '' + macAddress + '-' + scannedDevices.serialNumber) {
+            for (var dev in rfidApi.socket.configdata.devices) {
+                if (rfidApi.socket.configdata.devices[dev].hid === '' + macAddress + '-' + scannedDevices.serialNumber) {
                     rfidApi.socket.emit('iddplugin', {
                         'hid': '' + macAddress + '-' + scannedDevices.serialNumber + ''
                     });
@@ -196,4 +157,3 @@ socket.on(‘disconnect’, function (data) {
 
 
 //rfidApi.use(socket);
-//rfidApi.listenForScan();
