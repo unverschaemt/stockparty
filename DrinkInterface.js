@@ -8,10 +8,8 @@ var priceCalculator = require('./PriceCalculator');
 var m = module.exports = {};
 var priceEntryCache = {};
 
-m.getPriceEntry = function (callBack) {
-    priceHistoryInterface.getLatestEntry(function error(err) {
-        console.log(err)
-    }, function cb(obj) {
+m.getPriceEntry = function (error, callBack) {
+    priceHistoryInterface.getLatestEntry(error, function cb(obj) {
         callBack(obj);
     })
 };

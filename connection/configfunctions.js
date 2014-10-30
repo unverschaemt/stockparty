@@ -13,6 +13,12 @@ m.loadInitialConfigSync = function (file) {
     config.data.global.configfilepath = file;
     config.data.global.running = false;
     config.data.global.stockcrash = false;
+    for(var cid in config.data.clients){
+        config.runtime[cid] = {'sockets': []};
+    }
+    for(var did in config.data.devices){
+        config.runtime[did] = {'client': ''};
+    }
     console.log(('Loaded Config File from '+config.data.global.configfilepath).green);
 };
 
@@ -81,6 +87,7 @@ m.createClient = function (type, name) {
             return false;
         }
         config.data.clients[cid] = new config.client(cid, type, name);
+        config.runtime[cid] = {'sockets': []};
         m.updateConfigAll(['clients', cid]);
         return cid;
     } else {
@@ -123,6 +130,7 @@ m.createDevice = function (type, name, hid, client) {
             return false;
         }
         config.data.devices[did] = new config.device(did, type, name, hid, client);
+        config.runtime[did] = {'client': ''};
         m.updateConfigAll(['devices', did]);
         return did;
     } else {

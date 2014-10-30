@@ -34,7 +34,7 @@ var io = require('socket.io').listen(app.listen(config.data.global.port));
 // Login check
 io.use(function (socket, next) {
     console.log(socket.request.url);
-    if (socket.request._query.username && socket.request._query.password) {
+    if (socket.request._query.username && socket.request._query.password && socket.request._query.username === 'hans') {
         console.log("Super");
         next();
     } else  {

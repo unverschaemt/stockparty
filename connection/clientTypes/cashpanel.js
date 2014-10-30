@@ -54,6 +54,7 @@ m.use = function (socket) {
     configUpdateService.use(socket);
     iddService.use(socket);
     priceUpdateService.use(socket);
+    drinkUpdateService.use(socket);
 
     // Initial Data Push
 };
