@@ -75,50 +75,64 @@ rfidApi.use = function (socket) {
 
 /* Listens for a scan on all available RFID Readers */
 rfidApi.listenForScan = function () {
+    var pathIndex = -1;
+    var allDevices = hid.devices();
+    var devicePaths = [];
+    for (var j in allDevices) {
+        if (allDevices[j].productId === constants.PRODUCTID && allDevices[j].vendorId === constants.VENDORID) {
+            devicePaths.push(allDevices[j].path);
+        }
+    }
     for (var i in devices) {
-        var rfidReader = new hid.device(devices[i].path);
+        if (devices[i]) {
+            pathIndex++;
 
-        rfidReader.on('data', function (dat) {
-            var c = dat.charCodes[0];
-            if (c != null) {
-                if (c === '\n') { // /n at the end of every code
-                    console.log(code);
-                    getmac.getMac(function (err, macAddress) {
-                        if (err) console.error(err);
-                        socket.emit('iddscan', {
-                            'hid': '' + macAddress + devices[i].serialNumber + '',
-                            'idk': '' + code + ''
+            var rfidReader = new hid.device(devicePaths[pathIndex]);
+
+            rfidReader.on('data', function (dat) {
+                var c = dat.charCodes[0];
+                if (c != null) {
+                    if (c === '\n') { // /n at the end of every code
+                        console.log('data.received:');
+                        console.log(code);
+                        getmac.getMac(function (err, macAddress) {
+                            if (err) console.error(err);
+                            socket.emit('iddscan', {
+                                'hid': '' + macAddress + devices[i].serialNumber + '',
+                                'idk': '' + code + ''
+                            });
                         });
-                    });
 
-                    code = '';
-                } else {
-                    code += c;
+                        code = '';
+                    } else {
+                        code += c;
+                    }
                 }
-            }
-        });
-        rfidReader.on("error", function (err) {
-            console.warn(err);
-        });
+            });
+            rfidReader.on('error', function (err) {
+                console.warn(err);
+            });
+        }
     }
 
 }
+//TODO: Pfad holen und listener registrieren, Pfad mit node-hid möglich ?!
 monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', function (scannedDevices, err) {
     if (devices.length == 0) {
         scannedDevices.serialNumber = '0';
-                devices.push(scannedDevices);
+        devices.push(scannedDevices);
 
     } else {
         for (var i in devices) {
             if (devices[i] == null) {
                 scannedDevices.serialNumber = '' + i;
-                    devices[i] = scannedDevices;
+                devices[i] = scannedDevices;
                 break;
 
 
             } else {
                 scannedDevices.serialNumber = '' + devices.length;
-                    devices.push(scannedDevices);
+                devices.push(scannedDevices);
 
             }
         }
@@ -145,20 +159,20 @@ monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', functio
 });
 
 monitor.on('remove:' + constants.VENDORID + ':' + constants.PRODUCTID + '', function (scannedDevices, err) {
-                var serNumber = getDevice(scannedDevices.locationId).serialNumber;
-                 nullDevice(scannedDevices.locationId);
+    var serNumber = getDevice(scannedDevices.locationId).serialNumber;
+    nullDevice(scannedDevices.locationId);
     getmac.getMac(function (err, macAddress) {
         if (err) throw err;
         socket.emit('iddremove', {
-
             'hid': '' + macAddress + '-' + serNumber + ''
         });
     });
 });
 
+
 function getDevice(locId) {
     for (var i in devices) {
-        if (devices[i].locationId === locId) {
+        if (devices[i] && devices[i].locationId === locId) {
             return devices[i];
         }
     }
@@ -166,7 +180,7 @@ function getDevice(locId) {
 
 function nullDevice(locId) {
     for (var i in devices) {
-        if (devices[i].locationId === locId) {
+        if (devices[i] && devices[i].locationId === locId) {
             devices[i] = null;
         }
     }
@@ -182,4 +196,4 @@ socket.on(‘disconnect’, function (data) {
 
 
 rfidApi.use(socket);
-rfidApi.listenForScan();
+//rfidApi.listenForScan();
