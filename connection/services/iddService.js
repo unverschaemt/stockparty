@@ -40,6 +40,7 @@ m.use = function (socket) {
     });
 
     socket.on('iddscan', function (data) {
+        console.log('iddscan',data);
         var client = config.data.clients[socket.clientid];
         for (var did in config.data.devices) {
             if (config.data.devices[did].type === 'idd' && config.data.devices[did].hid === data.hid) {

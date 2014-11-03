@@ -14,7 +14,7 @@ var rfidReaders = [];
 var code = '';
 var allReaders = [];
 
-var rfidApi = {};
+var rfidApi = module.exports = {};
 
 //var socket = {};
 
@@ -113,9 +113,9 @@ console.log(arrIndex);
                                 'hid': '' + macAddress +'-'+devices[arrIndex].serialNumber + '',
                                 'idk': '' + code + ''
                             });
+                            code = '';
                         });
 
-                        code = '';
                     } else {
                         code += c;
                     }
@@ -160,13 +160,13 @@ monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', functio
 
     getmac.getMac(function (err, macAddress) {
         if (err) console.error(err);
-        if (rfidApi.socket.configdata.global.configmode == true) {
+        if (rfidApi.socket.configdata.config.global.configmode == true) {
             rfidApi.socket.emit('iddplugin', {
                 'hid': '' + macAddress + '-' + scannedDevices.serialNumber + ''
             });
         } else {
-            for (var dev in rfidApi.socket.configdata.devices) {
-                if (rfidApi.socket.configdata.devices[dev].hid === '' + macAddress + '-' + scannedDevices.serialNumber) {
+            for (var dev in rfidApi.socket.configdata.config.devices) {
+                if (rfidApi.socket.configdata.config.devices[dev].hid === '' + macAddress + '-' + scannedDevices.serialNumber) {
                     rfidApi.socket.emit('iddplugin', {
                         'hid': '' + macAddress + '-' + scannedDevices.serialNumber + ''
                     });
