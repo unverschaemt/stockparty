@@ -129,7 +129,7 @@ m.createDevice = function (type, name, hid, client) {
             console.error('looped to long [createDevice] in connection/config.js');
             return false;
         }
-        config.data.devices[did] = new config.device(did, type, name, hid, client);
+        config.data.devices[did] = new config.device(did, type, name, hid);
         config.runtime[did] = {'client': ''};
         m.updateConfigAll(['devices', did]);
         return did;

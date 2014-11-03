@@ -7,6 +7,7 @@ configfunctions.loadInitialConfigSync(__dirname+"/config.json");
 
 var express = require('express');
 var connection = require('./connection/connection.js');
+var login = require('./connection/login.js');
 var config = require('./connection/config.js');
 var mongoose = require('mongoose');
 require('socket.io-client');
@@ -32,7 +33,7 @@ var io = require('socket.io').listen(app.listen(config.data.global.port));
 
 
 // Login check
-io.use(function (socket, next) {
+/*io.use(function (socket, next) {
     console.log(socket.request.url);
     if (socket.request._query.username && socket.request._query.password && socket.request._query.username === 'hans') {
         console.log("Super");
@@ -42,7 +43,7 @@ io.use(function (socket, next) {
     }
     //if (socket.request.headers.cookie) return next();
     //next(new Error('Authentication error'));
-});
+});*/
 
 /*io.on('connection', function (socket) {
   socket.emit('news', { hello: 'world' });
@@ -69,8 +70,10 @@ var counter = 0;
 
 io.sockets.on('connection', function (socket) {
     console.log('Connected '+socket.id);
+    socket.loggedId = false;
 
-    connection.use(socket);
+    login.use(socket);
+    //connection.use(socket);
 
     socket.on('disconnect', function () {
         console.log('Disconnected '+socket.id);

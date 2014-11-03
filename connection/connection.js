@@ -11,19 +11,22 @@ var m = module.exports = {};
 m.use = function (socket) {
 
     //Initial onLogin Create View
-    socket.emit('view', {
-        'view': 'list',
-        'data': configfunctions.makeClientList()
-    });
+    socket.emitListView = function(){
+        socket.emit('view', {
+            'view': 'list',
+            'data': configfunctions.makeClientList()
+        });
+    }
     socket.sendError = function (msg) {
         socket.emit('err', {
             'msg': msg
         });
     };
 
-    socket.on('clientchoice', function (data) {
+    socket.on('clientchoice', function (data, error) {
         if (!(data.clientid && socket && config.data.clients[data.clientid])) {
-            return socket.sendError('Could not register');
+            error('Could not register');
+            return socket.emitListView('Could not register');
         }
         socket.clientid = data.clientid;
         if (c && c[config.data.clients[data.clientid].type]) {
@@ -31,12 +34,15 @@ m.use = function (socket) {
                 c[config.data.clients[data.clientid].type].use(socket);
             }
         } else {
-            return socket.sendError('No Client Type detected!');
+            error('No Client Type detected!');
+            return socket.emitListView('No Client Type detected!');
         }
     });
 
     socket.on('disconnect', function (data) {
 
     });
+
+    socket.emitListView();
 
 };

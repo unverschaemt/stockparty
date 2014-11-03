@@ -2,12 +2,11 @@ var utils = require('../utils.js');
 
 var m = module.exports = {};
 
-m.device = function (_id, type, name, hid, client) {
+m.device = function (_id, type, name, hid) {
     this._id = _id;
     this.type = type;
     this.name = name;
     this.hid = hid;
-    this.client = client;
 };
 
 m.client = function (_id, type, name) {
