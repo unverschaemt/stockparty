@@ -2,7 +2,6 @@ var config = require('../config.js');
 var configfunctions = require('../configfunctions.js');
 var drinkInterface = require('../../DrinkInterface.js');
 var priceHistoryInterface = require('../../database/PriceHistoryInterface.js');
-//var buy = require('buy.js');
 
 var m = module.exports = {};
 
