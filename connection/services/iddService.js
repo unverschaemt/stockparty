@@ -59,6 +59,10 @@ m.use = function (socket) {
         }
     });
 
+    socket.on('idderror', function (data) {
+        console.log('idderror',data);
+    });
+
     socket.on('disconnect', function (data) {
         var client = config.data.clients[socket.clientid];
         if (client.devices === true) {
