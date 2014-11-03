@@ -1,5 +1,7 @@
 
 var connection = require('./connection.js');
+var userInterface = require('../database/UserInterface.js');
+var md5 = require('MD5');
 var m = module.exports = {};
 
 m.acceptLogin = function(socket){
@@ -13,12 +15,18 @@ m.loginFail = function(socket, info){
 m.use = function(socket){
 
     socket.on('login', function(data, fn){
-        if(data.username === 'hans' && data.password === 'passi'){
-            m.acceptLogin(socket);
-        } else {
-            fn();
-            m.loginFail(socket, 'username invalid');
-        }
+        m.acceptLogin(socket);
+        /*userInterface.getUser(data.username, function(err){
+            fn(err);
+            m.loginFail(socket, err);
+        }, function(user){
+            if(user.password === md5(data.password)){
+               m.acceptLogin(socket);
+            } else {
+                fn();
+                m.loginFail(socket, 'username invalid');
+            }
+        });*/
     });
 
 };

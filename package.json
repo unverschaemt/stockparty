@@ -4,6 +4,7 @@
   "description": "System for a Stock Party",
   "main": "app.js",
   "dependencies": {
+    "MD5": "^1.2.1",
     "colors": "^1.0.3",
     "express": "^4.9.8",
     "getmac": "^1.0.6",
