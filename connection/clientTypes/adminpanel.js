@@ -3,6 +3,7 @@ var configfunctions = require('../configfunctions.js');
 var configUpdateService = require('../services/configUpdateService.js');
 var priceUpdateService = require('../services/priceUpdateService.js');
 var drinkUpdateService = require('../services/drinkUpdateService.js');
+var userService = require('../services/userService.js');
 var priceCalculator = require('../../PriceCalculator.js');
 var drinkInterface = require('../../DrinkInterface.js');
 
@@ -68,6 +69,7 @@ m.use = function (socket) {
     configUpdateService.use(socket);
     drinkUpdateService.use(socket);
     priceUpdateService.use(socket);
+    userService.use(socket);
 
 
     // Initial Data Push
