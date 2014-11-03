@@ -75,7 +75,7 @@ m.setUserInfo = function (data, error, cb) {
     });
 };
 
-m.init = function (error, cb) {
+m.init = function (error) {
     User.findOne({
         userName: 'admin'
     }, function (err, user) {
@@ -92,10 +92,7 @@ m.init = function (error, cb) {
                 admin.save(function (err, user) {
                     if (err) return console.error(err);
                     console.log("saved admin");
-                    cb(true);
                 });
-            }else{
-                cb(true);
             }
         }
     });
