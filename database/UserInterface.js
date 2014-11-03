@@ -1,4 +1,5 @@
 var User = require('./models/User');
+var config = require('../connection/config.js');
 
 var m = module.exports = {};
 
@@ -69,6 +70,32 @@ m.setUserInfo = function (data, error, cb) {
                         cb(user._id);
                     }
                 });
+            }
+        }
+    });
+};
+
+m.init = function (error, cb) {
+    User.findOne({
+        userName: 'admin'
+    }, function (err, user) {
+        if (err) {
+            error(err);
+        } else {
+            if(!user){
+                var admin = new User({
+                    userName: 'admin',
+                    password: 'admin',
+                    name: 'Administrator',
+                    role: {}
+                });
+                admin.save(function (err, user) {
+                    if (err) return console.error(err);
+                    console.log("saved admin");
+                    cb(true);
+                });
+            }else{
+                cb(true);
             }
         }
     });
