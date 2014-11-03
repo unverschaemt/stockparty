@@ -51,7 +51,11 @@ rfidApi.listenForScan = function (arrIndex) {
                 console.log('data.received:');
                 console.log(code);
                 getmac.getMac(function (err, macAddress) {
-                    if (err) console.error(err);
+                    if (err) {
+                        rfidApi.socket.emit('idderror',{
+                           'error' : err
+                        });
+                    }
                     rfidApi.socket.emit('iddscan', {
                         'hid': '' + macAddress + '-' + devices[arrIndex].serialNumber + '',
                         'idk': '' + code + ''
@@ -65,7 +69,9 @@ rfidApi.listenForScan = function (arrIndex) {
         }
     });
     rfidReader.on('error', function (err) {
-        console.warn(err);
+        rfidApi.socket.emit('idderror',{
+            'error' : err
+        });
     });
 
 }
@@ -102,7 +108,11 @@ monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', functio
     rfidApi.listenForScan(arrayIndex);
 
     getmac.getMac(function (err, macAddress) {
-        if (err) console.error(err);
+        if (err) {
+            rfidApi.socket.emit('idderror',{
+                'error' : err
+            });
+        }
         if (rfidApi.socket.configdata.config.global.configmode == true) {
             rfidApi.socket.emit('iddplugin', {
                 'hid': '' + macAddress + '-' + scannedDevices.serialNumber + ''
@@ -132,7 +142,11 @@ monitor.on('remove:' + constants.VENDORID + ':' + constants.PRODUCTID + '', func
     }
 
     getmac.getMac(function (err, macAddress) {
-        if (err) throw err;
+        if (err) {
+            rfidApi.socket.emit('idderror',{
+                'error' : err
+            });
+        }
         rfidApi.socket.emit('iddremove', {
             'hid': '' + macAddress + '-' + serNumber + ''
         });
