@@ -15,4 +15,18 @@ m.use = function (socket) {
     };
     // Initial Data Push
     socket.updateConfig(config.data, configfunctions.getSerializedRuntime());
-}
+};
+
+m.updateConfigBroadcast = function (arr) {
+    configfunctions.saveConfig();
+    var runtime = configfunctions.getSerializedRuntime();
+    for (var cid in config.data.clients) {
+        if (config.runtime[cid] && config.runtime[cid].sockets && config.runtime[cid].sockets.length > 0) {
+            for (var k in config.runtime[cid].sockets) {
+                if (config.runtime[cid].sockets[k].updateConfig) {
+                    config.runtime[cid].sockets[k].updateConfig(config.data, runtime, arr);
+                }
+            }
+        }
+    }
+};

@@ -6,9 +6,7 @@ var priceHistoryInterface = require('../../database/PriceHistoryInterface.js');
 var m = module.exports = {};
 
 // NOTE: Services in this module:
-// iddplugin: event => expected: {'hid': 'Hardware-ID'}
-// iddremove: event => expected: {'hid': 'Hardware-ID'}
-// iddscan: event => expected: {'hid': 'Hardware-ID','idk':'scanned rfid key (IDentificationKey)'}
+// priceUpdate: method => expected: {'all': boolean, 'entry': (Preread Priceentry)}
 
 m.use = function (socket) {
     socket.priceUpdate = function (all, entry) {
@@ -39,3 +37,15 @@ m.use = function (socket) {
     // Initial Data Push
     socket.priceUpdate(true);
 }
+
+m.priceUpdateBroadcast = function (priceEntry) {
+    for (var cid in config.data.clients) {
+        if (config.runtime[cid] && config.runtime[cid].sockets && config.runtime[cid].sockets.length > 0) {
+            for (var k in config.runtime[cid].sockets) {
+                if (config.runtime[cid].sockets[k].priceUpdate) {
+                    config.runtime[cid].sockets[k].priceUpdate(false, priceEntry);
+                }
+            }
+        }
+    }
+};
