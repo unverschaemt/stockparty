@@ -1,6 +1,7 @@
 var config = require('../config.js');
 var configfunctions = require('../configfunctions.js');
 var drinkInterface = require('../../DrinkInterface.js');
+var broadcasts = require('../broadcasts.js');
 var m = module.exports = {};
 
 // NOTE: Services in this module:
@@ -27,7 +28,7 @@ m.use = function (socket) {
     socket.drinkUpdate();
 }
 
-m.drinkUpdateBroadcast = function (drinks) {
+broadcasts.add('drinkUpdate', function (drinks) {
     for (var cid in config.data.clients) {
         if (config.runtime[cid] && config.runtime[cid].sockets && config.runtime[cid].sockets.length > 0) {
             for (var k in config.runtime[cid].sockets) {
@@ -37,4 +38,4 @@ m.drinkUpdateBroadcast = function (drinks) {
             }
         }
     }
-};
+});

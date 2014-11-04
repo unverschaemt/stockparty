@@ -1,7 +1,7 @@
 var utils = require('../utils.js');
 var config = require('./config.js');
 var colors = require('colors');
-var configUpdateService = require('./services/configUpdateService.js');
+var broadcasts = require('./broadcasts.js');
 var fs = require('fs');
 
 var m = module.exports = {};
@@ -38,7 +38,7 @@ m.saveConfig = function () {
 
 m.setConfig = function (conf) {
     config.data = conf;
-    configUpdateService.updateConfigBroadcast();
+    broadcasts.get('updateConfig')();
 };
 
 m.getSerializedRuntime = function () {
@@ -92,7 +92,7 @@ m.createClient = function (type, name) {
         }
         config.data.clients[cid] = new config.client(cid, type, name);
         config.runtime[cid] = {'sockets': []};
-        configUpdateService.updateConfigBroadcast(['clients', cid]);
+        broadcasts.get('updateConfig')(['clients', cid]);
         return cid;
     } else {
         return false;
@@ -107,7 +107,7 @@ m.removeClient = function (cid) {
             }
             delete config.data.clients[cid];
             delete config.runtime[cid];
-            configUpdateService.updateConfigBroadcast(['clients', cid]);
+            broadcasts.get('updateConfig')(['clients', cid]);
             return true;
         } else {
             return false;
@@ -135,7 +135,7 @@ m.createDevice = function (type, name, hid, client) {
         }
         config.data.devices[did] = new config.device(did, type, name, hid);
         config.runtime[did] = {'client': ''};
-        configUpdateService.updateConfigBroadcast(['devices', did]);
+        broadcasts.get('updateConfig')(['devices', did]);
         return did;
     } else {
         return false;
@@ -152,7 +152,7 @@ m.removeDevice = function (did) {
                     config.data.clients[cid].idd = '';
                 }
             }
-            configUpdateService.updateConfigBroadcast(['devices', did]);
+            broadcasts.get('updateConfig')(['devices', did]);
             return true;
         } else {
             return false;
@@ -174,12 +174,14 @@ m.addClient = function (socket) {
     socket.on('disconnect', function (data) {
         var index = config.runtime[socket.clientid].sockets.indexOf(socket);
         config.runtime[socket.clientid].sockets.splice(index, 1);
+        broadcasts.get('updateConfig')();
     });
     socket.emit('view', {
         'view': config.data.clients[socket.clientid].view,
         'cid': socket.clientid,
         'cconfig': config.data.clients[socket.clientid]
     });
+    broadcasts.get('updateConfig')();
     return true;
 };
 

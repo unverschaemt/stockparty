@@ -1,6 +1,7 @@
 var config = require('../config.js');
 var configfunctions = require('../configfunctions.js');
 var drinkInterface = require('../../DrinkInterface.js');
+var broadcasts = require('../broadcasts.js');
 var priceHistoryInterface = require('../../database/PriceHistoryInterface.js');
 
 var m = module.exports = {};
@@ -12,21 +13,21 @@ m.use = function (socket) {
     socket.priceUpdate = function (all, entry) {
         if (all) {
             priceHistoryInterface.getPriceHistory(function (err) {
-                console.error('ERROR: Failed to load price Data! ERR: '+JSON.stringify(err)+''.red);
+                console.error('ERROR: Failed to load price Data! ERR: ' + JSON.stringify(err) + ''.red);
             }, function (data) {
-                 socket.emit('allpricedata', {
+                socket.emit('allpricedata', {
                     'data': data
                 });
             });
         } else {
-            if(!entry){
-            drinkInterface.getPriceEntry(function (err) {
-                console.error('ERROR: Failed to get price Entry! ERR: '+JSON.stringify(err)+''.red);
-            }, function (priceEntry) {
-                 socket.emit('priceupdate', {
-                    'priceEntry': priceEntry
+            if (!entry) {
+                drinkInterface.getPriceEntry(function (err) {
+                    console.error('ERROR: Failed to get price Entry! ERR: ' + JSON.stringify(err) + ''.red);
+                }, function (priceEntry) {
+                    socket.emit('priceupdate', {
+                        'priceEntry': priceEntry
+                    });
                 });
-            });
             } else {
                 socket.emit('priceupdate', {
                     'priceEntry': entry
@@ -38,7 +39,7 @@ m.use = function (socket) {
     socket.priceUpdate(true);
 }
 
-m.priceUpdateBroadcast = function (priceEntry) {
+broadcasts.add('drinkUpdate', function (priceEntry) {
     for (var cid in config.data.clients) {
         if (config.runtime[cid] && config.runtime[cid].sockets && config.runtime[cid].sockets.length > 0) {
             for (var k in config.runtime[cid].sockets) {
@@ -48,4 +49,4 @@ m.priceUpdateBroadcast = function (priceEntry) {
             }
         }
     }
-};
+});

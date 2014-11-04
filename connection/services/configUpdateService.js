@@ -1,5 +1,7 @@
-var config = require('../config.js');
+
 var configfunctions = require('../configfunctions.js');
+var config = require('../config.js');
+var broadcasts = require('../broadcasts.js');
 
 var m = module.exports = {};
 
@@ -17,7 +19,7 @@ m.use = function (socket) {
     socket.updateConfig(config.data, configfunctions.getSerializedRuntime());
 };
 
-m.updateConfigBroadcast = function (arr) {
+broadcasts.add('updateConfig', function (arr) {
     configfunctions.saveConfig();
     var runtime = configfunctions.getSerializedRuntime();
     for (var cid in config.data.clients) {
@@ -29,4 +31,4 @@ m.updateConfigBroadcast = function (arr) {
             }
         }
     }
-};
+});
