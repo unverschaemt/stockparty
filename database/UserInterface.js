@@ -87,12 +87,13 @@ m.init = function (error) {
                     userName: 'admin',
                     password: 'admin',
                     name: 'Administrator',
+                    //TODO: correct role
                     role: {}
                 });
                 admin.save(function (err, user) {
                     if (err) return console.error(err);
                     console.log("saved admin");
-                });
+                }); 
             }
         }
     });
