@@ -1,9 +1,11 @@
 
 
 var welcome = require('./welcome.js');
+var colors = require('colors');
 //Loading Config:
 var configfunctions = require('./connection/configfunctions.js');
 configfunctions.loadInitialConfigSync(__dirname+"/config.json");
+
 
 var express = require('express');
 var connection = require('./connection/connection.js');
@@ -15,7 +17,11 @@ var app = express();
 
 // Loading Database:
 var db = mongoose.connect('mongodb://localhost/stockparty');
-
+// Check Default user
+var userInterface = require('./database/UserInterface.js');
+userInterface.init(function(err){
+    console.error('Failed to generate default admin user'.red);
+});
 
 app.get('/socket.io.js', function (req, res) {
     res.sendFile(__dirname + '/node_modules/socket.io-client/socket.io.js');

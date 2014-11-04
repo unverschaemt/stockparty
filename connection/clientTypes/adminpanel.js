@@ -3,6 +3,8 @@ var configfunctions = require('../configfunctions.js');
 var configUpdateService = require('../services/configUpdateService.js');
 var priceUpdateService = require('../services/priceUpdateService.js');
 var drinkUpdateService = require('../services/drinkUpdateService.js');
+var userService = require('../services/userService.js');
+var drinkService = require('../services/drinkService.js');
 var priceCalculator = require('../../PriceCalculator.js');
 var drinkInterface = require('../../DrinkInterface.js');
 
@@ -34,22 +36,6 @@ m.use = function (socket) {
     socket.on('save', function () {
         configfunctions.saveConfig();
     });
-    socket.on('adddrink', function (data, fn) {
-        if(!(data && fn)) return console.error("Invalid input parameters in adminpanel/adddrink!");
-        drinkInterface.addDrink(data, fn);
-    });
-    socket.on('removedrink', function (data, fn) {
-        if(!(data && fn)) return console.error("Invalid input parameters in adminpanel/removedrink!");
-        drinkInterface.removeDrink(data.drinkID, fn);
-    });
-    socket.on('setdrink', function (data, fn) {
-        if(!(data && fn)) return console.error("Invalid input parameters in adminpanel/setdrink!");
-        drinkInterface.setDrink(data, fn);
-    });
-    socket.on('setprice', function (data) {
-        if(!(data)) return console.error("Invalid input parameter in adminpanel/setprice!");
-        drinkInterface.setPrice(data);
-    });
 
     socket.on('disconnect', function (data) {
         for (var i in config.data.clients) {
@@ -68,6 +54,8 @@ m.use = function (socket) {
     configUpdateService.use(socket);
     drinkUpdateService.use(socket);
     priceUpdateService.use(socket);
+    userService.use(socket);
+    drinkService.use(socket);
 
 
     // Initial Data Push

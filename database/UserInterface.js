@@ -1,5 +1,6 @@
 var User = require('./models/User');
 var config = require('../connection/config.js');
+var md5 = require('MD5');
 
 var m = module.exports = {};
 
@@ -17,18 +18,18 @@ m.addUser = function (data, cb) {
     });
 };
 
-m.deleteUser = function (userName, error, cb) {
+m.deleteUser = function (userName, cb) {
     User.findOne({
         userName: userName
     }, function (err, user) {
         if (err) {
-            error(err);
+            cb(err);
         } else {
             if (!user) {
-                cb(true);
+                cb();
             } else {
                 user.remove(function () {
-                    cb(true);
+                    cb();
                 });
             }
         }
@@ -42,32 +43,41 @@ m.getUser = function (userName, error, cb) {
         if (err) {
             error(err);
         } else {
-            cb(user);
+            if(user == null){
+                error('User not found!');
+            } else {
+                cb(user);
+            }
         }
     });
 };
 
-m.setUserInfo = function (data, error, cb) {
+m.setUserInfo = function (data, cb) {
     User.findOne({
         userName: data.userName
     }, function (err, user) {
         if (err) {
-            error(err);
+            cb(err);
         } else {
             if (!user) {
                 cb(true);
             } else {
                 for (var k in data) {
                     if(k != "_id"){
-                        user[k] = data[k];
-                        console.log("set user "+k+" "+JSON.stringify(user[k]));
+                        if(k == "password"){
+                            user[k] = md5(data[k]);
+                            console.log("set user "+k);
+                        } else {
+                            user[k] = data[k];
+                            console.log("set user "+k+" "+JSON.stringify(user[k]));
+                        }
                     }
                 }
                 user.save(function (err, user) {
                     if (err) {
-                        error(err);
+                        cb(err);
                     } else {
-                        cb(user._id);
+                        cb(false, user._id);
                     }
                 });
             }
@@ -85,7 +95,7 @@ m.init = function (error) {
             if(!user){
                 var admin = new User({
                     userName: 'admin',
-                    password: 'admin',
+                    password: md5('admin'),
                     name: 'Administrator',
                     //TODO: correct role
                     role: {}

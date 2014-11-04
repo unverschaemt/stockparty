@@ -15,8 +15,8 @@ m.loginFail = function(socket, info){
 m.use = function(socket){
 
     socket.on('login', function(data, fn){
-        m.acceptLogin(socket);
-        /*userInterface.getUser(data.username, function(err){
+        //m.acceptLogin(socket);
+        userInterface.getUser(data.username, function(err){
             fn(err);
             m.loginFail(socket, err);
         }, function(user){
@@ -26,7 +26,7 @@ m.use = function(socket){
                 fn();
                 m.loginFail(socket, 'username invalid');
             }
-        });*/
+        });
     });
 
 };

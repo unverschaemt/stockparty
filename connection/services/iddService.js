@@ -7,6 +7,7 @@ var m = module.exports = {};
 // iddplugin: event => expected: {'hid': 'Hardware-ID'}
 // iddremove: event => expected: {'hid': 'Hardware-ID'}
 // iddscan: event => expected: {'hid': 'Hardware-ID','idk':'scanned rfid key (IDentificationKey)'}
+// idderror: event => expected: {Some Object to print}
 
 m.use = function (socket) {
 
@@ -57,6 +58,10 @@ m.use = function (socket) {
                 }
             }
         }
+    });
+
+    socket.on('idderror', function (data) {
+        console.log('idderror',data);
     });
 
     socket.on('disconnect', function (data) {
