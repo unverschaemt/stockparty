@@ -195,7 +195,7 @@ function nullDevice(locId) {
 }
 
 
-/*
+
 rfidApi.socket.on('disconnect', function (data) {
     disconnected = true;
 for (var i in rfidReaders) {
@@ -204,5 +204,5 @@ for (var i in rfidReaders) {
         }
     }
 });
-*/
+
 
