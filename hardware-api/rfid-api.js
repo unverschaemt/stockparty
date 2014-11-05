@@ -13,11 +13,31 @@ var devices = [];
 var rfidReaders = [];
 var code = '';
 var allReaders = [];
+var disconnected = false;
 
 var rfidApi = module.exports = {};
 
 rfidApi.use = function (socket) {
     rfidApi.socket = socket;
+	if(disconnected) {
+		disconnected = false;
+		//TODO: iddplugin schicken ==> absprechen mit dustin wegen configmode
+        for(var i in devices) {
+         if (rfidApi.socket.configdata.config.global.configmode == true) {
+            rfidApi.socket.emit('iddplugin', {
+                'hid': devices[i].hid
+            });
+        } else {
+            for (var dev in rfidApi.socket.configdata.config.devices) {
+                if (rfidApi.socket.configdata.config.devices[dev].hid === devices[i].hid) {
+                    rfidApi.socket.emit('iddplugin', {
+                        'hid': devices[i].hid
+                    });
+                }
+            }
+        }
+	   }
+    }
 };
 
 /* Listens for a scan on all available RFID Readers */
@@ -80,9 +100,11 @@ rfidApi.listenForScan = function (arrIndex) {
 //TODO: Pfad holen und listener registrieren, Pfad mit node-hid möglich ?!
 monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', function (scannedDevices, err) {
     var arrayIndex = 0;
+    var serNum = 0;
     if (devices.length == 0) {
         console.log("erster reader");
         scannedDevices.serialNumber = '0';
+        serNum = 0;
         devices.push(scannedDevices);
 
     } else {
@@ -91,6 +113,7 @@ monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', functio
                 scannedDevices.serialNumber = '' + i;
                 devices[i] = scannedDevices;
                 arrayIndex = i;
+                serNum = i;
                 break;
 
 
@@ -99,6 +122,7 @@ monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', functio
                     scannedDevices.serialNumber = '' + devices.length;
                     devices.push(scannedDevices);
                     arrayIndex = devices.length - 1;
+                    serNum = devices.length;
                 }
 
             }
@@ -113,6 +137,8 @@ monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', functio
                 'error' : err
             });
         }
+        devices[arrayIndex].hid = '' + macAddress + '-' +serNum+ '';
+
         if (rfidApi.socket.configdata.config.global.configmode == true) {
             rfidApi.socket.emit('iddplugin', {
                 'hid': '' + macAddress + '-' + scannedDevices.serialNumber + ''
@@ -130,7 +156,6 @@ monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', functio
 
 
 });
-
 monitor.on('remove:' + constants.VENDORID + ':' + constants.PRODUCTID + '', function (scannedDevices, err) {
     var serNumber = getDevice(scannedDevices.locationId).serialNumber;
     nullDevice(scannedDevices.locationId);
@@ -140,7 +165,6 @@ monitor.on('remove:' + constants.VENDORID + ':' + constants.PRODUCTID + '', func
             rfidReaders[i].close();
         }
     }
-
     getmac.getMac(function (err, macAddress) {
         if (err) {
             rfidApi.socket.emit('idderror',{
@@ -172,11 +196,13 @@ function nullDevice(locId) {
 
 
 /*
-socket.on(‘disconnect’, function (data) {
-    console.log('disconnected - evtl hier noch ports etc schließen ?');
+rfidApi.socket.on('disconnect', function (data) {
+    disconnected = true;
+for (var i in rfidReaders) {
+        if (rfidReaders[i].path === scannedDevices.path) {
+            rfidReaders[i].close();
+        }
+    }
 });
 */
 
-
-
-//rfidApi.use(socket);
