@@ -42,49 +42,11 @@ app.use('/apis', express.static(__dirname + '/apis'));
 
 var io = require('socket.io').listen(app.listen(config.data.global.port));
 
-
-// Login check
-/*io.use(function (socket, next) {
-    console.log(socket.request.url);
-    if (socket.request._query.username && socket.request._query.password && socket.request._query.username === 'hans') {
-        console.log("Super");
-        next();
-    } else  {
-        next(new Error('Authentication error'));
-    }
-    //if (socket.request.headers.cookie) return next();
-    //next(new Error('Authentication error'));
-});*/
-
-/*io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
-});*/
-
-/*
-
-var seto = function(arr, obj, to){
-    if(arr.length>1){
-         var x = arr.shift();
-         seto(arr, obj[x], to);
-    } else {
-         obj[arr[0]] = to;
-    }
-}
-
-*/
-
-
-var counter = 0;
-
 io.sockets.on('connection', function (socket) {
     console.log('Connected '+socket.id);
     socket.loggedId = false;
 
     login.use(socket);
-    //connection.use(socket);
 
     socket.on('disconnect', function () {
         console.log('Disconnected '+socket.id);
