@@ -27,6 +27,10 @@ app.get('/socket.io.js', function (req, res) {
     res.sendFile(__dirname + '/node_modules/socket.io-client/socket.io.js');
 });
 
+app.get('/superagent.js', function (req, res) {
+    res.sendFile(__dirname + '/node_modules/superagent/superagent.js');
+});
+
 app.get('/server.txt', function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -34,6 +38,7 @@ app.get('/server.txt', function (req, res) {
 });
 
 app.use(express.static(__dirname + '/public'));
+app.use('/apis', express.static(__dirname + '/apis'));
 
 var io = require('socket.io').listen(app.listen(config.data.global.port));
 
