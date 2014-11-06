@@ -1,5 +1,6 @@
 var config = require('../config.js');
 var configfunctions = require('../configfunctions.js');
+var broadcasts = require('../broadcasts.js');
 
 var m = module.exports = {};
 
@@ -12,7 +13,7 @@ var m = module.exports = {};
 m.use = function (socket) {
 
     socket.on('iddplugin', function (data) {
-        console.log('iddplugin',data);
+        console.log('iddplugin', data);
         var client = config.data.clients[socket.clientid];
         var found = false;
         var deviceId = "";
@@ -20,7 +21,7 @@ m.use = function (socket) {
             if (config.data.devices[did].type === 'idd' && config.data.devices[did].hid === data.hid) {
                 found = true;
                 config.runtime[did].client = socket.clientid;
-                return configfunctions.updateConfigAll(['devices', did, 'client']);
+                return broadcasts.get('updateConfig')(['devices', did, 'client']);
             }
         }
         if (!found) {
@@ -30,18 +31,18 @@ m.use = function (socket) {
     });
 
     socket.on('iddremove', function (data) {
-        console.log('iddremove',data);
+        console.log('iddremove', data);
         var client = config.data.clients[socket.clientid];
         for (var did in config.data.devices) {
             if (config.data.devices[did].type === 'idd' && config.data.devices[did].hid === data.hid) {
                 config.runtime[did].client = '';
-                return configfunctions.updateConfigAll(['devices', did, 'client']);
+                return broadcasts.get('updateConfig')(['devices', did, 'client']);
             }
         }
     });
 
     socket.on('iddscan', function (data) {
-        console.log('iddscan',data);
+        console.log('iddscan', data);
         var client = config.data.clients[socket.clientid];
         for (var did in config.data.devices) {
             if (config.data.devices[did].type === 'idd' && config.data.devices[did].hid === data.hid) {
@@ -61,17 +62,15 @@ m.use = function (socket) {
     });
 
     socket.on('idderror', function (data) {
-        console.log('idderror',data);
+        console.log('idderror', data);
     });
 
     socket.on('disconnect', function (data) {
         var client = config.data.clients[socket.clientid];
-        if (client.devices === true) {
-            for (var did in config.data.devices) {
-                if (config.data.devices[did].type === 'idd' && config.runtime[did].client === socket.clientid) {
-                    config.runtime[did].client = '';
-                    return configfunctions.updateConfigAll(['devices', did, 'client']);
-                }
+        for (var did in config.data.devices) {
+            if (config.data.devices[did].type === 'idd' && config.runtime[did].client === socket.clientid) {
+                config.runtime[did].client = '';
+                return broadcasts.get('updateConfig')(['devices', did, 'client']);
             }
         }
     });
