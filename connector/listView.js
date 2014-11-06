@@ -14,13 +14,7 @@ var toLength = function (str, len) {
 m.use = function (socket, data) {
     m.socket = socket;
     m.owndata = data;
-    if(m.socket.chosenclient){
-        m.socket.clientchoice(m.socket.chosenclient, function err(){
-                m.socket.chosenclient = false;
-            });
-    } else {
-        m.showchoice();
-    }
+    m.showchoice();
     // TODO: Show ClientList with data
 };
 
@@ -39,9 +33,7 @@ m.showchoice = function () {
         var i = parseInt(answer);
         if (m.owndata.data.length > i) {
             console.log(('Loading Client ' + m.owndata.data[i]._id + '...').green);
-            m.socket.clientchoice(m.owndata.data[i]._id, function err(){
-                m.socket.chosenclient = false;
-            });
+            m.socket.clientchoice(m.owndata.data[i]._id);
             m.socket.chosenclient = m.owndata.data[i]._id;
         } else {
             console.log(('Invalid Key! => '+i).red);

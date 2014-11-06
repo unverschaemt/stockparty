@@ -162,12 +162,12 @@ m.removeDevice = function (did) {
     }
 };
 
-m.addClient = function (socket) {
+m.addClient = function (socket, error) {
     if (!config.runtime[socket.clientid].sockets) {
         config.runtime[socket.clientid].sockets = [];
     }
     if (config.runtime[socket.clientid].sockets.length >= config.data.clients[socket.clientid].maxsockets) {
-        socket.sendError('Already connected');
+        error('Already connected');
         return false;
     }
     config.runtime[socket.clientid].sockets.push(socket);

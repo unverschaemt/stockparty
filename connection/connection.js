@@ -30,7 +30,7 @@ m.use = function (socket) {
         }
         socket.clientid = data.clientid;
         if (c && c[config.data.clients[data.clientid].type]) {
-            if (configfunctions.addClient(socket)) {
+            if (configfunctions.addClient(socket, error)) {
                 c[config.data.clients[data.clientid].type].use(socket);
             }
         } else {
