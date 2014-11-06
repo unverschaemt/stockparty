@@ -21,7 +21,6 @@ rfidApi.use = function (socket) {
     rfidApi.socket = socket;
     if (disconnected) {
         disconnected = false;
-        //TODO: iddplugin schicken ==> absprechen mit dustin wegen configmode
         for (var i in devices) {
             if (rfidApi.socket.configdata.config.global.configmode == true) {
                 rfidApi.socket.emit('iddplugin', {
