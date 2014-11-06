@@ -3,9 +3,9 @@ var io = require('socket.io-client');
 //var devices = require('./devices.js');
 var colors = require('colors');
 var readline = require('readline');
+var views = require('../connector/views.js');
+var devices = require('../connector/devices.js');
 var siocon = require('../apis/siocon.js');
-
-var superagent = require('superagent');
 
 var showlogin = function (socket) {
     var rl = readline.createInterface({
@@ -48,9 +48,13 @@ var url = 'http://localhost:4217/';
 
 var startConnection = function () {
     console.log('Starting Connection...');
-    siocon(url, function error(err) {
-        console.log('Connection failed! Please try again!'.red, err);
-        getServerAddress();
+    siocon(url, views, devices, function error(err) {
+        if (err === 'Invalid server address!') {
+            console.log('Connection failed! Please try again!'.red, err);
+            getServerAddress();
+        } else {
+            console.error('ERROR: Something crashed!'.red);
+        }
     }, function connect(socket) {
         console.log('> Successfully connected!'.green);
         showlogin(socket);

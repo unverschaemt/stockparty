@@ -1,20 +1,20 @@
 if (typeof module !== 'undefined' && module.exports) {
-    // NOTE: Node.JS
-    var views = require('../connector/views.js');
-    var devices = require('../connector/devices.js');
+//    // NOTE: Node.JS
+//    var views = require('../connector/views.js');
+//    var devices = require('../connector/devices.js');
     var superagent = require('superagent');
     var io = require('socket.io-client');
 }
 
 var serverVerifier = 'StockParty Server by David Ehlen, Robin Frischmann, Nils Hirsekorn, Dustin Hoffner';
 
-var siocon = function (url, error, connect) {
+var siocon = function (url, views, devices, error, connect) {
     if (url[url.length - 1] !== '/') {
         url += '/';
     }
     superagent.get(url + 'server.txt').end(function (err, res) {
         if (err || res.text !== serverVerifier) {
-            console.error('Invalid server address!');
+            //console.error('Invalid server address!');
             return error('Invalid server address!');
         }
         var socket = io(url);
@@ -25,10 +25,13 @@ var siocon = function (url, error, connect) {
             socket.emit('clientchoice', {
                 'clientid': client
             }, function err(error) {
-                console.error('ERROR: ' + error);
+                //console.error('ERROR: ' + error);
                 socket.chosenclient = false;
-                if (views['list']) {
+                /*if (views['list']) {
                     views['list'].use(socket, socket.viewdata);
+                }*/
+                if(callback){
+                    callback(error);
                 }
             });
         };
@@ -44,7 +47,7 @@ var siocon = function (url, error, connect) {
         };
 
         socket.on('connect', function () {
-            console.info('Connected to Socket.IO Server: ' + url);
+            //console.info('Connected to Socket.IO Server: ' + url);
             if (socket.username && socket.password && socket.loginfailcb && socket.loginwasgood) {
                 socket.login(socket.username, socket.password, socket.loginfailcb);
             } else  {
@@ -63,7 +66,6 @@ var siocon = function (url, error, connect) {
         });
         socket.on('configupdate', function (data) {
             socket.configdata = data;
-            console.log('New Config', data);
             if (load) {
                 load = false;
                 for (var i in devices) {
@@ -83,7 +85,7 @@ var siocon = function (url, error, connect) {
         });
 
         socket.on('disconnect', function (e) {
-            console.info('Disconnected from Socket.IO');
+            //console.info('Disconnected from Socket.IO');
         });
     });
 }

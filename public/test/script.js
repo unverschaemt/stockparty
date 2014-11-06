@@ -4,7 +4,7 @@ var uiConnector = {};
 
 uiConnector.connect = function(url){
     console.log('Starting Connection...');
-    siocon(url, function error(err) {
+    siocon(url, views, devices, function error(err) {
         console.log('UI: Show connecting to server loading circle');
         // UI: Show connecting to server loading circle
         if(err === 'Invalid server address!'){
