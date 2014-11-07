@@ -4,17 +4,31 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <link href="layout/css/standard.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="layout/font/fontAwesome/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,100italic,300italic,400italic' rel='stylesheet' type='text/css'>
+
+    <script type="text/javascript" src="javascript/UIHandler.js"></script>
 </head>
 
 <body>
-    <div id="login">
-        <form method="post" action="javascript:void(0)">
-            <input name="username" type="text" placeholder="USERNAME">
+    <div id="loginPanel">
+        <center>
+            <img src="layout/image/stockpartylogo.png" width="100" height="100">
+        </center>
+        <br>
+        <br>
+        <form method="post" action="javascript:void(0)" onkeydown="javascript:return">
+            <input id="server" type="text" placeholder="SERVER">
             <br>
-            <input name="password" type="password" placeholder="PASSWORD">
-            <br>
-            <br>
-            <input type="submit" value="LOGIN" onclick="window.location.href='cashPanel.html'">
+            <div id="userLogin">
+                <div id="overlayer"></div>
+                <input id="username" type="text" placeholder="USERNAME">
+                <br>
+                <input id="password" type="password" placeholder="PASSWORD">
+                <br>
+                <br>
+                <input type="submit" value="LOGIN" onclick="window.location.href='cashPanel.html'">
+            </div>
         </form>
         <br>
         <br>
