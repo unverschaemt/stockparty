@@ -16,6 +16,7 @@ var allReaders = [];
 var disconnected = false;
 
 var rfidApi = module.exports = {};
+rfidApi.first = true;
 
 rfidApi.use = function (socket) {
     rfidApi.socket = socket;
@@ -37,14 +38,17 @@ rfidApi.use = function (socket) {
             }
         }
     }
-    rfidApi.socket.on('disconnect', function (data) {
-        disconnected = true;
-        for (var i in rfidReaders) {
-            if (rfidReaders[i].path === scannedDevices.path) {
-                rfidReaders[i].close();
+    if (rfidApi.first) {
+        rfidApi.socket.on('disconnect', function (data) {
+            disconnected = true;
+            for (var i in rfidReaders) {
+                if (rfidReaders[i].path === scannedDevices.path) {
+                    rfidReaders[i].close();
+                }
             }
-        }
-    });
+        });
+    }
+    rfidApi.first = false;
 };
 
 /* Listens for a scan on all available RFID Readers */
