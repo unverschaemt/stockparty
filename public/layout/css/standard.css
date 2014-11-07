@@ -27,19 +27,27 @@ body {
     width: 100%;
     height: 100%;
     font-size: 15px;
-    font-family: Lato;
+    font-family: "Lato";
     overflow: hidden;
 }
 body {
     background: url('../image/background.jpg');
     background-size: cover;
 }
-#login {
-    padding: 20%;
+#loginPanel {
+    padding: 3% 20% 20% 20%;
 }
-#cashPanel {
+#cashPanel,
+#adminPanel,
+#loginPanel {
     color: white;
     height: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
 }
 input {
     width: 100%;
@@ -65,17 +73,44 @@ input[type=submit] {
     font-size: 20px;
     padding: 12px 10px;
     color: rgba(255, 255, 255, 0.95);
-    background: rgba(88, 132, 158, 0.7);
-    border-color: rgba(119, 119, 119, 0.5);
-    border-radius: 2px;
-    border-width: 0px 0px 2px 0px;
+    background: rgba(88, 132, 158, 0.9);
+    border-radius: 4px;
+    font-weight: 300;
+    font-family: "Lato";
+}
+::-webkit-scrollbar {
+    display: none
+}
+button {
+    display: inline-block;
+    width: 50%;
+    border: 0;
+    font-size: 20px;
+    padding: 10px 10px;
+    color: rgba(255, 255, 255, 0.95);
+    background: rgba(88, 132, 158, 0.9);
+    font-family: "Helvetica Neue";
+    font-weight: 200;
+    outline: none;
+    float: left;
+}
+button:hover {
+    background: rgba(88, 132, 158, 0.4);
+}
+#orderListControlPanel button:nth-child(2) {
+    margin-right: 1px;
+    margin-left: -1px;
+}
+#orderListControlPanel {
+    position: absolute;
+    width: 40%;
+    bottom: 0;
 }
 input[type=submit]:hover {
-    margin-top: 3px;
-    background: rgba(88, 132, 158, 0.75);
-    border-width: 0px 0px 1px 0px;
+    background: rgba(88, 132, 158, 0.4);
 }
-#userBalance {
+#userBalance,
+#totalPrice {
     width: 100%;
     vertical-align: middle;
     line-height: 50px;
@@ -84,43 +119,74 @@ input[type=submit]:hover {
     font-size: 30px;
     padding: 15px;
     border-bottom: 1px solid rgba(128, 128, 128, 0.5);
-    background-color: rgba(255, 255, 255, 0.2) !important;
+    background-color: rgba(255, 255, 255, 0.2);
+    font-family: "Helvetica Neue";
+    font-weight: 100;
+}
+#userBalance i {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 12px 10px 0px 0px;
+    float: right;
+}
+#userBalance i:hover {
+    color: rgba(255, 255, 255, 1);
+    padding: 12px 10px 0px 0px;
+    float: right;
+}
+#userBalance i.open {
+    color: #1f1f1f;
+}
+#userBalance span {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 18px;
+    vertical-align: middle;
+}
+#totalPrice {
+    font-size: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.6);
+    border-bottom: 0px;
+    padding: 3px 10px;
+    text-align: right;
+    font-weight: 300;
 }
 #userOrder {
     width: 100%;
-    height: 90%;
+    overflow-y: auto;
 }
 #orderList {
     width: 40%;
     height: 100%;
     float: left;
 }
-#drinkList {
-    width: 60%;
-    height: 100%;
-    float: left;
-    overflow-y: auto;
-    background: rgba(50, 50, 50, 1) !important;
-}
 #orderList,
-#drinkList,
 #userBalance {
     background-color: rgba(255, 255, 255, 0.1);
 }
+#drinkList {
+    width: 60%;
+    float: left;
+    overflow-y: auto;
+    height: 100%;
+    background: rgb(44, 83, 106);
+}
 .drink {
-    font-size: 20px;
+    font-size: 22px;
     width: 50%;
     position: relative;
-    background: rgba(88, 132, 158, 0.5);
+    background: rgb(44, 83, 106);
     border-style: solid;
     border-width: 0px 0px 1px 1px;
-    border-color: rgb(124, 129, 137);
+    border-color: rgba(255, 255, 255, 0.21);
     vertical-align: top;
     padding: 20px 15px;
     float: left;
+    font-weight: 500;
+    text-align: center;
 }
 .drink span {
-    float: right;
+    display: block;
+    font-size: 14px;
+    font-weight: 200;
 }
 .drink:hover {
     background: rgba(88, 132, 158, 0.9);
@@ -131,13 +197,371 @@ input[type=submit]:hover {
     background-color: transparent;
     cursor: default;
 }
-table tr td {
-    padding: 12px;
+#userAddCash table {
+    text-align: center;
 }
-table tr td:nth-child(2),
-table tr td:last-child {
+#userOrder,
+#manageDrinkPanel {
+    font-weight: 300;
+}
+#userOrder tr td,
+#manageDrinkPanel tr td {
+    padding: 10px;
+}
+#userOrder tr td:last-child,
+#userOrder tr td:first-child {
+    font-weight: 400;
+}
+#userOrder tr td:nth-child(2),
+#manageDrinkPanel tr td:nth-child(2),
+#manageDrinkPanel tr th:nth-child(2),
+#userOrder tr td:last-child,
+#manageDrinkPanel tr td:nth-child(6),
+#manageDrinkPanel tr th:nth-child(6) {
     text-align: right;
 }
-table tr:nth-child(even) {
+#manageDrinkPanel tr td:nth-child(6) input[type="checkbox"].ios-switch + div {
+    float: right;
+}
+#manageDrinkPanel tr:hover{
+    border: 1px solid gray;
+    background-color: rgba(0, 0, 0, 0.2) !important;
+}
+#manageDrinkPanel tr:nth-child(even):hover > td{
+    background: transparent;
+}
+#manageDrinkPanel tr.editDrink {} #manageDrinkPanel tr.editDrink td {
+    padding: 4px;
+    background-color: rgba(0, 0, 0, 0.15) !important;
+}
+#manageDrinkPanel tr.editDrink td:nth-child(7) {
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+#manageDrinkPanel tr.editDrink td input {
+    width: 100%;
+    padding: 7px;
+    background: transparent;
+    position: relative;
+    border-radius: 4px;
+    color: white;
+    border: 1px solid rgba(183, 183, 183, 0.5);
+    font-size: 16px;
+}
+#manageDrinkPanel tr:nth-child(even) td,
+#userOrder tr:nth-child(even) {
     background-color: rgba(255, 255, 255, 0.1);
+}
+#manageDrinkPanel tr td:last-child {
+    background-color: rgba(255, 255, 255, 0) !important;
+    width: 30px;
+}
+#manageDrinkPanel th {
+    text-align: left;
+    padding: 12px;
+}
+#cashPanelId {
+    padding: 3px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3)
+}
+#userOrderTable {
+    width: 100%;
+    overflow-y: auto;
+    height: auto;
+}
+#userAddCash {
+    display: none;
+}
+#userAddCash p {
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 12px;
+    text-align: right;
+}
+#userAddCash table {
+    border-bottom: 1px solid rgba(196, 196, 196, 0.5);
+}
+#userAddCash table tr td:nth-child(3) {
+    border-right: 1px solid transparent;
+}
+#userAddCash table tr td {
+    width: 33.33333333333333%;
+    padding: 15px;
+    border-top: 1px solid rgba(196, 196, 196, 0.5);
+    border-right: 1px solid rgba(196, 196, 196, 0.5);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+#userAddCash table tr td:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+#userAddCash table tr td.delete {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+#userAddCash table tr td.delete:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+#userAddCash table tr td.mode {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+#userAddCash table tr td.button {
+    background-color: rgba(88, 132, 158, 0.9);
+    font-family: "Helvetica Neue";
+    font-weight: 200;
+}
+#userAddCash table tr td.button:hover {
+    background-color: rgba(88, 132, 158, 0.4);
+}
+a.button {
+    background-color: rgba(88, 132, 158, 0.9);
+    font-family: "Helvetica Neue";
+    padding: 10px 14px;
+    font-weight: 200;
+    border-radius: 4px;
+}
+#loginPageHandler a.button {
+    width: 27px;
+    text-align: center;
+    display: inline-block;
+    padding: 5px 0px;
+    vertical-align: top;
+}
+a.button:hover {
+    background-color: rgba(88, 132, 158, 0.4);
+    cursor: pointer;
+}
+#drinkListOverlayer {
+    display: none;
+    position: fixed;
+    margin-left: 40%;
+    background: rgba(0, 0, 0, 0.7);
+    width: 60%;
+    height: 100%;
+    z-index: 200;
+}
+.menuItem {
+    width: 25%;
+    padding: 20px;
+    float: left;
+    border-right: 1px solid gray;
+    display: inline-block;
+    font-size: 20px;
+    text-align: center;
+}
+
+.menuItem:hover {
+    background: rgba(0,0,0,0.3);
+    cursor: pointer;
+}
+.menuItem:last-child {
+    border-right: 0px;
+}
+#adminPanelMenu {
+    border-bottom: 1px solid gray;
+    position: absolute;
+    display: block;
+    width: 100%;
+}
+#settingPanel {
+    background: rgba(255, 255, 255, 0.2);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+.actuellTab {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+#tabs {
+    margin-left: -100%;
+    width: 400%;
+    display: table;
+    position: relative;
+    height: 100%;
+    -webkit-transition: all 500ms ease-in-out;
+    -ms-transition: all 500ms ease-in-out;
+    -o-transition: all 500ms ease-in-out;
+    -moz-transition: all 500ms ease-in-out;
+    transition: all 500ms ease-in-out;
+}
+#settingPanel section {
+    width: 25%;
+    vertical-align: top;
+    float: left;
+    position: relative;
+    height: 100%;
+    overflow-x: hidden;
+    padding: 50px 50px 0px 50px;
+    overflow-y: auto;
+}
+input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 40px;
+}
+/* Normal Track */
+
+input[type="checkbox"].ios-switch + div {
+    vertical-align: middle;
+    margin-left: 3px;
+    width: 40px;
+    height: 20px;
+    display: inline-block;
+    border: 1px solid rgba(0, 0, 0, .4);
+    border-radius: 999px;
+    background-color: rgba(0, 0, 0, 0.1);
+    -webkit-transition-duration: .4s;
+    -webkit-transition-property: background-color, box-shadow;
+    box-shadow: inset 0 0 0 0px rgba(0, 0, 0, 0.4);
+}
+/* Checked Track (Blue) */
+
+input[type="checkbox"].ios-switch:checked + div {
+    width: 40px;
+    background-position: 0 0;
+    background-color: rgba(88, 132, 158, 0.9);
+    border: 1px solid #456081;
+    box-shadow: inset 0 0 0 10px rgba(88, 132, 158, 0.9);
+}
+/* Tiny Track */
+
+input[type="checkbox"].tinyswitch.ios-switch + div {
+    width: 34px;
+    height: 18px;
+}
+/* Big Track */
+
+input[type="checkbox"].bigswitch.ios-switch + div {
+    width: 50px;
+    height: 25px;
+}
+/* Green Track */
+
+input[type="checkbox"].green.ios-switch:checked + div {
+    background-color: #00e359;
+    border: 1px solid rgba(0, 162, 63, 1);
+    box-shadow: inset 0 0 0 10px rgba(0, 227, 89, 1);
+}
+/* Normal Knob */
+
+input[type="checkbox"].ios-switch + div > div {
+    float: left;
+    width: 18px;
+    height: 18px;
+    border-radius: inherit;
+    background: #ffffff;
+    -webkit-transition-timing-function: cubic-bezier(.54, 1.85, .5, 1);
+    -webkit-transition-duration: 0.4s;
+    -webkit-transition-property: transform, background-color, box-shadow;
+    -moz-transition-timing-function: cubic-bezier(.54, 1.85, .5, 1);
+    -moz-transition-duration: 0.4s;
+    -moz-transition-property: transform, background-color;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3), 0px 0px 0 1px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    margin-top: 1px;
+    margin-left: 1px;
+}
+/* Checked Knob (Blue Style) */
+
+input[type="checkbox"].ios-switch:checked + div > div {
+    -webkit-transform: translate3d(20px, 0, 0);
+    -moz-transform: translate3d(20px, 0, 0);
+    background-color: #ffffff;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3), 0px 0px 0 1px rgba(8, 80, 172, 1);
+}
+/* Tiny Knob */
+
+input[type="checkbox"].tinyswitch.ios-switch + div > div {
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+}
+/* Checked Tiny Knob (Blue Style) */
+
+input[type="checkbox"].tinyswitch.ios-switch:checked + div > div {
+    -webkit-transform: translate3d(16px, 0, 0);
+    -moz-transform: translate3d(16px, 0, 0);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3), 0px 0px 0 1px rgba(8, 80, 172, 1);
+}
+/* Big Knob */
+
+input[type="checkbox"].bigswitch.ios-switch + div > div {
+    width: 21px;
+    height: 21px;
+    margin-top: 1px;
+}
+/* Checked Big Knob (Blue Style) */
+
+input[type="checkbox"].bigswitch.ios-switch:checked + div > div {
+    -webkit-transform: translate3d(25px, 0, 0);
+    -moz-transform: translate3d(16px, 0, 0);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3), 0px 0px 0 1px rgba(8, 80, 172, 1);
+}
+/* Green Knob */
+
+input[type="checkbox"].green.ios-switch:checked + div > div {
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 162, 63, 1);
+}
+#importExport {
+    float: right;
+    margin-right: 36px;
+}
+#userLogin {
+    opacity: 0.3;
+}
+#userLogin #overlayer {
+    background: transparent;
+    width: 100%;
+    height: 100%;
+    ;
+    position: absolute;
+    z-index: 30;
+}
+#graphContainer {
+    width: 100%;
+    height: 100%;
+}
+#monitorPanel {
+    width: 100%;
+    height: 100%;
+}
+#partyActive {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 300;
+    padding: 20px;
+    border-radius: 50px;
+    background: rgba(0, 0, 0, 0.3);
+}
+#configurationPanel {
+    padding: 0px !important;
+    margin: 0;
+}
+#clientDeviceList {
+    float: left;
+    list-style-type: none;
+    display: inline-block;
+    height: 100%;
+    width: 25%;
+    border-right: 1px solid gray;
+    position: absolute;
+    overflow-y: auto;
+}
+#clientDeviceList li:nth-child(even):hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+#clientDeviceList li:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+#clientDeviceList li {
+    padding: 10px 10px 10px 20px;
+}
+#clientDeviceList li:nth-child(even) {
+    background: rgba(255, 255, 255, 0.1);
+}
+#clientDevicePreview {
+    float: right;
+    width: 75%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    overflow-y: auto;
 }
