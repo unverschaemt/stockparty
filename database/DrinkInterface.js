@@ -6,18 +6,19 @@ m.addDrink = function (name, priceMin, priceMax, cb) {
     var drink = new Drink({
         name: name,
         priceMin: priceMin,
-        priceMax: priceMax
+        priceMax: priceMax,
+        soldOut: true
     });
     drink.save(function (err, drink) {
         if (err) return console.error(err);
-        console.log("saved");
+        console.log('saved drink');
         cb(true);
     });
 };
 
-m.deleteDrink = function (name, error, cb) {
+m.deleteDrink = function (id, error, cb) {
     Drink.findOne({
-        name: name
+        _id: id
     }, function (err, drink) {
         if (err) {
             error(err);
@@ -58,9 +59,9 @@ m.deleteAllDrinks = function (error, cb) {
     });
 };
 
-m.getDrink = function (name, error, cb) {
+m.getDrink = function (id, error, cb) {
     Drink.findOne({
-        name: name
+        _id: id
     }, function (err, drink) {
         if (err) {
             error(err);
@@ -70,15 +71,15 @@ m.getDrink = function (name, error, cb) {
     });
 };
 
-m.setDrinkInfo = function (name, data, error, cb) {
+m.setDrinkInfo = function (id, data, error, cb) {
     Drink.findOne({
-        name: name
+        _id: id
     }, function (err, drink) {
         if (err) {
             error(err);
         } else {
             if (!drink) {
-                cb(true);
+                cb(false);
             } else {
                 for (var k in data) {
                     if(k != "_id"){
@@ -90,7 +91,7 @@ m.setDrinkInfo = function (name, data, error, cb) {
                     if (err) {
                         error(err);
                     } else {
-                        cb(drink._id);
+                        cb(true);
                     }
                 });
             }
@@ -105,7 +106,7 @@ m.getAllDrinks = function (error, cb) {
         } else {
             var ex = {};
             for (var i in drinks) {
-                ex[drinks[i].name] = drinks[i];
+                ex[drinks[i]._id] = drinks[i];
             }
             var temp = JSON.parse(JSON.stringify(ex));
             cb(temp);

@@ -2,16 +2,17 @@ var Consumption = require('./models/Consumption');
 
 var m = module.exports = {};
 
-m.addConsumption = function (guest, time, drink, quantity, cb) {
+m.addConsumption = function (guest, priceID, drink, quantity, time, cb) {
     var consumption = new Consumption({
         guest: guest,
-        time: time,
+        priceID: priceID,
         drink: drink,
-        quantity: quantity
+        quantity: quantity,        
+        time: time
     });
     consumption.save(function (err, consumption) {
         if (err) return console.error(err);
-        console.log('saved');
+        console.log('saved consumption');
         cb(true);
     });
 };
@@ -48,7 +49,7 @@ m.getConsumptionForGuest = function (guest, error, cb) {
         } else {
             var ex = {};
             for (var i in guests) {
-                ex[guests[i].time] = guests[i];
+                ex[guests[i].priceID] = guests[i];
             }
             var temp = JSON.parse(JSON.stringify(ex));
             cb(temp);

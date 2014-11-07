@@ -10,7 +10,7 @@ m.addAlcoholLevel = function (time, level, guest, cb) {
     });
     alcoholLevel.save(function (err, alcoholLevel) {
         if (err) return console.error(err);
-        console.log('saved');
+        console.log('saved alcohol level');
         cb(true);
     });
 };

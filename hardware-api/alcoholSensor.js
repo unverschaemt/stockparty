@@ -30,7 +30,7 @@ sp.open(function () {
 }
 
 function getPort(callback) {    
-    serialPort.list(function (err, ports) {
+    serialport.list(function (err, ports) {
     ports.forEach(function(port) {
         console.log(port.comName);
         console.log(port.pnpId);

@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 
 var fileSchema = new Schema({
     time: Number,
-    drinks: Object
+    guest: String,
+    balance: Number
 });
 
-module.exports = mongoose.model('PriceHistory', fileSchema);
+module.exports = mongoose.model('Balance', fileSchema);
