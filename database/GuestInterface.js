@@ -88,7 +88,11 @@ m.getGuest = function (idk, error, cb) {
             });
         } else {
             if (!guest) {
-                cb(null);
+                addGuest(idk, '', 0, function (err) {
+                    error(err)
+                }, function (obj) {
+                    cb(obj)
+                });
             } else {
                 var temp = JSON.parse(JSON.stringify(guest));
                 getBalanceOfGuest(idk, function callBack(balance) {
