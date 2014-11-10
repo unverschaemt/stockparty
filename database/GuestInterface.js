@@ -81,14 +81,14 @@ m.getGuest = function (idk, error, cb) {
         idk: idk
     }, function (err, guest) {
         if (err) {
-            addGuest(idk, '', 0, function (err) {
+            m.addGuest(idk, '', 0, function (err) {
                 error(err)
             }, function (obj) {
                 cb(obj)
             });
         } else {
             if (!guest) {
-                addGuest(idk, '', 0, function (err) {
+                m.addGuest(idk, '', 0, function (err) {
                     error(err)
                 }, function (obj) {
                     cb(obj)
