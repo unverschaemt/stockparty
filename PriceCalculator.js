@@ -13,7 +13,7 @@ var calculating = config.global.running;
 var timeOut;
 var manuallySetPrices = [];
 
-m.calculatePrices = function () {
+m.calculatePrices = function (callBack) {
     drinkInterface.getAllDrinks(function error(err) {}, function cb(obj) {
         var data = testData.shift();
         var drinksWithPrices = {};
@@ -23,7 +23,7 @@ m.calculatePrices = function () {
                 'price': calcPriceForDrink(obj[i], data)
             };
         }
-        saveNewDrinkPricesToDatabase(drinksWithPrices);
+        saveNewDrinkPricesToDatabase(drinksWithPrices, callBack);
         oldDatas = data;
     });
 };
@@ -36,13 +36,17 @@ m.setRefreshInterval = function (interval) {
     }
 };
 
+m.getRefreshInterval = function () {
+    return refreshInterval;
+};
+
 m.setPrice = function (drinkID, price) {
     manuallySetPrices[drinkID] = price;
 };
 
 m.triggerStockCrash = function (decision) {
     if (decision) return enableStockCrash();
-    m.start();
+    m.triggerCalculation(true);
 };
 
 m.triggerCalculation = function (decision) {
@@ -51,11 +55,15 @@ m.triggerCalculation = function (decision) {
     goCalculate();
 };
 
+m.getStatus = function () {
+    return calculating;
+};
+
 goCalculate = function () {
-    m.calculatePrices();
+    m.calculatePrices(function cb() {});
     timeOut = setInterval(function loop() {
         if (calculating) {
-            m.calculatePrices();
+            m.calculatePrices(function cb() {});
         } else {
             clearInterval(timeOut);
         }
@@ -63,7 +71,7 @@ goCalculate = function () {
 }
 
 enableStockCrash = function () {
-    m.pause();
+    m.triggerCalculation(false);
 
     drinkInterface.getAllDrinks(function error(err) {
         console.log(err)
@@ -75,7 +83,7 @@ enableStockCrash = function () {
                 'price': obj[i].priceMin
             });
         }
-        saveNewDrinkPricesToDatabase(drinksWithPrices);
+        saveNewDrinkPricesToDatabase(drinksWithPrices, function cb() {});
     });
 }
 
@@ -126,12 +134,10 @@ getSalesRate = function (oldData, newData) {
     return rate;
 }
 
-saveNewDrinkPricesToDatabase = function (drinks) {
+saveNewDrinkPricesToDatabase = function (drinks, callBack) {
     var data = {
         'time': new Date().getTime(),
         'drinks': drinks
     };
-    priceHistoryInterface.addPriceHistory(data, function cb() {
-        triggerFunctions.onNewPriceEntry(data);
-    });
+    priceHistoryInterface.addPriceHistory(data, callBack);
 }

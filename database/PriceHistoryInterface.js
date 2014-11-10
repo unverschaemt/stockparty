@@ -15,32 +15,33 @@ m.addPriceHistory = function (data, cb) {
 };
 
 m.deleteAllPriceHistoryEntries = function (error, cb) {
-    PriceHistory.find({
-    }, function (err, priceHistorys) {
+    PriceHistory.find({}, function (err, priceHistorys) {
         if (err) {
             error(err);
         } else {
             var c = 0;
-            for(var i in priceHistorys){
+            for (var i in priceHistorys) {
                 var priceHistory = priceHistorys[i];
                 if (priceHistory) {
                     priceHistory.remove(function () {
                         c++;
-                        if(priceHistorys.length == c){
-                            cb(c+' from '+priceHistorys.length+' deleted good!');
+                        if (priceHistorys.length == c) {
+                            cb(c + ' from ' + priceHistorys.length + ' deleted good!');
                         }
                     });
                 }
             }
-            if(priceHistorys.length < 1){
-                cb(c+' from '+priceHistorys.length+' deleted good!');
+            if (priceHistorys.length < 1) {
+                cb(c + ' from ' + priceHistorys.length + ' deleted good!');
             }
         }
     });
 };
 
 m.getPricesForID = function (id, error, cb) {
-    PriceHistory.findOne({_id: id}, function (err, historyEntry) {
+    PriceHistory.findOne({
+        _id: id
+    }, function (err, historyEntry) {
         if (err) {
             error(err);
         } else {
@@ -65,7 +66,11 @@ m.getPriceHistory = function (error, cb) {
 };
 
 m.getLatestEntry = function (error, cb) {
-    PriceHistory.findOne({}, {}, { sort: { 'time' : -1 } }, function(err, lastEntry) {
+    PriceHistory.findOne({}, {}, {
+        sort: {
+            'time': -1
+        }
+    }, function (err, lastEntry) {
         if (err) {
             error(err);
         } else {

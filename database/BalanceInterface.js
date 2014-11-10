@@ -17,7 +17,7 @@ m.addBalance = function (data, cb) {
     }
 };
 
-m.saveBalance = function (data, cb) {
+saveBalance = function (data, cb) {
     var balance = new Balance({
         guest: data.guest,
         time: new Date().getTime(),

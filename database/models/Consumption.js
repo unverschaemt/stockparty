@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 var fileSchema = new Schema({
     guest: String,
-    priceID: Number,
+    priceID: String,
     drink: String,
     quantity: Number,
     time: Number

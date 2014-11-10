@@ -6,6 +6,7 @@ var guestInterface = require('../database/GuestInterface');
 var alcoholLevelInterface = require('../database/AlcoholLevelInterface');
 var consumptionInterface = require('../database/ConsumptionInterface');
 var priceHistoryInterface = require('../database/PriceHistoryInterface');
+var md5 = require('MD5');
 
 // Create db connection
 var db;
@@ -62,7 +63,7 @@ describe('Database Interfaces', function () {
                     userInterface.getUser(userToCreate.userName, function error(err) {
                         console.log(err)
                     }, function cb(user) {
-                        assert.equal(user, false);
+                        assert.equal(user.password, md5(userInformation.password));
                         done();
                     });
                 });
@@ -130,7 +131,7 @@ describe('Database Interfaces', function () {
 
                 guestInterface.deleteGuest(guestToCreate.idk, function error(err) {}, function cb(obj) {
                     guestInterface.getGuest(guestToCreate.idk, function error(err) {}, function cb(obj) {
-                        assert.equal(obj, null);
+                        assert.equal(obj, true);
                         done();
                     });
                 });
@@ -148,9 +149,9 @@ describe('Database Interfaces', function () {
 
                     guestInterface.deleteAllGuests(function error(err) {}, function cb(obj) {
                         guestInterface.getGuest(guestToCreate.idk, function error(err) {}, function cb(obj) {
-                            assert.equal(obj, null);
+                            assert.equal(obj, true);
                             guestInterface.getGuest(differentGuestToCreate.idk, function error(err) {}, function cb(obj) {
-                                assert.equal(obj, null);
+                                assert.equal(obj, true);
                                 done();
                             });
                         });

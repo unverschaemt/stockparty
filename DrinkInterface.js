@@ -9,9 +9,7 @@ var m = module.exports = {};
 var priceEntryCache = {};
 
 m.getPriceEntry = function (error, callBack) {
-    priceHistoryInterface.getLatestEntry(error, function cb(obj) {
-        callBack(obj);
-    })
+    priceHistoryInterface.getLatestEntry(error, callBack);
 };
 
 m.buyDrinks = function (data, callBack) {
@@ -22,8 +20,10 @@ m.buyDrinks = function (data, callBack) {
             price += obj * data.drinks[i].quantity;
             received++;
             if (data.drinks.length == received) {
-                guestInterface.getBalanceOfGuest(data.guestID, function cb(obj) {
-                    if (price < obj) {
+                guestInterface.getGuest(data.guestID, function error(err) {
+                    console.log(err)
+                }, function cb(obj) {
+                    if (price < obj.balance) {
                         addConsumption(data.drinks, data.guestID, data.priceID, callBack);
                     } else {
                         callBack(false);
