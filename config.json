@@ -5,7 +5,7 @@
         "clientnameprefix": "client",
         "configfilepath": "/Users/hex0r/BitBucket/stockings/source/config.json",
         "port": 4217,
-        "interval": 30,
+        "interval": 1,
         "stockcrash": false,
         "running": false
     },

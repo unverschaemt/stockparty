@@ -72,7 +72,6 @@ getPriceOfDrink = function (priceID, drinkID, callBack) {
         console.log(err)
     }, function cb(obj) {
         callBack(obj.drinks[drinkID].price);
-        callBack(false);
     });
 };
 

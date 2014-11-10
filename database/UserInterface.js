@@ -26,10 +26,10 @@ m.deleteUser = function (userName, cb) {
             cb(err);
         } else {
             if (!user) {
-                cb();
+                cb(false);
             } else {
                 user.remove(function () {
-                    cb();
+                    cb(true);
                 });
             }
         }
@@ -43,7 +43,7 @@ m.getUser = function (userName, error, cb) {
         if (err) {
             error(err);
         } else {
-            if(user == null){
+            if (user == null) {
                 error('User not found!');
             } else {
                 cb(user);
@@ -63,13 +63,13 @@ m.setUserInfo = function (data, cb) {
                 cb(true);
             } else {
                 for (var k in data) {
-                    if(k != "_id"){
-                        if(k == "password"){
+                    if (k != "_id") {
+                        if (k == "password") {
                             user[k] = md5(data[k]);
-                            console.log("set user "+k);
+                            console.log("set user " + k);
                         } else {
                             user[k] = data[k];
-                            console.log("set user "+k+" "+JSON.stringify(user[k]));
+                            console.log("set user " + k + " " + JSON.stringify(user[k]));
                         }
                     }
                 }
@@ -92,7 +92,7 @@ m.init = function (error) {
         if (err) {
             error(err);
         } else {
-            if(!user){
+            if (!user) {
                 var admin = new User({
                     userName: 'admin',
                     password: md5('admin'),
@@ -103,7 +103,7 @@ m.init = function (error) {
                 admin.save(function (err, user) {
                     if (err) return console.error(err);
                     console.log("saved admin");
-                }); 
+                });
             }
         }
     });

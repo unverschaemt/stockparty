@@ -1,4 +1,7 @@
 var Guest = require('./models/Guest');
+var balanceInterface = require('./BalanceInterface');
+var consumptionInterface = require('./ConsumptionInterface');
+var priceHistoryInterface = require('./PriceHistoryInterface');
 
 var m = module.exports = {};
 
@@ -21,7 +24,6 @@ m.addGuest = function (idk, name, birthDate, error, cb) {
 newGuest = function (idk, name, birthDate, cb) {
     var guest = new Guest({
         idk: idk,
-        balance: balance,
         name: name,
         birthDate: birthDate
     });
@@ -98,7 +100,7 @@ m.getGuest = function (idk, error, cb) {
     });
 };
 
-getBalanceOfGuest = function (guestID, callBack){
+getBalanceOfGuest = function (guestID, callBack) {
     var totalBalance = 0;
     balanceInterface.getTotalForGuest(guestID, function error(err) {
         console.log(err)
@@ -123,9 +125,9 @@ getBalanceOfGuest = function (guestID, callBack){
                     }
                 });
             }
+            if (empty) {
+                callBack(totalBalance);
+            }
         });
-        if (empty) {
-            callBack(totalBalance);
-        }
     });
 };
