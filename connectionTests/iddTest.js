@@ -132,12 +132,28 @@ describe("Stock Party IDD plugin/scan/remove", function () {
     });
 
     it('Should have a guest and a price entry in order object', function (done) {
-        if (orderdata && orderdata.guest && orderdata.priceEntry) {
-            var t = true;
+        if (orderdata && orderdata.priceEntry) {
+            var t1 = true;
         } else {
-            var t = false;
+            var t1 = false;
         }
-        t.should.equal(true);
+        if (orderdata && orderdata.guest) {
+            var t2 = true;
+        } else {
+            var t2 = false;
+        }
+        should(orderdata).be.type('object');
+        if (orderdata) {
+            should(orderdata).have.property('guest', 'priceEntry');
+            if (orderdata.guest) {
+                should(orderdata.guest).be.type('object');
+            }
+            if (orderdata.priceEntry) {
+                should(orderdata.priceEntry).be.type('object');
+            }
+        }
+        //t1.should.equal(true);
+        //t2.should.equal(true);
         done();
     });
 
