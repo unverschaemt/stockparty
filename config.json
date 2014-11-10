@@ -1,59 +1,57 @@
 {
     "global": {
-        "configmode": true,
+        "configmode": false,
         "devicenameprefix": "device",
         "clientnameprefix": "client",
-        "configfilepath": "/Users/hex0r/BitBucket/stockings/source/config.json",
+        "configfilepath": "/Users/hex0r/BitBucket/stockings/stockparty/config.json",
         "port": 4217,
-        "interval": 1,
+        "interval": 30,
         "stockcrash": false,
         "running": false
     },
     "clients": {
-        "client00": {
-            "_id": "client00",
+        "client000": {
+            "_id": "client000",
             "name": "ADMIN",
             "type": "adminpanel",
             "maxsockets": 99999,
             "view": "adminpanel"
         },
-        "client01": {
-            "_id": "client01",
+        "client001": {
+            "_id": "client001",
             "name": "Kasse 1",
             "type": "cashpanel",
             "maxsockets": 1,
-            "idd": "device01",
+            "idd": "device000",
             "view": "cashpanel"
         },
-        "client02": {
-            "_id": "client02",
+        "client002": {
+            "_id": "client002",
             "name": "Kasse 2",
             "type": "cashpanel",
             "maxsockets": 1,
-            "idd": "device02",
+            "idd": "device002",
             "view": "cashpanel"
         },
-        "client03": {
-            "_id": "client03",
+        "client003": {
+            "_id": "client003",
             "name": "Connectors",
             "type": "connector",
             "maxsockets": 99999,
             "view": "connector"
+        },
+        "client004": {
+            "_id": "client004",
+            "name": "Monitor 1",
+            "type": "monitor",
+            "maxsockets": 1,
+            "drinks": ["drinkid1", "drinkid2"],
+            "fontsize": 14,
+            "theme": "dark",
+            "view": "monitor"
         }
     },
     "devices": {
-        "device01": {
-            "_id": "device01",
-            "type": "idd",
-            "name": "RFID Device1",
-            "hid": "USB_02xd82jf"
-        },
-        "device02": {
-            "_id": "device02",
-            "type": "idd",
-            "name": "RFID Device2",
-            "hid": "USB_02xd82jh"
-        },
         "device000": {
             "_id": "device000",
             "type": "idd",

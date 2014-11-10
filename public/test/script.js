@@ -1,62 +1,39 @@
-var socket = io('http://localhost:4217/?username=karl&password=test223'); //&password=test223
-socket.on('connect', function () {
+var url = 'http://localhost:4217/';
 
-});
-socket.on('view', function (data) {
-    console.log('view => ' + JSON.stringify(data));
-});
-socket.on('error', function (e) {
-    if (e === 'Authentication error') {
-        console.log('Destroy Socket');
+var uiConnector = {};
+
+uiConnector.connect = function(url){
+    console.log('Starting Connection...');
+    siocon(url, views, devices, function error(err) {
+        console.log('UI: Show connecting to server loading circle');
+        // UI: Show connecting to server loading circle
+        if(err === 'Invalid server address!'){
+            console.log('Connection failed! Please try again!', err);
+            console.log('UI: Show Invalid Server Address please again');
+            // UI: Show Invalid Server Address please again
+        } else {
+            var msg = 'Connection error!';
+            console.log('UI: Show Error Page', msg);
+            // UI: Show Error Page with message msg
+        }
+    }, function connect(socket) {
+        uiConnector.socket = socket;
+        console.log('UI: Show Login fields');
+        // UI: Show Login fields
+    });
+};
+
+uiConnector.login = function(username, password){
+    if(uiConnector.socket){
+        console.log('UI: Show waiting page / loading circle');
+        // UI: Show waiting page / loading circle
+        uiConnector.socket.login(username, password, function loginfail(){
+            console.log('UI: Show Login failed => Retry');
+            // UI: Show Login failed => Retry
+        });
+    } else {
+        var msg = 'No connection found!';
+        console.log('UI: Show Error Page', msg);
+        // UI: Show Error Page with message msg
     }
-    console.error(e);
-});
-socket.on('err', function (data) {
-    console.error(data);
-});
-var temo = {};
-socket.on('configupdate', function (data) {
-    console.warn(data);
-    temo = data;
-});
-
-var siocon = function (url, username, password, error) {
-    var socket = io(url + '?username=' + username + '&password=' + password); //&password=test223
-    siocon.socket = socket;
-    socket.on('connect', function () {
-        console.info('Connected to Socket.IO Server: '+url);
-    });
-    socket.on('view', function (data) {
-        console.log('view => ' + JSON.stringify(data));
-        if (data.cconfig.devices === true) {
-            for (var i in devices) {
-                devices[i].use(socket);
-            }
-        }
-        if (views[data.view]) {
-            views[data.view].use(socket, data);
-        }
-    });
-    socket.on('configupdate', function (data) {
-        socket.configdata = data;
-    });
-
-    socket.on('err', function (data) {
-        console.error(data);
-        console.log('Destroy Socket');
-        socket.destroy();
-        error(data);
-    });
-    socket.on('error', function (e) {
-        if (e === 'Authentication error') {
-            console.log('Destroy Socket');
-            socket.destroy();
-            error(e);
-        }
-        console.error(e);
-    });
-    socket.on('disconnect', function (e) {
-        console.info('Connected to Socket.IO');
-    });
-
-}
+};

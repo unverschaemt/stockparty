@@ -4,90 +4,65 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <link href="layout/css/standard.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="layout/font/fontAwesome/css/font-awesome.min.css">
+        <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,100italic,300italic,400italic' rel='stylesheet' type='text/css'>
+
+    <script type="text/javascript" src="javascript/UIHandler.js"></script>
 </head>
 
 <body>
     <div id="cashPanel">
         <div id="orderList">
-            <div id="userBalance">
-                12,85€
-            </div>
-            <div id="userOrder">
-                <table width="100%" cellspacing="0" cellpadding="5">
+            <p id="userBalance" onclick="updateDrinkList(3)">
+                12,85€ <span>(2,44€)</span><i class="fa fa-calculator" onclick="toggleAddCashPanel(this)"></i>
+            </p>
+            <div id="userAddCash">
+                <p id="addCashAmount">€</p>
+                <table width="100%" border="0" cellspacing="0">
                     <tr>
-                        <td width="10%">3x</td>
-                        <td width="10%">0,5l</td>
-                        <td width="65%">Bier</td>
-                        <td width="15%">12,50€</td>
+                        <td onclick="addCash('1')">1</td>
+                        <td onclick="addCash('2')">2</td>
+                        <td onclick="addCash('3')">3</td>
                     </tr>
                     <tr>
-                        <td width="10%">2x</td>
-                        <td width="10%">12,3l</td>
-                        <td width="65%">Bier</td>
-                        <td width="15%">2,50€</td>
+                        <td onclick="addCash('4')">4</td>
+                        <td onclick="addCash('5')">5</td>
+                        <td onclick="addCash('6')">6</td>
                     </tr>
                     <tr>
-                        <td width="10%">2x</td>
-                        <td width="10%">0,5l</td>
-                        <td width="65%">Softdrink</td>
-                        <td width="15%">1,50€</td>
+                        <td onclick="addCash('7')">7</td>
+                        <td onclick="addCash('8')">8</td>
+                        <td onclick="addCash('9')">9</td>
                     </tr>
                     <tr>
-                        <td width="10%">5x</td>
-                        <td width="10%">0,05l</td>
-                        <td width="65%">Vodka</td>
-                        <td width="15%">5,50€</td>
+                        <td onclick="addCash('.')">.</td>
+                        <td onclick="addCash(0)">0</td>
+                        <td class="delete" onclick="removeCash()"><i class="fa fa-caret-square-o-left"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="mode">AUS</td>
+                        <td class="button">CANCEL</td>
+                        <td class="button">OK</td>
+                    </tr>
+                    </tr>
                     </tr>
                 </table>
             </div>
+            <div id="userOrderTable">
+                <table id="userOrder" width="100%" cellspacing="0">
+                </table>
+            </div>
         </div>
-        <div id="drinkList">
-            <span class="drink">
-                Bier <span>0,5l</span>
-            </span>
-            <span class="drink">
-            Bier <span>0,3l</span>
-            </span>
-            <span class="drink">
-            Vodka <span>0,05l</span>
-            </span>
-            <span class="drink inactive">
-            Vodka <span>0,1l</span>
-            </span>
-            <span class="drink">
-            Jägermeister <span>0,05l</span>
-            </span>
-            <span class="drink inactive">
-            Coba Libre <span>0,4l</span>
-            </span>
-            <span class="drink">
-            Wein (Rot) <span>0,25l</span>
-            </span>
-            <span class="drink inactive">
-            Wein (Rot) <span>0,5l</span>
-            </span>
-            <span class="drink">
-            Wein (Weiß) <span>0,25l</span>
-            </span>
-            <span class="drink">
-            Wein (Weiß) <span>0,5l</span>
-            </span>
-            <span class="drink">
-            Rum <span>0,5l</span>
-            </span>
-            <span class="drink inactive">
-            Rum <span>0,05l</span>
-            </span>
-            <span class="drink">
-            Bachwasser <span>0,33l</span>
-            </span>
-            <span class="drink">
-            Softdrink <span>0,5l</span>
-            </span>
-            <span class="drink">
-            Softdrink <span>0,33l</span>
-            </span>
+        <div id="orderListControlPanel">
+            <p id="totalPrice">
+                12,85€
+            </p>
+            <button>Pay</button>
+            <button onclick="fillWithTestData()">Clear</button>
+            <p id="cashPanelId">ID: 2334996862334</p>
         </div>
+        <div id="drinkListOverlayer"></div>
+        <div id="drinkList"></div>
     </div>
 </body>
 
