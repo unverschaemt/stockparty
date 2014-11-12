@@ -1,5 +1,5 @@
 var config = require('../config.js');
-var configfunctions = require('../configfunctions.js');
+//var configfunctions = require('../configfunctions.js');
 var drinkInterface = require('../../DrinkInterface.js');
 var broadcasts = require('../broadcasts.js');
 var m = module.exports = {};

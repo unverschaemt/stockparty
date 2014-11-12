@@ -3,7 +3,7 @@ var priceUpdateService = require('../services/priceUpdateService.js');
 var configUpdateService = require('../services/configUpdateService.js');
 var drinkUpdateService = require('../services/drinkUpdateService.js');
 
-var config = require('../config.js');
+//var config = require('../config.js');
 var m = module.exports = {};
 
 m.use = function (socket) {
