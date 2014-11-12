@@ -1,5 +1,6 @@
 var should = require('should');
-var io = require('socket.io-client');
+//var io = require('socket.io-client');
+siocon = null;
 var siocon = require('../apis/siocon.js');
 
 var views = {};
@@ -133,6 +134,7 @@ describe("Stock Party IDD plugin/scan/remove", function () {
 
     it('Should have a guest and a price entry in order object', function (done) {
         should(orderdata).be.type('object');
+        console.log(orderdata);
         if (orderdata) {
             should(orderdata).have.property('guest');
             should(orderdata).have.property('priceEntry');
@@ -167,5 +169,11 @@ describe("Stock Party IDD plugin/scan/remove", function () {
         };
         globalSocket.on('configupdate', temp);
         globalSocket.emit('iddremove', iddpluginobject);
+    });
+    it('Should disconnect the socket', function (done) {
+        globalSocket.close();
+        setTimeout(function () {
+            done();
+        }, 1500);
     });
 });

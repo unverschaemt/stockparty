@@ -1,5 +1,6 @@
 var should = require('should');
-var io = require('socket.io-client');
+//var io = require('socket.io-client');
+siocon = null;
 var siocon = require('../apis/siocon.js');
 
 var views = {};
@@ -76,9 +77,9 @@ describe("Stock Party Client-Server Connection", function () {
     });
     it('Should fire configupdate event with data.config when a correct client was chosen. And should fire a view event', function (done) {
         var d = 2;
-        var checkdone = function(){
+        var checkdone = function () {
             d--;
-            if(d<1){
+            if (d < 1) {
                 done();
             }
         };
@@ -107,5 +108,9 @@ describe("Stock Party Client-Server Connection", function () {
         globalSocket.clientchoice(correctClient, function error() {
 
         });
+    });
+    it('Should disconnect the socket', function (done) {
+        globalSocket.close();
+        done();
     });
 });
