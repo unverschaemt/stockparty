@@ -128,9 +128,9 @@ function login() {
 function connectServer(inputBox) {
     uiConnector.connect(inputBox.value, function (success) {
         if (success) {
-            alert("success");
+            console.log("success");
         } else {
-            alert("not success")
+            console.log("not success")
         };
     });
 }
