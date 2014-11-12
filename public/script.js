@@ -2,7 +2,7 @@ var url = 'http://localhost:4217/';
 
 var uiConnector = {};
 
-uiConnector.connect = function(url){
+uiConnector.connect = function(url, cb){
     console.log('Starting Connection...');
     siocon(url, views, devices, function error(err) {
         console.log('UI: Show connecting to server loading circle');
@@ -10,16 +10,16 @@ uiConnector.connect = function(url){
         if(err === 'Invalid server address!'){
             console.log('Connection failed! Please try again!', err);
             console.log('UI: Show Invalid Server Address please again');
-            // UI: Show Invalid Server Address please again
+            cb(false); // UI: Show Invalid Server Address please again
         } else {
             var msg = 'Connection error!';
             console.log('UI: Show Error Page', msg);
-            // UI: Show Error Page with message msg
+            showErrorPage(); // UI: Show Error Page with message msg
         }
     }, function connect(socket) {
         uiConnector.socket = socket;
         console.log('UI: Show Login fields');
-        // UI: Show Login fields
+        cb(true); // UI: Show Login fields
     });
 };
 
