@@ -128,11 +128,8 @@ function login() {
 function connectServer(inputBox) {
     uiConnector.connect(inputBox.value, function (success) {
         if (success) {
-<<<<<<< HEAD
             showLogin();
-=======
             console.log("success");
->>>>>>> development/development
         } else {
             console.log("not success")
         };
