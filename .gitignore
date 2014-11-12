@@ -2859,3 +2859,4 @@ hardware-api/node_modules/usb/test/usb.coffee
 hardware-api/node_modules/usb/test/usb.js
 hardware-api/node_modules/usb/usb.js
 hardware-api/package.json
+/config.json
