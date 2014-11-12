@@ -9,6 +9,9 @@ if (typeof module !== 'undefined' && module.exports) {
 var serverVerifier = 'StockParty Server by David Ehlen, Robin Frischmann, Nils Hirsekorn, Dustin Hoffner';
 
 var siocon = function (url, views, devices, error, connect) {
+    if ( url === ''){
+        return error('Invalid server address!');
+    }
     if (url[url.length - 1] !== '/') {
         url += '/';
     }
@@ -85,6 +88,7 @@ var siocon = function (url, views, devices, error, connect) {
         });
 
         socket.on('disconnect', function (e) {
+            load = true;
             //console.info('Disconnected from Socket.IO');
         });
     });

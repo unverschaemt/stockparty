@@ -4,13 +4,58 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <link href="layout/css/standard.css" rel="stylesheet" type="text/css">
+
+    <script src="socket.io.js"></script>
+    <script src="superagent.js"></script>
+    <script src="apis/siocon.js"></script>
+    <!-- First ALL Controllers -->
+    <script src="listView.js"></script>
+    <script src="adminPanelView.js"></script>
+    <script src="cashPanelView.js"></script>
+    <script src="monitorView.js"></script>
+    <!--    <script src="scanner.js"></script>-->
+
+    <!--     Register Devices and Views -->
+    <script src="devices.js"></script>
+    <script src="views.js"></script>
+
+    <!--     Main Script -->
+    <script src="script.js"></script>
+
+
     <link rel="stylesheet" href="layout/font/fontAwesome/css/font-awesome.min.css">
-        <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,100italic,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,100italic,300italic,400italic' rel='stylesheet' type='text/css'>
 
     <script type="text/javascript" src="javascript/UIHandler.js"></script>
 </head>
 
 <body>
+    <div id="loginPanel">
+        <center>
+            <img src="layout/image/stockpartylogo.png" width="80" height="80">
+            <br>
+            <span style="font-size: 30px; font-family: UnverschaemtSans">Stock Party</span>
+        </center>
+        <br>
+        <br>
+        <form method="post" action="javascript:login()">
+            <input id="server" type="text" placeholder="SERVER" value="/" onblur="connectServer(this)">
+            <br>
+            <div id="userLogin">
+                <input id="username" type="text" placeholder="USERNAME" value="admin" disabled>
+                <br>
+                <input id="password" type="password" placeholder="PASSWORD" value="admin" disabled>
+                <br>
+                <br>
+                <input id="loginSubmit" type="submit" value="LOGIN" disabled>
+            </div>
+        </form>
+        <br>
+        <br>
+    </div>
+    <div id="clientSelectionPanel">
+        <table id="clientSelection"></table>
+    </div>
     <div id="cashPanel">
         <div id="orderList">
             <p id="userBalance" onclick="updateDrinkList(3)">
@@ -37,7 +82,8 @@
                     <tr>
                         <td onclick="addCash('.')">.</td>
                         <td onclick="addCash(0)">0</td>
-                        <td class="delete" onclick="removeCash()"><i class="fa fa-caret-square-o-left"></i></td>
+                        <td class="delete" onclick="removeCash()"><i class="fa fa-caret-square-o-left"></i>
+                        </td>
                     </tr>
                     <tr>
                         <td class="mode">AUS</td>
@@ -56,7 +102,7 @@
                 12,85€
             </p>
             <button>Pay</button>
-            <button onclick="fillWithTestData()">Clear</button>
+            <button onclick="cleanUserOrder()">Clear</button>
             <p id="cashPanelId">ID: 2334996862334</p>
         </div>
         <div id="drinkListOverlayer"></div>

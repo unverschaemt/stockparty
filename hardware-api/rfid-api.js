@@ -22,29 +22,20 @@ rfidApi.use = function (socket) {
     rfidApi.socket = socket;
     if (disconnected) {
         disconnected = false;
+        console.log(devices);
         for (var i in devices) {
-            if (rfidApi.socket.configdata.config.global.configmode == true) {
-                rfidApi.socket.emit('iddplugin', {
+            rfidApi.socket.emit('iddplugin', {
                     'hid': devices[i].hid
                 });
-            } else {
-                for (var dev in rfidApi.socket.configdata.config.devices) {
-                    if (rfidApi.socket.configdata.config.devices[dev].hid === devices[i].hid) {
-                        rfidApi.socket.emit('iddplugin', {
-                            'hid': devices[i].hid
-                        });
-                    }
-                }
-            }
+              rfidApi.listenForScan(i);
         }
     }
     if (rfidApi.first) {
         rfidApi.socket.on('disconnect', function (data) {
             disconnected = true;
             for (var i in rfidReaders) {
-                if (rfidReaders[i].path === devices[i].path) {
-                    rfidReaders[i].close();
-                }
+               rfidReaders[i].close();
+                
             }
         });
     }
@@ -150,19 +141,9 @@ monitor.on('add:' + constants.VENDORID + ':' + constants.PRODUCTID + '', functio
         }
         devices[arrayIndex].hid = '' + macAddress + '-' + serNum + '';
 
-        if (rfidApi.socket.configdata.config.global.configmode == true) {
-            rfidApi.socket.emit('iddplugin', {
+          rfidApi.socket.emit('iddplugin', {
                 'hid': '' + macAddress + '-' + scannedDevices.serialNumber + ''
             });
-        } else {
-            for (var dev in rfidApi.socket.configdata.config.devices) {
-                if (rfidApi.socket.configdata.config.devices[dev].hid === '' + macAddress + '-' + scannedDevices.serialNumber) {
-                    rfidApi.socket.emit('iddplugin', {
-                        'hid': '' + macAddress + '-' + scannedDevices.serialNumber + ''
-                    });
-                }
-            }
-        }
     });
 
 

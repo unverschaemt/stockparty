@@ -3,19 +3,22 @@ var chart;
 function addDrink(drink) {
     var newDrink = document.createElement("span");
     newDrink.classList.add("drink");
-    newDrink.innerHTML = drink.name + "<span>" + drink.size + "</span>";
-    newDrink.onclick = function () {
+    newDrink.innerHTML = drink.name + "<span>" + drink.priceMin + "</span>";
+    newDrink.addEventListener("click", function () {
         addDrinkToUserOrder(drink)
-    };
+    });
     drinkList.appendChild(newDrink);
 }
 
 function addDrinkToUserOrder(drink) {
     var newUserOrderElement = document.createElement("tr");
-    newUserOrderElement.innerHTML = '<td width="10%">1x</td><td width="10%">' + drink.size + '</td><td width="65%">' + drink.name + '</td><td width="15%">2,50€</td>';
+    newUserOrderElement.innerHTML = '<td width="10%">1x</td><td width="10%">' + drink.priceMin + '</td><td width="65%">' + drink.name + '</td><td width="15%">2,50€</td>';
     userOrder.appendChild(newUserOrderElement);
 }
 
+function cleanUserOrder(){
+    userOrder.innerHTML = "";
+}
 function addCash(char) {
     var temp = addCashAmount.innerHTML.replace("€", "");
     if (temp == "") {
@@ -38,6 +41,14 @@ function removeCash() {
     temp = temp.substr(0, temp.length - 1);
     temp += "€";
     addCashAmount.innerHTML = temp;
+}
+
+function updateDrinks(drinks) {
+    drinkList.innerHTML = "";
+    for (var drink in drinks) {
+        addDrink(drinks[drink])
+    }
+    updateDrinkList(3);
 }
 
 function updateDrinkList(columns) {
@@ -106,10 +117,6 @@ function fillWithTestData() {
 }
 
 function loadPage() {
-    if (document.getElementById("cashPanel")) {
-        fillWithTestData();
-        userOrderTable.style.height = (orderList.offsetHeight - orderListControlPanel.offsetHeight - userBalance.offsetHeight) + "px";
-    }
     if (document.getElementById("adminPanel")) {
         settingPanel.style.top = adminPanelMenu.offsetHeight + "px";
         settingPanel.style.height = (adminPanel.clientHeight) + "px";
@@ -121,15 +128,55 @@ function loadPage() {
 }
 
 function login() {
-    alert("das");
-    window.location.href = 'cashPanel.html'
+    uiConnector.login(username.value, password.value, function () {
+        showErrorMessage("Wrong login");
+    });
 }
 
-function showLogin(input) {
-    userlogin.style.display = "block";
-    input.blur();
-    serverlogin.style.display = "none";
-    loginPage.innerHTML = "2 / 2"
+function showClientList(data) {
+    console.log(data);
+    data = data.data;
+    loginPanel.style.display = "none";
+    clientSelectionPanel.style.display = "block";
+    clientSelection.innerHTML += "<tr><th>ID</th><th>NAME</th><th>Type</th><th>Connections</th></tr>";
+    for (var item in data) {
+        var id = "'" + data[item]._id + "'";
+        clientSelection.innerHTML += '<tr onclick="listView.choose(' + id + ')"><td>' + data[item]._id + "</td><td>" + data[item].name + "</td><td>" + data[item].type + "</td><td>" + data[item].connections + "</td></tr>";
+    }
+}
+
+function showCashPanel() {
+    clientSelectionPanel.style.display = "none";
+    cashPanel.style.display = "block";
+    userOrderTable.style.height = (orderList.offsetHeight - orderListControlPanel.offsetHeight - userBalance.offsetHeight) + "px";
+}
+
+function connectServer(inputBox) {
+    uiConnector.connect(inputBox.value, function (success) {
+        if (success) {
+            showLogin();
+        } else {
+            //TODO: SERVER ERROR
+            showErrorMessage("SERVER BLASDSD");
+            inputBox.focus();
+        };
+    });
+}
+
+function showErrorMessage(error) {
+    console.log(error);
+}
+
+function showErrorPage(text) {
+    //TODO:ERROR PAGE
+    alert("ERROR");
+};
+
+function showLogin() {
+    username.disabled = false;
+    password.disabled = false;
+    loginSubmit.disabled = false;
+    username.focus();
 }
 
 function switchNavigationTabs(navigationTab, page) {
@@ -182,7 +229,7 @@ function startGraphAnimation() {
 
 function addPoint() {
     for (var i = 0; i < chart.series.length; ++i) {
-        chart.series[i].addPoint((Math.random() * Math.random() * 5)*2);
+        chart.series[i].addPoint((Math.random() * Math.random() * 5) * 2);
     }
 }
 
