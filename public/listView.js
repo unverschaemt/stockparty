@@ -6,6 +6,7 @@ listView.use = function (socket, data) {
     listView.socket = socket;
     console.log('UI: Show clientlist of data', data);
     // UI: Show clientlist of data
+    showClientList(data);
     if(!listView.first){
         console.log('UI: Show that an error was thrown while performing last choice');
         // UI: Show that an error was thrown while performing last choice

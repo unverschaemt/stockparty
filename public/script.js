@@ -23,13 +23,14 @@ uiConnector.connect = function(url, cb){
     });
 };
 
-uiConnector.login = function(username, password){
+uiConnector.login = function(username, password, error){
     if(uiConnector.socket){
         console.log('UI: Show waiting page / loading circle');
         // UI: Show waiting page / loading circle
         uiConnector.socket.login(username, password, function loginfail(){
             console.log('UI: Show Login failed => Retry');
             // UI: Show Login failed => Retry
+            error();
         });
     } else {
         var msg = 'No connection found!';

@@ -14,7 +14,7 @@ var db = mongoose.connect("mongodb://localhost/stockparty");
 //userInterface.deleteUser("5447eb9420cdd3d0b916cf5e", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //userInterface.setUserInfo("5447f106856d2088b72ae70f", {"password": "geheimesPasswort"}, function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 
-//drinkInterface.addDrink("Beer", 2.50, 5.30);
+drinkInterface.addDrink("Beer", 2.50, 5.30, false);
 //drinkInterface.getDrink("5447f2c5c7bd909c6758a4d5", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //drinkInterface.getAllDrinks(function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //drinkInterface.setDrinkInfo("5447f2c5c7bd909c6758a4d5", {"name": "Beer 0.33"}, function error(err){console.log(err)}, function cb(obj){console.log(obj)});
