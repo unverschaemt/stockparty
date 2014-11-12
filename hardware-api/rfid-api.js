@@ -42,7 +42,7 @@ rfidApi.use = function (socket) {
         rfidApi.socket.on('disconnect', function (data) {
             disconnected = true;
             for (var i in rfidReaders) {
-                if (rfidReaders[i].path === scannedDevices.path) {
+                if (rfidReaders[i].path === devices[i].path) {
                     rfidReaders[i].close();
                 }
             }
