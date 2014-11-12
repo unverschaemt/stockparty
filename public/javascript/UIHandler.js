@@ -125,6 +125,21 @@ function login() {
     window.location.href = 'cashPanel.html'
 }
 
+function connectServer(inputBox) {
+    uiConnector.connect(inputBox.value, function (success) {
+        if (success) {
+            alert("success");
+        } else {
+            alert("not success")
+        };
+    });
+}
+
+function showErrorPage(text) {
+    //TODO:ERROR PAGE
+    alert("ERROR");
+};
+
 function showLogin(input) {
     userlogin.style.display = "block";
     input.blur();
@@ -182,7 +197,7 @@ function startGraphAnimation() {
 
 function addPoint() {
     for (var i = 0; i < chart.series.length; ++i) {
-        chart.series[i].addPoint((Math.random() * Math.random() * 5)*2);
+        chart.series[i].addPoint((Math.random() * Math.random() * 5) * 2);
     }
 }
 
