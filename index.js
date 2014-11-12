@@ -5,6 +5,7 @@ var guestInterface = require('./database/GuestInterface');
 var alcoholInterface = require('./database/AlcoholLevelInterface');
 var consumptionInterface = require('./database/ConsumptionInterface');
 var priceHistoryInterface = require('./database/PriceHistoryInterface');
+var priceCalculator = require('./PriceCalculator');
 
 // Create db connection
 var db = mongoose.connect("mongodb://localhost/stockparty");
@@ -42,3 +43,35 @@ var db = mongoose.connect("mongodb://localhost/stockparty");
 //priceHistoryInterface.getPriceHistory(function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //priceHistoryInterface.deleteAllPriceHistoryEntries(function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 
+/*drinkInterface.addDrink('Beer', 2.5, 5.3, function cb(obj) {
+    drinkInterface.addDrink('Coke', 2, 4, function cb(obj) {
+        drinkInterface.addDrink('Vodka', 3, 5, function cb(obj) {
+            drinkInterface.addDrink('Rum', 3, 5, function cb(obj) {
+                drinkInterface.addDrink('Tequila', 3, 5, function cb(obj) {
+                    drinkInterface.addDrink('Captain', 4, 7, function cb(obj) {
+                        priceCalculator.triggerCalculation(true);
+                    });
+                });
+            });
+        });
+    });
+});*/
+
+priceHistoryInterface.getPriceHistory(function err(err) {
+    console.log(err)
+}, function cb(obj) {
+    drinkInterface.getAllDrinks(function err(err) {
+        console.log(err)
+    }, function cb(drinks) {
+        var testPrices = [];
+        for (var i in obj) {
+            var data = {};
+            data.Time = obj[i].time;
+            for (var j in obj[i].drinks) {
+                data[drinks[obj[i].drinks[j].id].name] = obj[i].drinks[j].price;
+            }
+            testPrices.push(data);
+        }
+        console.log(JSON.stringify(testPrices));
+    });
+});
