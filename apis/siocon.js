@@ -85,6 +85,7 @@ var siocon = function (url, views, devices, error, connect) {
         });
 
         socket.on('disconnect', function (e) {
+            load = true;
             //console.info('Disconnected from Socket.IO');
         });
     });
