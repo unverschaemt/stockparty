@@ -81,17 +81,27 @@ m.getGuest = function (idk, error, cb) {
         idk: idk
     }, function (err, guest) {
         if (err) {
+            var guest = {
+                'idk': idk,
+                'name': '',
+                'birthDate': 0
+            };
             m.addGuest(idk, '', 0, function (err) {
                 error(err)
             }, function (obj) {
-                cb(obj)
+                cb(guest);
             });
         } else {
             if (!guest) {
+                var guest = {
+                    'idk': idk,
+                    'name': '',
+                    'birthDate': 0
+                };
                 m.addGuest(idk, '', 0, function (err) {
                     error(err)
                 }, function (obj) {
-                    cb(obj)
+                    cb(guest);
                 });
             } else {
                 var temp = JSON.parse(JSON.stringify(guest));
