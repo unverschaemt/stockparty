@@ -46,13 +46,13 @@ m.deleteAllGuests = function (error, cb) {
                     guest.remove(function () {
                         c++;
                         if (guests.length == c) {
-                            cb(c + ' from ' + guests.length + ' deleted good!');
+                            cb(true);
                         }
                     });
                 }
             }
             if (guests.length < 1) {
-                cb(c + ' from ' + guests.length + ' deleted good!');
+                cb(true);
             }
         }
     });

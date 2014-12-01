@@ -15,7 +15,7 @@ var db = mongoose.connect("mongodb://localhost/stockparty");
 //userInterface.deleteUser("5447eb9420cdd3d0b916cf5e", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //userInterface.setUserInfo("5447f106856d2088b72ae70f", {"password": "geheimesPasswort"}, function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 
-drinkInterface.addDrink("Beer", 2.50, 5.30, false);
+//drinkInterface.addDrink("Beer", 2.50, 5.30, false);
 //drinkInterface.getDrink("5447f2c5c7bd909c6758a4d5", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //drinkInterface.getAllDrinks(function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //drinkInterface.setDrinkInfo("5447f2c5c7bd909c6758a4d5", {"name": "Beer 0.33"}, function error(err){console.log(err)}, function cb(obj){console.log(obj)});
@@ -23,7 +23,7 @@ drinkInterface.addDrink("Beer", 2.50, 5.30, false);
 //drinkInterface.deleteAllDrinks(function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 
 //guestInterface.addGuest("F03DA23B22", 5.23, "Peter", 12.12, function error(err){console.log(err)});
-//guestInterface.getGuest("F03DA23B22", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
+guestInterface.getGuest("F03DA23B22", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //guestInterface.deleteGuest("F03DA23B22", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //guestInterface.deleteAllGuests(function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //guestInterface.setGuestBalance("F03DA23B22", 10.00, function error(err){console.log(err)}, function cb(obj){console.log(obj)});
@@ -57,7 +57,7 @@ drinkInterface.addDrink("Beer", 2.50, 5.30, false);
     });
 });*/
 
-priceHistoryInterface.getPriceHistory(function err(err) {
+/*priceHistoryInterface.getPriceHistory(function err(err) {
     console.log(err)
 }, function cb(obj) {
     drinkInterface.getAllDrinks(function err(err) {
@@ -75,3 +75,4 @@ priceHistoryInterface.getPriceHistory(function err(err) {
         console.log(JSON.stringify(testPrices));
     });
 });
+*/

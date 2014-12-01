@@ -103,7 +103,7 @@ calcPriceForDrink = function (drink, data) {
                 } else {
                     price = oldPrices[drink.name] - ((oldPrices[drink.name] - drink.priceMin) * Math.abs(rate));
                 }
-                console.log(drink.name + '  :  oldData: ' + oldDatas[drink.name] + '  newData: ' + data[drink.name] + '  rate: ' + rate + '   price: ' + price);
+                //console.log(drink.name + '  :  oldData: ' + oldDatas[drink.name] + '  newData: ' + data[drink.name] + '  rate: ' + rate + '   price: ' + price);
             }
         } else {
             //Calculated randomly

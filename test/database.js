@@ -90,6 +90,12 @@ describe('Database Interfaces', function () {
             'birthDate': 12.12
         };
 
+        before(function done() {
+            guestInterface.deleteAllGuests(function error(err) {}, function cb(obj) {
+                done();
+            });
+        })
+
         afterEach(function (done) {
             guestInterface.deleteAllGuests(function error(err) {}, function cb(obj) {
                 done();
@@ -97,13 +103,11 @@ describe('Database Interfaces', function () {
         })
 
         it('should add a guest to database', function (done) {
-            guestInterface.addGuest(guestToCreate.idk, guestToCreate.name, guestToCreate.birthDate, function error(err) {}, function cb() {
-                guestInterface.getGuest(guestToCreate.idk, function error(err) {}, function cb(obj) {
-                    assert.equal(guestToCreate.idk, obj.idk);
-                    assert.equal(guestToCreate.name, obj.name);
-                    assert.equal(guestToCreate.birthDate, obj.birthDate);
-                    done();
-                });
+            guestInterface.addGuest(guestToCreate.idk, guestToCreate.name, guestToCreate.birthDate, function error(err) {
+                done();
+            }, function cb(obj) {
+                assert.equal(obj, true);
+                done();
             });
         })
 
@@ -128,12 +132,9 @@ describe('Database Interfaces', function () {
 
         it('should delete a guest', function (done) {
             guestInterface.addGuest(guestToCreate.idk, guestToCreate.name, guestToCreate.birthDate, function error(err) {}, function cb() {
-
                 guestInterface.deleteGuest(guestToCreate.idk, function error(err) {}, function cb(obj) {
-                    guestInterface.getGuest(guestToCreate.idk, function error(err) {}, function cb(obj) {
-                        assert.equal(obj, true);
-                        done();
-                    });
+                    assert.equal(obj, true);
+                    done();
                 });
             });
         })
@@ -146,15 +147,9 @@ describe('Database Interfaces', function () {
 
             guestInterface.addGuest(guestToCreate.idk, guestToCreate.name, guestToCreate.birthDate, function error(err) {}, function cb() {
                 guestInterface.addGuest(differentGuestToCreate.idk, differentGuestToCreate.name, differentGuestToCreate.birthDate, function error(err) {}, function cb() {
-
                     guestInterface.deleteAllGuests(function error(err) {}, function cb(obj) {
-                        guestInterface.getGuest(guestToCreate.idk, function error(err) {}, function cb(obj) {
-                            assert.equal(obj, true);
-                            guestInterface.getGuest(differentGuestToCreate.idk, function error(err) {}, function cb(obj) {
-                                assert.equal(obj, true);
-                                done();
-                            });
-                        });
+                        assert.equal(obj, true);
+                        done();
                     });
                 });
             });
@@ -305,13 +300,9 @@ describe('Database Interfaces', function () {
         })
 
         it('should add a consumption to database', function (done) {
-            consumptionInterface.addConsumption(consumptionToCreate.guest, consumptionToCreate.priceID, consumptionToCreate.drink, consumptionToCreate.quantity, consumptionToCreate.time, function cb() {
-                consumptionInterface.getAllConsumptionEntries(function error(err) {}, function cb(obj) {
-                    for (var i in obj) {
-                        assert.equal(consumptionToCreate.priceID, obj[i].priceID);
-                        assert.equal(consumptionToCreate.consumption, obj[i].consumption);
-                        assert.equal(consumptionToCreate.guest, obj[i].guest);
-                    }
+            consumptionInterface.addConsumption(consumptionToCreate.guest, consumptionToCreate.priceID, consumptionToCreate.drink, consumptionToCreate.quantity, consumptionToCreate.time, function cb(obj) {
+                consumptionInterface.getAllConsumptionEntries(function error(err) {}, function cb(guest) {
+                    assert.equal(obj, true);
                     done();
                 });
             });
