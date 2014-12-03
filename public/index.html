@@ -39,20 +39,74 @@
         <br>
         <br>
         <form method="post" action="javascript:login()">
-            <input id="server" type="text" placeholder="SERVER" onblur="connectServer(this)">
+            <input id="server" type="text" placeholder="SERVER" value="/" onblur="connectServer(this)">
             <br>
             <div id="userLogin">
-                <div id="overlayer"></div>
-                <input id="username" type="text" placeholder="USERNAME">
+                <input id="username" type="text" placeholder="USERNAME" value="admin" disabled>
                 <br>
-                <input id="password" type="password" placeholder="PASSWORD">
+                <input id="password" type="password" placeholder="PASSWORD" value="admin" disabled>
                 <br>
                 <br>
-                <input type="submit" value="LOGIN">
+                <input id="loginSubmit" type="submit" value="LOGIN" disabled>
             </div>
         </form>
         <br>
         <br>
+    </div>
+    <div id="clientSelectionPanel">
+        <table id="clientSelection"></table>
+    </div>
+    <div id="cashPanel">
+        <div id="orderList">
+            <p id="userBalance" onclick="updateDrinkList(3)">
+                12,85€ <span>(2,44€)</span><i class="fa fa-calculator" onclick="toggleAddCashPanel(this)"></i>
+            </p>
+            <div id="userAddCash">
+                <p id="addCashAmount">€</p>
+                <table width="100%" border="0" cellspacing="0">
+                    <tr>
+                        <td onclick="addCash('1')">1</td>
+                        <td onclick="addCash('2')">2</td>
+                        <td onclick="addCash('3')">3</td>
+                    </tr>
+                    <tr>
+                        <td onclick="addCash('4')">4</td>
+                        <td onclick="addCash('5')">5</td>
+                        <td onclick="addCash('6')">6</td>
+                    </tr>
+                    <tr>
+                        <td onclick="addCash('7')">7</td>
+                        <td onclick="addCash('8')">8</td>
+                        <td onclick="addCash('9')">9</td>
+                    </tr>
+                    <tr>
+                        <td onclick="addCash('.')">.</td>
+                        <td onclick="addCash(0)">0</td>
+                        <td class="delete" onclick="removeCash()"><i class="fa fa-caret-square-o-left"></i>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="mode">AUS</td>
+                        <td class="button">CANCEL</td>
+                        <td class="button">OK</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="userOrderTable">
+                <table id="userOrder" width="100%" cellspacing="0">
+                </table>
+            </div>
+        </div>
+        <div id="orderListControlPanel">
+            <p id="totalPrice">
+                12,85€
+            </p>
+            <button>Pay</button>
+            <button onclick="cleanUserOrder()">Clear</button>
+            <p id="cashPanelId">ID: 2334996862334</p>
+        </div>
+        <div id="drinkListOverlayer"></div>
+        <div id="drinkList"></div>
     </div>
 </body>
 

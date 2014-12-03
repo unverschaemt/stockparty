@@ -47,8 +47,14 @@ body {
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none
+    user-select: none;
 }
+
+#cashPanel, #clientSelectionPanel{
+    display: none;
+}
+
+
 input {
     width: 100%;
     margin: 2px 2px 3px 2px;
@@ -503,9 +509,7 @@ input[type="checkbox"].green.ios-switch:checked + div > div {
     float: right;
     margin-right: 36px;
 }
-#userLogin {
-    opacity: 0.3;
-}
+
 #userLogin #overlayer {
     background: transparent;
     width: 100%;

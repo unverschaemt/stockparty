@@ -5,6 +5,7 @@ var guestInterface = require('./database/GuestInterface');
 var alcoholInterface = require('./database/AlcoholLevelInterface');
 var consumptionInterface = require('./database/ConsumptionInterface');
 var priceHistoryInterface = require('./database/PriceHistoryInterface');
+var priceCalculator = require('./PriceCalculator');
 
 // Create db connection
 var db = mongoose.connect("mongodb://localhost/stockparty");
@@ -14,7 +15,7 @@ var db = mongoose.connect("mongodb://localhost/stockparty");
 //userInterface.deleteUser("5447eb9420cdd3d0b916cf5e", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //userInterface.setUserInfo("5447f106856d2088b72ae70f", {"password": "geheimesPasswort"}, function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 
-//drinkInterface.addDrink("Beer", 2.50, 5.30);
+//drinkInterface.addDrink("Beer", 2.50, 5.30, false);
 //drinkInterface.getDrink("5447f2c5c7bd909c6758a4d5", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //drinkInterface.getAllDrinks(function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //drinkInterface.setDrinkInfo("5447f2c5c7bd909c6758a4d5", {"name": "Beer 0.33"}, function error(err){console.log(err)}, function cb(obj){console.log(obj)});
@@ -22,7 +23,7 @@ var db = mongoose.connect("mongodb://localhost/stockparty");
 //drinkInterface.deleteAllDrinks(function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 
 //guestInterface.addGuest("F03DA23B22", 5.23, "Peter", 12.12, function error(err){console.log(err)});
-//guestInterface.getGuest("F03DA23B22", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
+guestInterface.getGuest("F03DA23B22", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //guestInterface.deleteGuest("F03DA23B22", function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //guestInterface.deleteAllGuests(function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //guestInterface.setGuestBalance("F03DA23B22", 10.00, function error(err){console.log(err)}, function cb(obj){console.log(obj)});
@@ -42,3 +43,36 @@ var db = mongoose.connect("mongodb://localhost/stockparty");
 //priceHistoryInterface.getPriceHistory(function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 //priceHistoryInterface.deleteAllPriceHistoryEntries(function error(err){console.log(err)}, function cb(obj){console.log(obj)});
 
+/*drinkInterface.addDrink('Beer', 2.5, 5.3, function cb(obj) {
+    drinkInterface.addDrink('Coke', 2, 4, function cb(obj) {
+        drinkInterface.addDrink('Vodka', 3, 5, function cb(obj) {
+            drinkInterface.addDrink('Rum', 3, 5, function cb(obj) {
+                drinkInterface.addDrink('Tequila', 3, 5, function cb(obj) {
+                    drinkInterface.addDrink('Captain', 4, 7, function cb(obj) {
+                        priceCalculator.triggerCalculation(true);
+                    });
+                });
+            });
+        });
+    });
+});*/
+
+/*priceHistoryInterface.getPriceHistory(function err(err) {
+    console.log(err)
+}, function cb(obj) {
+    drinkInterface.getAllDrinks(function err(err) {
+        console.log(err)
+    }, function cb(drinks) {
+        var testPrices = [];
+        for (var i in obj) {
+            var data = {};
+            data.Time = obj[i].time;
+            for (var j in obj[i].drinks) {
+                data[drinks[obj[i].drinks[j].id].name] = obj[i].drinks[j].price;
+            }
+            testPrices.push(data);
+        }
+        console.log(JSON.stringify(testPrices));
+    });
+});
+*/
