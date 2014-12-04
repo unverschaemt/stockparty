@@ -134,7 +134,7 @@ describe("Stock Party IDD plugin/scan/remove", function () {
 
     it('Should have a guest and a price entry in order object', function (done) {
         should(orderdata).be.type('object');
-        console.log(orderdata);
+        //console.log(orderdata);
         if (orderdata) {
             should(orderdata).have.property('guest');
             should(orderdata).have.property('priceEntry');
