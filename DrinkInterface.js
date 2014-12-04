@@ -48,16 +48,20 @@ m.getAllDrinks = function (error, cb) {
 };
 
 m.addDrink = function (drink, cb) {
-    drinkDatabaseInterface.addDrink(drink.name, drink.size, drink.priceMin, drink.priceMax, cb);
+    drinkDatabaseInterface.addDrink(drink.name, drink.size, drink.priceMin, drink.priceMax, function callBack(obj){
     broadcasts.get('drinkUpdate')();
+        cb(obj);
+    });
 };
 
 m.removeDrink = function (drinkID, cb) {
     drinkDatabaseInterface.deleteDrink(drinkID, function err(err) {
         cb(false);
         console.log(err);
-    }, cb);
+    }, function callBack(obj){
     broadcasts.get('drinkUpdate')();
+        cb(obj);
+    });
 };
 
 m.setPrice = function (data) {
@@ -68,8 +72,10 @@ m.setDrink = function (data, cb) {
     drinkDatabaseInterface.setDrinkInfo(data.drinkID, data, function error(err) {
         cb(false);
         console.log(err);
-    }, cb);
+    }, function callBack(obj){
     broadcasts.get('drinkUpdate')();
+        cb(obj);
+    });
 };
 
 m.triggerStockCrash = function (decision) {
