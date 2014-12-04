@@ -8,9 +8,25 @@ var broadcasts = require('./connection/broadcasts.js');
 
 var m = module.exports = {};
 var priceEntryCache = {};
+var newDrinks = [];
 
 m.getPriceEntry = function (error, callBack) {
-    priceHistoryInterface.getLatestEntry(error, callBack);
+    priceHistoryInterface.getLatestEntry(error, function cb(entry) {
+        drinkDatabaseInterface.getAllDrinks(error, function cb(drinks) {
+            for (var i in drinks) {
+                for (var i in newDrinks) {
+                    if (drinks[i].name == newDrinks[i].name) {
+                        entry.drinks.push({
+                            'id': drinks[i]._id,
+                            'price': (drinks[i].priceMax + drinks[i].priceMin) / 2
+                        });
+                    }
+                }
+            }
+        });
+        newDrinks = [];
+        callBack(entry);
+    })
 };
 
 m.buyDrinks = function (data, callBack) {
@@ -49,6 +65,7 @@ m.getAllDrinks = function (error, cb) {
 
 m.addDrink = function (drink, cb) {
     drinkDatabaseInterface.addDrink(drink.name, drink.size, drink.priceMin, drink.priceMax, cb);
+    newDrinks.push(drink);
     broadcasts.get('drinkUpdate')();
 };
 
