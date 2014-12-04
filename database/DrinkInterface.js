@@ -2,9 +2,10 @@ var Drink = require('./models/Drink');
 
 var m = module.exports = {};
 
-m.addDrink = function (name, priceMin, priceMax, cb) {
+m.addDrink = function (name, size, priceMin, priceMax, cb) {
     var drink = new Drink({
         name: name,
+        size: size,
         priceMin: priceMin,
         priceMax: priceMax,
         soldOut: true

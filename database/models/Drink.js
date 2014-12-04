@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 
 var fileSchema = new Schema({
     name: String,
+    size: String,
     priceMin: Number,
     priceMax: Number,
     soldOut: Boolean

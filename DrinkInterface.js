@@ -47,7 +47,7 @@ m.getAllDrinks = function (error, cb) {
 };
 
 m.addDrink = function (drink, cb) {
-    drinkDatabaseInterface.addDrink(drink.name, drink.priceMin, drink.priceMax, cb);
+    drinkDatabaseInterface.addDrink(drink.name, drink.size, drink.priceMin, drink.priceMax, cb);
 };
 
 m.removeDrink = function (drinkID, cb) {
