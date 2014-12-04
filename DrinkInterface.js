@@ -14,24 +14,30 @@ m.getPriceEntry = function (error, callBack) {
 
 m.buyDrinks = function (data, callBack) {
     var price = 0;
-    var received = 0;
+    var drinks = [];
     for (var i in data.drinks) {
-        getPriceOfDrink(data.priceID, data.drinks[i].drinkID, function cb(obj) {
-            price += obj * data.drinks[i].quantity;
-            received++;
-            if (data.drinks.length == received) {
-                guestInterface.getGuest(data.guestID, function error(err) {
-                    console.log(err)
-                }, function cb(obj) {
-                    if (price < obj.balance) {
-                        addConsumption(data.drinks, data.guestID, data.priceID, callBack);
-                    } else {
-                        callBack(false);
-                    }
-                });
-            }
-        });
+        if (data.drinks[i].type == 'drink') {
+            getPriceOfDrink(data.priceID, data.drinks[i].drinkID, function cb(obj) {
+                price += obj * data.drinks[i].quantity;
+                drinks.push(data.drinks[i]);
+            });
+        } else {
+            balanceInterface.addBalance({
+                'balance': data.drinks[i].balance,
+                'guest': data.guestID
+            }, callBack);
+        }
     }
+
+    guestInterface.getGuest(data.guestID, function error(err) {
+        console.log(err)
+    }, function cb(obj) {
+        if (price < obj.balance) {
+            addConsumption(drinks, data.guestID, data.priceID, callBack);
+        } else {
+            callBack(false);
+        }
+    });
 };
 
 m.getAllDrinks = function (error, cb) {
