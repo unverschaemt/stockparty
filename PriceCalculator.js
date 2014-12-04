@@ -77,12 +77,12 @@ enableStockCrash = function () {
     drinkInterface.getAllDrinks(function error(err) {
         console.log(err)
     }, function cb(obj) {
-        var drinksWithPrices = [];
+        var drinksWithPrices = {};
         for (var i in obj) {
-            drinksWithPrices.push({
+            drinksWithPrices[i] = {
                 'id': obj[i]._id,
                 'price': obj[i].priceMin
-            });
+            };
         }
         saveNewDrinkPricesToDatabase(drinksWithPrices, function cb() {
             broadcasts.get('priceUpdate')();
