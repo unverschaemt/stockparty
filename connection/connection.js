@@ -9,6 +9,7 @@ c.monitor = require('./clientTypes/monitor.js');
 var m = module.exports = {};
 
 m.use = function (socket) {
+    socket.clientChosen = false;
 
     //Initial onLogin Create View
     socket.emitListView = function(){
@@ -24,6 +25,10 @@ m.use = function (socket) {
     };
 
     socket.on('clientchoice', function (data, error) {
+        if(socket.clientChosen){
+            error('Client already chosen!');
+            return socket.emitListView('Client already chosen!');
+        }
         if (!(data.clientid && socket && config.data.clients[data.clientid])) {
             error('Could not register');
             return socket.emitListView('Could not register');
@@ -31,6 +36,7 @@ m.use = function (socket) {
         socket.clientid = data.clientid;
         if (c && c[config.data.clients[data.clientid].type]) {
             if (configfunctions.addClient(socket, error)) {
+                socket.clientChosen = true;
                 c[config.data.clients[data.clientid].type].use(socket);
             }
         } else {

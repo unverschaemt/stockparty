@@ -37,9 +37,10 @@ m.use = function (socket) {
     };
     // Initial Data Push
     socket.priceUpdate(true);
+    socket.priceUpdate(false);
 }
 
-broadcasts.add('drinkUpdate', function (priceEntry) {
+broadcasts.add('priceUpdate', function (priceEntry) {
     for (var cid in config.data.clients) {
         if (config.runtime[cid] && config.runtime[cid].sockets && config.runtime[cid].sockets.length > 0) {
             for (var k in config.runtime[cid].sockets) {
