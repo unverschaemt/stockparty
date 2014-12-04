@@ -12,6 +12,9 @@ var priceEntryCache = {};
 m.getPriceEntry = function (error, callBack) {
     priceHistoryInterface.getLatestEntry(error, function cb(entry) {
         drinkDatabaseInterface.getAllDrinks(error, function cb(drinks) {
+            if(!entry){
+                entry = {'drinks':{}};
+            }
             for (var i in drinks) {
                 if (!entry.drinks[i]) {
                     entry.drinks[i] = {
