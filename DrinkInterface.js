@@ -12,20 +12,16 @@ var priceEntryCache = {};
 m.getPriceEntry = function (error, callBack) {
     priceHistoryInterface.getLatestEntry(error, function cb(entry) {
         drinkDatabaseInterface.getAllDrinks(error, function cb(drinks) {
-            var entryObj = {};
-            for (var i in entry.drinks) {
-                entryObj[entry.drinks[i].drinkID] = entry.drinks[i];
-            }
             for (var i in drinks) {
-                if (!entryObj[drinks[i]._id]) {
-                    entry.drinks.push({
-                        'id': drinks[i]._id,
+                if (!entry.drinks[i]) {
+                    entry.drinks[i] = {
+                        'id': i,
                         'price': (drinks[i].priceMax + drinks[i].priceMin) / 2
-                    });
+                    };
                 }
             }
+            callBack(entry);
         });
-        callBack(entry);
     })
 };
 
@@ -66,6 +62,7 @@ m.getAllDrinks = function (error, cb) {
 m.addDrink = function (drink, cb) {
     drinkDatabaseInterface.addDrink(drink.name, drink.size, drink.priceMin, drink.priceMax, function callBack(obj) {
         broadcasts.get('drinkUpdate')();
+        broadcasts.get('priceUpdate')();
         cb(obj);
     });
 };
