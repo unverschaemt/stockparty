@@ -3,6 +3,7 @@ var drinkInterface = require('./database/DrinkInterface');
 var config = require('./config.json');
 var triggerFunctions = require('./connection/triggerfunctions.js');
 var testData = require('./testdata.json');
+var broadcasts = require('./connection/broadcasts.js');
 var oldDatas = {};
 var oldPrices = {};
 
@@ -25,6 +26,7 @@ m.calculatePrices = function (callBack) {
         }
         saveNewDrinkPricesToDatabase(drinksWithPrices, callBack);
         oldDatas = data;
+        broadcasts.get('priceUpdate')();
     });
 };
 
@@ -109,7 +111,7 @@ calcPriceForDrink = function (drink, data) {
             //Calculated randomly
             price = Math.random() * (drink.priceMax - drink.priceMin) + drink.priceMin;
         }
-        price = Math.round(price * 100) / 100 ;
+        price = Math.round(price * 100) / 100;
         oldPrices[drink.name] = price;
     }
     //console.log(drink.name + '  :   ' + price);
