@@ -98,7 +98,8 @@ calcPriceForDrink = function (drink, data) {
         price = manualPrice;
         delete manuallySetPrices[drink._id];
     } else {
-        if (Object.getOwnPropertyNames(oldDatas).length != 0) {
+        //first attempts for a calculation algorithm
+        /*if (Object.getOwnPropertyNames(oldDatas).length != 0) {
             if (data) {
                 var rate = getSalesRate(oldDatas[drink.name], data[drink.name]);
                 if (rate > 0) {
@@ -110,8 +111,8 @@ calcPriceForDrink = function (drink, data) {
             }
         } else {
             //Calculated randomly
-            price = Math.random() * (drink.priceMax - drink.priceMin) + drink.priceMin;
-        }
+        }*/
+        price = Math.random() * (drink.priceMax - drink.priceMin) + drink.priceMin;
         price = Math.round(price * 100) / 100;
         oldPrices[drink.name] = price;
     }
