@@ -109,6 +109,7 @@ calcPriceForDrink = function (drink, data) {
             //Calculated randomly
             price = Math.random() * (drink.priceMax - drink.priceMin) + drink.priceMin;
         }
+        price = Math.round(price * 100) / 100 ;
         oldPrices[drink.name] = price;
     }
     //console.log(drink.name + '  :   ' + price);
