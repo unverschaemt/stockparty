@@ -30,6 +30,7 @@
 </head>
 
 <body>
+    <div id="grayOverlayer"></div>
     <div id="loginPanel">
         <center>
             <img src="layout/image/stockpartylogo.png" width="80" height="80">
@@ -54,12 +55,14 @@
         <br>
     </div>
     <div id="clientSelectionPanel">
-        <table id="clientSelection"></table>
+        <center>
+            <table id="clientSelection"></table>
+        </center>
     </div>
     <div id="cashPanel">
         <div id="orderList">
             <p id="userBalance" onclick="updateDrinkList(3)">
-                12,85€ <span>(2,44€)</span><i class="fa fa-calculator" onclick="toggleAddCashPanel(this)"></i>
+                <span id="userAccountBalance">0.00</span>€ <span id="simulatedNewUserBalance">(<span>0.00</span>€)</span><i class="fa fa-calculator" onclick="toggleAddCashPanel(this)"></i>
             </p>
             <div id="userAddCash">
                 <p id="addCashAmount">€</p>
@@ -99,7 +102,7 @@
         </div>
         <div id="orderListControlPanel">
             <p id="totalPrice">
-                12,85€
+                <span>0.00</span>€
             </p>
             <button>Pay</button>
             <button onclick="cleanUserOrder()">Clear</button>
@@ -107,6 +110,189 @@
         </div>
         <div id="drinkListOverlayer"></div>
         <div id="drinkList"></div>
+    </div>
+    <div id="adminPanel">
+        <label id="partyActive">Party active
+            <input id="partyActiveCheckbox" onclick="adminPanelView.togglePartyActive()" type="checkbox" class="ios-switch bigswitch" />
+            <div>
+                <div></div>
+            </div>
+        </label>
+        <div id="adminPanelMenu">
+            <div class="menuItem" onclick="switchNavigationTabs(this, 1)">
+                Configuration
+            </div>
+            <div class="menuItem actuellTab" onclick="switchNavigationTabs(this, 2)">
+                Drinks
+            </div>
+            <div class="menuItem" onclick="switchNavigationTabs(this, 3)">
+                Settings
+            </div>
+            <div class="menuItem" onclick="switchNavigationTabs(this, 4)">
+                Statistics
+            </div>
+        </div>
+        <div id="settingPanel">
+            <div id="tabs">
+                <section id="configurationPanel">
+                    <ul id="clientDeviceList">
+                        <li>Penis</li>
+                        <li>Penis</li>
+                        <li>Penis</li>
+                        <li>Penis</li>
+                        <li>Penis</li>
+                        <li>Penis</li>
+                    </ul>
+                    <div id="clientDevicePreview">
+                        asdasda
+                        <br>asdasda
+
+                        <br>
+                    </div>
+                </section>
+                <section id="manageDrinkPanel">
+                    <table width="100%" border="0" cellspacing="0">
+                        <tr>
+                            <th>Name</th>
+                            <th>Size</th>
+                            <th>Current Price</th>
+                            <th>Lowest Price</th>
+                            <th>Highest Price</th>
+                            <th>Sold out</th>
+                        </tr>
+                        <tbody id="adminDrinkList">
+                        <tr>
+                            <td>Bier</td>
+                            <td>0,3l</td>
+                            <td>2,80€</td>
+                            <td>2,50€</td>
+                            <td>3,90€</td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" class="ios-switch bigswitch" checked />
+                                    <div>
+                                        <div></div>
+                                    </div>
+                                </label>
+                            </td>
+                            <td>
+                                <i class="fa fa-remove"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Bier</td>
+                            <td>0,3l</td>
+                            <td>2,80€</td>
+                            <td>2,50€</td>
+                            <td>3,90€</td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" class="ios-switch bigswitch" checked />
+                                    <div>
+                                        <div></div>
+                                    </div>
+                                </label>
+                            </td>
+                            <td>
+                                <i class="fa fa-remove"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Bier</td>
+                            <td>0,3l</td>
+                            <td>2,80€</td>
+                            <td>2,50€</td>
+                            <td>3,90€</td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" class="ios-switch bigswitch" checked />
+                                    <div>
+                                        <div></div>
+                                    </div>
+                                </label>
+                            </td>
+                            <td>
+                                <i class="fa fa-remove"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Bier</td>
+                            <td>0,3l</td>
+                            <td>2,80€</td>
+                            <td>2,50€</td>
+                            <td>3,90€</td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" class="ios-switch bigswitch" checked />
+                                    <div>
+                                        <div></div>
+                                    </div>
+                                </label>
+                            </td>
+                            <td>
+                                <i class="fa fa-remove"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Bier</td>
+                            <td>0,3l</td>
+                            <td>2,80€</td>
+                            <td>2,50€</td>
+                            <td>3,90€</td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" class="ios-switch bigswitch" checked />
+                                    <div>
+                                        <div></div>
+                                    </div>
+                                </label>
+                            </td>
+                            <td>
+                                <i class="fa fa-remove"></i>
+                            </td>
+                        </tr>
+                            </tbody>
+                        <tr class="editDrink">
+                            <td>
+                                <input type="text" id="addDrinkName" placeholder="Name">
+                            </td>
+                            <td>
+                                <input type="text" id="addDrinkSize" placeholder="Size">
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                <input type="text" id="addDrinkMinPrice" placeholder="Lowest Price">
+                            </td>
+                            <td>
+                                <input type="text" id="addDrinkMaxPrice" placeholder="Highest Price">
+                            </td>
+                            <td>
+                                <input type="button" value="ADD" onclick="adminPanelView.addDrink();">
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <label>enable Stock Crash
+                        <input id="stockCrashEnable" type="checkbox" class="ios-switch bigswitch" onclick="adminPanelView.toggleStockCrash();" />
+                        <div>
+                            <div></div>
+                        </div>
+                    </label>
+                    <div id="importExport">
+                        <a class="button">Export</a>
+                        <a class="button">Import</a>
+                    </div>
+                </section>
+                <section>
+                </section>
+                <section>
+                    GRUN
+                </section>
+            </div>
+        </div>
     </div>
 </body>
 

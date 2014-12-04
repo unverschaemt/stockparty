@@ -49,12 +49,11 @@ body {
     -ms-user-select: none;
     user-select: none;
 }
-
-#cashPanel, #clientSelectionPanel{
+#cashPanel,
+#adminPanel,
+#clientSelectionPanel {
     display: none;
 }
-
-
 input {
     width: 100%;
     margin: 2px 2px 3px 2px;
@@ -113,7 +112,7 @@ button:hover {
     bottom: 0;
 }
 input[type=submit]:hover {
-    background: rgba(88, 132, 158, 0.4);
+    background: rgba(88, 132, 158, 1);
 }
 #userBalance,
 #totalPrice {
@@ -142,18 +141,17 @@ input[type=submit]:hover {
 #userBalance i.open {
     color: #1f1f1f;
 }
-#userBalance span {
+#userBalance span#simulatedNewUserBalance {
     color: rgba(255, 255, 255, 0.7);
     font-size: 18px;
     vertical-align: middle;
 }
 #totalPrice {
     font-size: 25px;
-    border-top: 1px solid rgba(255, 255, 255, 0.6);
+    border-top: 1px solid rgba(128, 128, 128, 0.5);
     border-bottom: 0px;
     padding: 3px 10px;
     text-align: right;
-    font-weight: 300;
 }
 #userOrder {
     width: 100%;
@@ -173,13 +171,12 @@ input[type=submit]:hover {
     float: left;
     overflow-y: auto;
     height: 100%;
-    background: rgb(44, 83, 106);
+    background: rgba(44, 83, 106, 0.6);
 }
 .drink {
     font-size: 22px;
     width: 50%;
     position: relative;
-    background: rgb(44, 83, 106);
     border-style: solid;
     border-width: 0px 0px 1px 1px;
     border-color: rgba(255, 255, 255, 0.21);
@@ -195,13 +192,16 @@ input[type=submit]:hover {
     font-weight: 200;
 }
 .drink:hover {
-    background: rgba(88, 132, 158, 0.9);
+    background: rgba(88, 132, 158, 0.4);
     cursor: pointer;
 }
 .drink.inactive {
     color: rgba(181, 181, 181, 0.62);
     background-color: transparent;
     cursor: default;
+}
+.drink .currentPrice {
+    font-size: 28px;
 }
 #userAddCash table {
     text-align: center;
@@ -229,11 +229,11 @@ input[type=submit]:hover {
 #manageDrinkPanel tr td:nth-child(6) input[type="checkbox"].ios-switch + div {
     float: right;
 }
-#manageDrinkPanel tr:hover{
+#manageDrinkPanel tr:hover {
     border: 1px solid gray;
     background-color: rgba(0, 0, 0, 0.2) !important;
 }
-#manageDrinkPanel tr:nth-child(even):hover > td{
+#manageDrinkPanel tr:nth-child(even):hover > td {
     background: transparent;
 }
 #manageDrinkPanel tr.editDrink {} #manageDrinkPanel tr.editDrink td {
@@ -268,7 +268,9 @@ input[type=submit]:hover {
 #cashPanelId {
     padding: 3px;
     text-align: center;
-    background: rgba(0, 0, 0, 0.3)
+    background: rgba(0, 0, 0, 0.3);
+    font-family: "Helvetica Neue";
+    font-weight: 100;
 }
 #userOrderTable {
     width: 100%;
@@ -352,9 +354,8 @@ a.button:hover {
     font-size: 20px;
     text-align: center;
 }
-
 .menuItem:hover {
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     cursor: pointer;
 }
 .menuItem:last-child {
@@ -370,6 +371,7 @@ a.button:hover {
     background: rgba(255, 255, 255, 0.2);
     width: 100%;
     height: 100%;
+    top: 65px;
     position: absolute;
 }
 .actuellTab {
@@ -509,7 +511,6 @@ input[type="checkbox"].green.ios-switch:checked + div > div {
     float: right;
     margin-right: 36px;
 }
-
 #userLogin #overlayer {
     background: transparent;
     width: 100%;
@@ -568,4 +569,62 @@ input[type="checkbox"].green.ios-switch:checked + div > div {
     background: rgba(255, 255, 255, 0.2);
     padding: 20px;
     overflow-y: auto;
+}
+#grayOverlayer {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: none;
+    z-Index: 5000000;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.6);
+}
+#userAccountBalance {
+    font-size: 30px;
+    font-family: "Helvetica Neue";
+    font-weight: 100;
+}
+#clientSelection {
+    width: 100%;
+    height: 100%;
+    padding: 5%;
+}
+#clientSelection div {
+    width: 33.3333333%;
+    display: inline-block;
+    padding: 20px;
+}
+#clientSelection div ul {
+    padding: 30px 25px;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: 1px solid #606060;
+}
+#clientSelection div ul:hover {
+    background: rgba(131, 162, 204, 0.12);
+    cursor: pointer;
+}
+#clientSelection div ul li {
+    text-align: center;
+    list-style-type: none;
+    display: inline-block;
+    vertical-align: middle;
+}
+#clientSelection div ul li span {
+    color: gray;
+    font-size: 12px;
+}
+#clientSelection div ul li:nth-child(1) {
+    width: 20.0%;
+    font-size: 30px;
+    font-family: "Helvetica Neue";
+    font-weight: 100;
+}
+#clientSelection div ul li:nth-child(2) {
+    width: 50.0%;
+    font-size: 20px;
+}
+#clientSelection div ul li:nth-child(3) {
+    width: 30%;
+    font-size: 40px;
 }

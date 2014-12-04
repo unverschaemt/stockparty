@@ -1,24 +1,53 @@
 var chart;
+var orderedDrinks = [];
+var orderPriceValue = 0.0;
 
 function addDrink(drink) {
     var newDrink = document.createElement("span");
     newDrink.classList.add("drink");
-    newDrink.innerHTML = drink.name + "<span>" + drink.priceMin + "</span>";
+    newDrink.id = "Button" + drink._id;
+    drink.size = "0.5";
+    newDrink.innerHTML = drink.name + "<span>" + drink.size + '</span><br><span class="currentPrice"></span>';
     newDrink.addEventListener("click", function () {
+        drink.currentPrice = cashPanelView.currentPrices.priceEntry.drinks[drink._id].price;
         addDrinkToUserOrder(drink)
     });
     drinkList.appendChild(newDrink);
 }
 
 function addDrinkToUserOrder(drink) {
-    var newUserOrderElement = document.createElement("tr");
-    newUserOrderElement.innerHTML = '<td width="10%">1x</td><td width="10%">' + drink.priceMin + '</td><td width="65%">' + drink.name + '</td><td width="15%">2,50€</td>';
-    userOrder.appendChild(newUserOrderElement);
+    var drinkAlreadyExists = false;
+    for (var i in orderedDrinks) {
+        if (orderedDrinks[i]._id == drink._id) {
+            drinkAlreadyExists = true;
+        }
+    }
+    if (drinkAlreadyExists) {
+        var userOrderElement = document.getElementById(drink._id);
+        console.log(userOrderElement);
+        userOrderElement.getElementsByClassName("drinkCount")[0].innerHTML = parseFloat(userOrderElement.getElementsByClassName("drinkCount")[0].innerHTML) + 1;
+        userOrderElement.getElementsByClassName("drinkPrice")[0].innerHTML = parseFloat(userOrderElement.getElementsByClassName("drinkPrice")[0].innerHTML) + drink.currentPrice;
+    } else {
+        var newUserOrderElement = document.createElement("tr");
+        newUserOrderElement.id = drink._id;
+        newUserOrderElement.innerHTML = '<td width="10%"><span class="drinkCount">1</span>x</td><td width="10%">' + drink.size + '</td><td width="65%">' + drink.name + '</td><td width="15%"><span class="drinkPrice">' + drink.currentPrice + '</span>€</td>';
+        orderedDrinks.push(drink);
+        userOrder.appendChild(newUserOrderElement);
+    }
+    orderPriceValue += drink.currentPrice;
+    simulatedNewUserBalance.getElementsByTagName("span")[0].innerHTML = (0.00 - orderPriceValue);
+    totalPrice.getElementsByTagName("span")[0].innerHTML = orderPriceValue;
 }
 
-function cleanUserOrder(){
+function cleanUserOrder() {
+    orderPriceValue = 0.0;
     userOrder.innerHTML = "";
+    orderedDrinks = [];
+    simulatedNewUserBalance.getElementsByTagName("span")[0].innerHTML = 0.00;
+    totalPrice.getElementsByTagName("span")[0].innerHTML = 0.00;
+
 }
+
 function addCash(char) {
     var temp = addCashAmount.innerHTML.replace("€", "");
     if (temp == "") {
@@ -62,62 +91,10 @@ function updateDrinkList(columns) {
     }
 }
 
-function fillWithTestData() {
-    addDrink({
-        name: "Bier",
-        size: "0.5l"
-    });
-    addDrink({
-        name: "Vodka",
-        size: "0.05l"
-    });
-    addDrink({
-        name: "Rum",
-        size: "0.05l"
-    });
-    addDrink({
-        name: "Wein (weiß)",
-        size: "0.25l"
-    });
-    addDrink({
-        name: "Wein (rot)",
-        size: "0.25l"
-    });
-    addDrink({
-        name: "Softdrink",
-        size: "0.3l"
-    });
-    addDrink({
-        name: "Softdrink",
-        size: "0.5l"
-    });
-    addDrink({
-        name: "Wasser",
-        size: "0.5l"
-    });
-    addDrink({
-        name: "Special",
-        size: "0.2l"
-    });
-    addDrink({
-        name: "Bier",
-        size: "0.5l"
-    });
-    addDrink({
-        name: "Vodka",
-        size: "0.05l"
-    });
-    addDrink({
-        name: "Rum",
-        size: "0.05l"
-    });
-    updateDrinkList(3);
-}
-
 function loadPage() {
     if (document.getElementById("adminPanel")) {
-        settingPanel.style.top = adminPanelMenu.offsetHeight + "px";
-        settingPanel.style.height = (adminPanel.clientHeight) + "px";
+        //settingPanel.style.top = adminPanelMenu.offsetHeight + "px";
+        //settingPanel.style.height = (adminPanel.clientHeight) + "px";
     }
     if (document.getElementById("monitorPanel")) {
         loadTheme();
@@ -132,14 +109,22 @@ function login() {
 }
 
 function showClientList(data) {
-    console.log(data);
     data = data.data;
     loginPanel.style.display = "none";
     clientSelectionPanel.style.display = "block";
-    clientSelection.innerHTML += "<tr><th>ID</th><th>NAME</th><th>Type</th><th>Connections</th></tr>";
     for (var item in data) {
         var id = "'" + data[item]._id + "'";
-        clientSelection.innerHTML += '<tr onclick="listView.choose(' + id + ')"><td>' + data[item]._id + "</td><td>" + data[item].name + "</td><td>" + data[item].type + "</td><td>" + data[item].connections + "</td></tr>";
+        var typeIcon;
+        if (data[item].type == "cashpanel") {
+            typeIcon = '<i class="fa fa-calculator"></i>';
+        } else if (data[item].type == "monitor") {
+            typeIcon = '<i class="fa fa-line-chart"></i>';
+        } else if (data[item].type == "connector") {
+            typeIcon = '<i class="fa fa-plug"></i>';
+        } else {
+            typeIcon = '<i class="fa fa-tasks"></i>';
+        }
+        clientSelection.innerHTML += '<div><ul onclick="listView.choose(' + id + ')"><li>' + data[item].connections + "</li><li>" + data[item].name + "<br><span>" + data[item]._id + "</span></li><li>" + typeIcon + "</li></ul></div>";
     }
 }
 
