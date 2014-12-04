@@ -4,6 +4,7 @@ var consumptionInterface = require('./database/ConsumptionInterface');
 var guestInterface = require('./database/GuestInterface');
 var balanceInterface = require('./database/BalanceInterface');
 var priceCalculator = require('./PriceCalculator');
+var broadcasts = require('./connection/broadcasts.js');
 
 var m = module.exports = {};
 var priceEntryCache = {};
@@ -48,6 +49,7 @@ m.getAllDrinks = function (error, cb) {
 
 m.addDrink = function (drink, cb) {
     drinkDatabaseInterface.addDrink(drink.name, drink.size, drink.priceMin, drink.priceMax, cb);
+    broadcasts.get('drinkUpdate')();
 };
 
 m.removeDrink = function (drinkID, cb) {
@@ -55,6 +57,7 @@ m.removeDrink = function (drinkID, cb) {
         cb(false);
         console.log(err);
     }, cb);
+    broadcasts.get('drinkUpdate')();
 };
 
 m.setPrice = function (data) {
@@ -66,6 +69,7 @@ m.setDrink = function (data, cb) {
         cb(false);
         console.log(err);
     }, cb);
+    broadcasts.get('drinkUpdate')();
 };
 
 m.triggerStockCrash = function (decision) {
