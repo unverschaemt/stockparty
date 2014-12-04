@@ -1,7 +1,6 @@
 var priceHistoryInterface = require('./database/PriceHistoryInterface');
 var drinkInterface = require('./database/DrinkInterface');
 var config = require('./config.json');
-var triggerFunctions = require('./connection/triggerfunctions.js');
 var testData = require('./testdata.json');
 var broadcasts = require('./connection/broadcasts.js');
 var oldDatas = {};
@@ -85,7 +84,9 @@ enableStockCrash = function () {
                 'price': obj[i].priceMin
             });
         }
-        saveNewDrinkPricesToDatabase(drinksWithPrices, function cb() {});
+        saveNewDrinkPricesToDatabase(drinksWithPrices, function cb() {
+            broadcasts.get('priceUpdate')();
+        });
     });
 }
 
