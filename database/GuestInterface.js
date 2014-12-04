@@ -89,6 +89,7 @@ m.getGuest = function (idk, error, cb) {
             m.addGuest(idk, '', 0, function (err) {
                 error(err)
             }, function (obj) {
+                guest.balance = 0;
                 cb(guest);
             });
         } else {
