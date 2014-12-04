@@ -20,14 +20,14 @@ m.use = function (socket) {
 
     // Add event listeners
     socket.on('setconfig', function (data) {
-        if(!(data)) return console.error("Invalid input parameter in adminpanel/setconfig!");
-        if(data.global.stockcrash !== config.data.global.stockcrash){
+        if (!(data)) return console.error("Invalid input parameter in adminpanel/setconfig!");
+        if (data.global.stockcrash !== config.data.global.stockcrash) {
             drinkInterface.triggerStockCrash(data.global.stockcrash);
         }
-        if(data.global.interval !== config.data.global.interval){
+        if (data.global.interval !== config.data.global.interval) {
             priceCalculator.setRefreshInterval(data.global.interval);
         }
-        if(data.global.running !== config.data.global.running){
+        if (data.global.running !== config.data.global.running) {
             priceCalculator.triggerCalculation(data.global.running);
         }
 
@@ -35,6 +35,18 @@ m.use = function (socket) {
     });
     socket.on('save', function () {
         configfunctions.saveConfig();
+    });
+
+    socket.on('start', function () {
+        var data = config.data;
+        console.log('start');
+        if (!config.data.global.running) {
+            data.global.running = true;
+            priceCalculator.triggerCalculation(data.global.running);
+            console.log('now');
+        }
+
+        configfunctions.setConfig(data);
     });
 
     socket.on('disconnect', function (data) {
