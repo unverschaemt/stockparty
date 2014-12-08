@@ -27,6 +27,9 @@ adminPanelView.use = function (socket, data) {
 adminPanelView.show = function () {
     clientSelectionPanel.style.display = "none";
     adminPanel.style.display = "block";
+    settingPanel.style.top = adminPanelMenu.offsetHeight + "px";
+    settingPanel.style.height = (adminPanel.clientHeight) + "px";
+    manageDrinkPanel.style.height = (manageDrinkPanel.offsetHeight + 50) + "px";
 };
 
 adminPanelView.updateClientAndDeviceList = function (c) {
@@ -53,11 +56,11 @@ adminPanelView.updateDrinkList = function (l) {
         if (l.drinks[i]) {
             var d = l.drinks[i];
             var checked = '';
-            if (d.soldOut) {
+            /*if (d.soldOut) {
                 checked = 'checked';
-            }
+            }*/
             var id = "'" + i + "'";
-            data += '<tr><td>' + d.name + '</td><td>' + d.size + '</td><td id="currentPrice' + i + '">2,80€</td><td>' + d.priceMin + '€</td><td>' + d.priceMax + '€</td><td><label><input type="checkbox" onclick="adminPanelView.toggleSoldOut(' + id + ')" class="ios-switch bigswitch" ' + checked + ' /><div><div></div></div></label></td><td><i class="fa fa-remove" onclick="adminPanelView.removeDrink(' + id + ')"></i></td></tr>';
+            data += '<tr class="adminPanelDrink"><td>' + d.name + '</td><td>' + d.size + '</td><td id="currentPrice' + i + '">2,80€</td><td>' + d.priceMin + '€</td><td>' + d.priceMax + '€</td><td><label><input type="checkbox" onclick="adminPanelView.toggleSoldOut(' + id + ')" class="ios-switch bigswitch" ' + checked + ' /><div><div></div></div></label></td><td><i class="fa fa-remove" onclick="adminPanelView.removeDrink(' + id + ')"></i></td></tr>';
         }
     }
     adminDrinkList.innerHTML = data;
@@ -78,15 +81,22 @@ adminPanelView.updatePrices = function (p) {
 };
 
 adminPanelView.addDrink = function () {
-    var obj = {};
-    obj.name = addDrinkName.value;
-    obj.size = addDrinkSize.value;
-    obj.priceMin = addDrinkMinPrice.value;
-    obj.priceMax = addDrinkMaxPrice.value;
-    console.log('sendadddrink', obj);
-    adminPanelView.socket.emit('adddrink', obj, function (cb) {
-        console.warn('adddrinkcb', cb);
-    });
+    if (event.keyCode == 13) {
+        var obj = {};
+        obj.name = addDrinkName.value;
+        obj.size = addDrinkSize.value;
+        obj.priceMin = addDrinkMinPrice.value;
+        obj.priceMax = addDrinkMaxPrice.value;
+        console.log('sendadddrink', obj);
+        adminPanelView.socket.emit('adddrink', obj, function (cb) {
+            console.warn('adddrinkcb', cb);
+        });
+        addDrinkName.value = "";
+        addDrinkSize.value = "";
+        addDrinkMinPrice.value = "";
+        addDrinkMaxPrice.value = "";
+        addDrinkName.focus();
+    }
 };
 
 adminPanelView.removeDrink = function (id) {
@@ -116,8 +126,14 @@ adminPanelView.toggleStockCrash = function () {
 
 adminPanelView.updateStockCrash = function () {
     stockCrashEnable.checked = adminPanelView.socket.configdata.config.global.stockcrash;
+    var stockCrashLabel = stockCrashEnable.parentNode.childNodes[0];
+    if (stockCrashLabel.innerHTML.indexOf("enable") != -1) {
+        stockCrashLabel.innerHTML = stockCrashLabel.innerHTML.replace("enable", "disable")
+    } else {
+        stockCrashLabel.innerHTML = stockCrashLabel.innerHTML.replace("disable", "enable")
+    }
 };
 
-adminPanelView.toggleSoldOut = function(id){
+adminPanelView.toggleSoldOut = function (id) {
 
 };

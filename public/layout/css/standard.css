@@ -229,19 +229,26 @@ input[type=submit]:hover {
 #manageDrinkPanel tr td:nth-child(6) input[type="checkbox"].ios-switch + div {
     float: right;
 }
-#manageDrinkPanel tr:hover {
+#manageDrinkPanel tr.adminPanelDrink:hover {
     border: 1px solid gray;
     background-color: rgba(0, 0, 0, 0.2) !important;
+}
+#manageDrinkPanel tr.adminPanelDrink td:nth-child(6),
+#manageDrinkPanel tr.adminPanelDrink td:last-child {
+    cursor: pointer;
 }
 #manageDrinkPanel tr:nth-child(even):hover > td {
     background: transparent;
 }
-#manageDrinkPanel tr.editDrink {} #manageDrinkPanel tr.editDrink td {
+#manageDrinkPanel tr.editDrink td {
     padding: 4px;
-    background-color: rgba(0, 0, 0, 0.15) !important;
+    background-color: rgba(0, 0, 0, 0.25) !important;
 }
-#manageDrinkPanel tr.editDrink td:nth-child(7) {
-    background-color: rgba(0, 0, 0, 0) !important;
+#manageDrinkPanel tr.editDrink td:first-child {
+    border-radius: 0px 0px 0px 4px;
+}
+#manageDrinkPanel tr.editDrink td:nth-child(6) {
+    border-radius: 0px 0px 4px 0px;
 }
 #manageDrinkPanel tr.editDrink td input {
     width: 100%;
@@ -252,6 +259,9 @@ input[type=submit]:hover {
     color: white;
     border: 1px solid rgba(183, 183, 183, 0.5);
     font-size: 16px;
+}
+#manageDrinkPanel tr.editDrink td input:focus {
+       background-color: rgba(0, 0, 0, 0.35) !important;
 }
 #manageDrinkPanel tr:nth-child(even) td,
 #userOrder tr:nth-child(even) {
@@ -353,9 +363,10 @@ a.button:hover {
     display: inline-block;
     font-size: 20px;
     text-align: center;
+    background: rgba(0, 0, 0, 0.25);
 }
 .menuItem:hover {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
     cursor: pointer;
 }
 .menuItem:last-child {
@@ -368,21 +379,22 @@ a.button:hover {
     width: 100%;
 }
 #settingPanel {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
     width: 100%;
     height: 100%;
     top: 65px;
     position: absolute;
 }
 .actuellTab {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.4);
 }
 #tabs {
     margin-left: -100%;
     width: 400%;
-    display: table;
+    display: block;
     position: relative;
     height: 100%;
+    overflow-y: auto;
     -webkit-transition: all 500ms ease-in-out;
     -ms-transition: all 500ms ease-in-out;
     -o-transition: all 500ms ease-in-out;
@@ -395,14 +407,13 @@ a.button:hover {
     float: left;
     position: relative;
     height: 100%;
-    overflow-x: hidden;
     padding: 50px 50px 0px 50px;
-    overflow-y: auto;
 }
 input[type="checkbox"] {
     position: absolute;
     opacity: 0;
     width: 40px;
+    cursor: pointer;
 }
 /* Normal Track */
 
@@ -418,6 +429,7 @@ input[type="checkbox"].ios-switch + div {
     -webkit-transition-duration: .4s;
     -webkit-transition-property: background-color, box-shadow;
     box-shadow: inset 0 0 0 0px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
 }
 /* Checked Track (Blue) */
 

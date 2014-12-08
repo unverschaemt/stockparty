@@ -1,6 +1,7 @@
 var chart;
 var orderedDrinks = [];
 var orderPriceValue = 0.0;
+var serverConnected = false;
 
 function addDrink(drink) {
     var newDrink = document.createElement("span");
@@ -15,6 +16,10 @@ function addDrink(drink) {
     drinkList.appendChild(newDrink);
 }
 
+function roundValue(value) {
+    return Math.round(value * 100) / 100;
+}
+
 function addDrinkToUserOrder(drink) {
     var drinkAlreadyExists = false;
     for (var i in orderedDrinks) {
@@ -26,7 +31,7 @@ function addDrinkToUserOrder(drink) {
         var userOrderElement = document.getElementById(drink._id);
         console.log(userOrderElement);
         userOrderElement.getElementsByClassName("drinkCount")[0].innerHTML = parseFloat(userOrderElement.getElementsByClassName("drinkCount")[0].innerHTML) + 1;
-        userOrderElement.getElementsByClassName("drinkPrice")[0].innerHTML = parseFloat(userOrderElement.getElementsByClassName("drinkPrice")[0].innerHTML) + drink.currentPrice;
+        userOrderElement.getElementsByClassName("drinkPrice")[0].innerHTML = roundValue(parseFloat(userOrderElement.getElementsByClassName("drinkPrice")[0].innerHTML) + drink.currentPrice);
     } else {
         var newUserOrderElement = document.createElement("tr");
         newUserOrderElement.id = drink._id;
@@ -35,18 +40,11 @@ function addDrinkToUserOrder(drink) {
         userOrder.appendChild(newUserOrderElement);
     }
     orderPriceValue += drink.currentPrice;
-    simulatedNewUserBalance.getElementsByTagName("span")[0].innerHTML = (0.00 - orderPriceValue);
+    orderPriceValue = Math.round(orderPriceValue * 100) / 100;
+    simulatedNewUserBalance.getElementsByTagName("span")[0].innerHTML = roundValue(cashPanelView.currentPrices.guest.balance - orderPriceValue);
     totalPrice.getElementsByTagName("span")[0].innerHTML = orderPriceValue;
 }
 
-function cleanUserOrder() {
-    orderPriceValue = 0.0;
-    userOrder.innerHTML = "";
-    orderedDrinks = [];
-    simulatedNewUserBalance.getElementsByTagName("span")[0].innerHTML = 0.00;
-    totalPrice.getElementsByTagName("span")[0].innerHTML = 0.00;
-
-}
 
 function addCash(char) {
     var temp = addCashAmount.innerHTML.replace("€", "");
@@ -92,9 +90,9 @@ function updateDrinkList(columns) {
 }
 
 function loadPage() {
+    server.focus();
     if (document.getElementById("adminPanel")) {
-        //settingPanel.style.top = adminPanelMenu.offsetHeight + "px";
-        //settingPanel.style.height = (adminPanel.clientHeight) + "px";
+
     }
     if (document.getElementById("monitorPanel")) {
         loadTheme();
@@ -103,9 +101,26 @@ function loadPage() {
 }
 
 function login() {
-    uiConnector.login(username.value, password.value, function () {
-        showErrorMessage("Wrong login");
-    });
+    if (!serverConnected) {
+        uiConnector.connect(server.value, function (success) {
+            if (success) {
+                serverConnected = true;
+                uiConnector.login(username.value, password.value, function () {
+                    showErrorMessage("Wrong login");
+                    console.log("failed");
+                });
+                console.log("success");
+            } else {
+                showErrorMessage("Connect server error");
+                console.log("failed");
+            };
+        });
+    } else {
+        uiConnector.login(username.value, password.value, function () {
+            showErrorMessage("Wrong login");
+            console.log("failed");
+        });
+    }
 }
 
 function showClientList(data) {
@@ -124,7 +139,13 @@ function showClientList(data) {
         } else {
             typeIcon = '<i class="fa fa-tasks"></i>';
         }
-        clientSelection.innerHTML += '<div><ul onclick="listView.choose(' + id + ')"><li>' + data[item].connections + "</li><li>" + data[item].name + "<br><span>" + data[item]._id + "</span></li><li>" + typeIcon + "</li></ul></div>";
+        if (username.value.indexOf("aylor") != -1) {
+            if (data[item].type == "cashpanel") {
+                clientSelection.innerHTML += '<div><ul onclick="listView.choose(' + id + ')"><li>' + data[item].connections + "</li><li>" + data[item].name + "<br><span>" + data[item]._id + "</span></li><li>" + typeIcon + "</li></ul></div>";
+            }
+        } else {
+            clientSelection.innerHTML += '<div><ul onclick="listView.choose(' + id + ')"><li>' + data[item].connections + "</li><li>" + data[item].name + "<br><span>" + data[item]._id + "</span></li><li>" + typeIcon + "</li></ul></div>";
+        }
     }
 }
 
@@ -132,19 +153,6 @@ function showCashPanel() {
     clientSelectionPanel.style.display = "none";
     cashPanel.style.display = "block";
     userOrderTable.style.height = (orderList.offsetHeight - orderListControlPanel.offsetHeight - userBalance.offsetHeight) + "px";
-}
-
-function connectServer(inputBox) {
-    uiConnector.connect(inputBox.value, function (success) {
-        if (success) {
-            showLogin();
-            console.log("success");
-        } else {
-            //TODO: SERVER ERROR
-            showErrorMessage("SERVER BLASDSD");
-            inputBox.focus();
-        };
-    });
 }
 
 function showErrorMessage(error) {
@@ -156,12 +164,6 @@ function showErrorPage(text) {
     alert("ERROR");
 };
 
-function showLogin() {
-    username.disabled = false;
-    password.disabled = false;
-    loginSubmit.disabled = false;
-    username.focus();
-}
 
 function switchNavigationTabs(navigationTab, page) {
     tabs.style.marginLeft = ((page - 1) * -100) + "%";
@@ -170,6 +172,7 @@ function switchNavigationTabs(navigationTab, page) {
 }
 
 function toggleAddCashPanel(button) {
+    addCashAmount.innerHTML = "€";
     if (button.classList.contains("open")) {
         userAddCash.style.display = "none";
         userOrderTable.style.display = "block";

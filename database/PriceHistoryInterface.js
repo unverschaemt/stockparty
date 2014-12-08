@@ -66,6 +66,9 @@ m.getPriceHistory = function (error, cb) {
 };
 
 m.getLatestEntry = function (error, cb) {
+
+    //var query = PriceHistory.sort( { _id : -1 } ).limit(1);
+    //query.findOne({
     PriceHistory.findOne({}, {}, {
         sort: {
             'time': -1

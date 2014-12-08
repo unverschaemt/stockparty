@@ -12,8 +12,10 @@ var priceEntryCache = {};
 m.getPriceEntry = function (error, callBack) {
     priceHistoryInterface.getLatestEntry(error, function cb(entry) {
         drinkDatabaseInterface.getAllDrinks(error, function cb(drinks) {
-            if(!entry){
-                entry = {'drinks':{}};
+            if (!entry) {
+                entry = {
+                    'drinks': {}
+                };
             }
             for (var i in drinks) {
                 if (!entry.drinks[i]) {
@@ -31,22 +33,39 @@ m.getPriceEntry = function (error, callBack) {
 m.buyDrinks = function (data, callBack) {
     var price = 0;
     var drinks = [];
+    var l = 0;
     for (var i in data.drinks) {
         if (data.drinks[i].type == 'drink') {
+            l++;
             getPriceOfDrink(data.priceID, data.drinks[i].drinkID, function cb(obj) {
+                l--;
                 price += obj * data.drinks[i].quantity;
                 drinks.push(data.drinks[i]);
+                if (l < 1) {
+                    m.buy(data, drinks, callBack);
+                }
             });
         } else {
+            l++;
             balanceInterface.addBalance({
                 'balance': data.drinks[i].balance,
                 'guest': data.guestID
-            }, callBack);
+            }, function cb(bo) {
+                l--;
+                if (l < 1) {
+                    m.buy(data, drinks, callBack);
+                }
+            });
         }
     }
+    if (l < 1) {
+        m.buy(data, drinks, callBack);
+    }
+};
 
+m.buy = function (data, drinks, callBack) {
     guestInterface.getGuest(data.guestID, function error(err) {
-        console.log(err)
+        console.log(err);
     }, function cb(obj) {
         if (price < obj.balance) {
             addConsumption(drinks, data.guestID, data.priceID, callBack);

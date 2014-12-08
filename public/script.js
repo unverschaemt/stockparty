@@ -2,12 +2,12 @@ var url = 'http://localhost:4217/';
 
 var uiConnector = {};
 
-uiConnector.connect = function(url, cb){
+uiConnector.connect = function (url, cb) {
     console.log('Starting Connection...');
     siocon(url, views, devices, function error(err) {
         console.log('UI: Show connecting to server loading circle');
         // UI: Show connecting to server loading circle
-        if(err === 'Invalid server address!'){
+        if (err === 'Invalid server address!') {
             console.log('Connection failed! Please try again!', err);
             console.log('UI: Show Invalid Server Address please again');
             cb(false); // UI: Show Invalid Server Address please again
@@ -23,11 +23,11 @@ uiConnector.connect = function(url, cb){
     });
 };
 
-uiConnector.login = function(username, password, error){
-    if(uiConnector.socket){
+uiConnector.login = function (username, password, error) {
+    if (uiConnector.socket) {
         console.log('UI: Show waiting page / loading circle');
         // UI: Show waiting page / loading circle
-        uiConnector.socket.login(username, password, function loginfail(){
+        uiConnector.socket.login(username, password, function loginfail() {
             console.log('UI: Show Login failed => Retry');
             // UI: Show Login failed => Retry
             error();
