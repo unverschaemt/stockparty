@@ -11,6 +11,8 @@
     "hidstream": "0.0.5",
     "mongoose": "^3.8.17",
     "node-hid": "^0.3.2",
+    "react": "^0.13.1",
+    "react-tools": "^0.13.1",
     "serialport": "^1.4.6",
     "socket.io": "^1.1.0",
     "socket.io-client": "^1.1.0",

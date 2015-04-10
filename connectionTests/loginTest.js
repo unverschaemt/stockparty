@@ -23,10 +23,12 @@ var correctLogin = {
 var invalidClient = 'invalid';
 var correctClient = 'client000';
 
+//var globalSocket;
 var globalSocket;
 
 
 describe("Stock Party Client-Server Connection", function () {
+
     it('Should throw an error when Server not found.', function (done) {
         siocon(invalidServerAddress, views, devices, function error(err) {
             err.should.equal('Invalid server address!');
@@ -110,7 +112,9 @@ describe("Stock Party Client-Server Connection", function () {
         });
     });
     it('Should disconnect the socket', function (done) {
+        globalSocket.on('disconnect', function(){
+            done();
+        });
         globalSocket.close();
-        done();
     });
 });

@@ -25,11 +25,18 @@ var iddscanobject = {
     'idk': 'test1234'
 };
 
-var globalSocket;
 var orderdata;
 
-
 describe("Stock Party IDD plugin/scan/remove", function () {
+    //var globalSocket;
+    //var orderdata;
+    before(function(){
+        console.log('Before Stock IDD');
+    });
+    after(function(){
+        console.log('After Stock IDD');
+    });
+
     it('Should connect the to the Server', function (done) {
         siocon(correctServerAddress, views, devices, function error(err) {
 
@@ -171,9 +178,9 @@ describe("Stock Party IDD plugin/scan/remove", function () {
         globalSocket.emit('iddremove', iddpluginobject);
     });
     it('Should disconnect the socket', function (done) {
-        globalSocket.close();
-        setTimeout(function () {
+        globalSocket.on('disconnect', function(){
             done();
-        }, 1500);
+        });
+        globalSocket.close();
     });
 });
