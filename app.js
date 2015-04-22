@@ -1,5 +1,3 @@
-
-
 var welcome = require('./welcome.js');
 var colors = require('colors');
 //Loading Config:
@@ -16,7 +14,7 @@ require('socket.io-client');
 var app = express();
 
 // Loading Database:
-var db = mongoose.connect('mongodb://localhost/stockparty');
+var db = mongoose.connect(config.global.db || "mongodb://localhost/stockparty");
 
 // Check Default user
 var userInterface = require('./database/UserInterface.js');
