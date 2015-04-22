@@ -9,12 +9,13 @@ var express = require('express');
 var connection = require('./connection/connection.js');
 var login = require('./connection/login.js');
 var config = require('./connection/config.js');
+var config2 = require('./config.json');
 var mongoose = require('mongoose');
 require('socket.io-client');
 var app = express();
 
 // Loading Database:
-var db = mongoose.connect(config.global.db || "mongodb://localhost/stockparty");
+var db = mongoose.connect(config2.global.db || "mongodb://localhost/stockparty");
 
 // Check Default user
 var userInterface = require('./database/UserInterface.js');
