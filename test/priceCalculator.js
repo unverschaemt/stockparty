@@ -5,20 +5,18 @@ var priceHistoryInterface = require('../database/PriceHistoryInterface');
 var drinkInterface = require('../database/DrinkInterface');
 
 describe('Price Calculator', function () {
+    before(function (done) {
+        var db = mongoose.connect('mongodb://localhost/test');
+        done();
+    })
+
+    after(function (done) {
+        mongoose.connection.db.dropDatabase();
+        mongoose.connection.close();
+        done();
+    })
 
     describe('Calculate Price', function () {
-        before(function (done) {
-            var db = mongoose.connect('mongodb://localhost/stockparty');
-            priceHistoryInterface.deleteAllPriceHistoryEntries(function error(err) {}, function cb(obj) {
-                done();
-            });
-        })
-
-        after(function (done) {
-            mongoose.connection.close();
-            done();
-        })
-
         it('should write new prices in price history', function (done) {
             priceCalculator.calculatePrices(function callBack() {
                 priceHistoryInterface.getPriceHistory(function error(err) {}, function cb(obj) {
@@ -46,34 +44,30 @@ describe('Price Calculator', function () {
     describe('Trigger Stock Crash', function () {
         var firstDrink = {
             'name': 'Beer',
+            'size': 0.3,
             'priceMin': 2.00,
-            'priceMax': 4.00
+            'priceMax': 4.00,
+            'soldOut': false
         };
         var secondDrink = {
             'name': 'Wine',
+            'size': 0.3,
             'priceMin': 4.00,
-            'priceMax': 8.00
+            'priceMax': 8.00,
+            'soldOut': false
         };
 
         before(function (done) {
-            var db = mongoose.connect('mongodb://localhost/stockparty');
-            drinkInterface.addDrink(firstDrink.name, firstDrink.priceMin, firstDrink.priceMax, function cb(obj) {
-                drinkInterface.addDrink(secondDrink.name, secondDrink.priceMin, secondDrink.priceMax, function cb(obj) {
+            drinkInterface.addDrink(firstDrink, function cb(obj) {
+                drinkInterface.addDrink(secondDrink, function cb(obj) {
                     priceCalculator.triggerCalculation(true);
                     done();
                 });
             });
         })
 
-        /*beforeEach(function (done) {
-            priceHistoryInterface.deleteAllPriceHistoryEntries(function error(err) {}, function cb(obj) {
-                done()
-            });
-        })*/
-
         after(function (done) {
             drinkInterface.deleteAllDrinks(function error(err) {}, function cb(obj) {
-                mongoose.connection.close();
                 done();
             });
         })

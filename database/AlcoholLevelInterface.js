@@ -2,12 +2,8 @@ var AlcoholLevel = require('./models/AlcoholLevel');
 
 var m = module.exports = {};
 
-m.addAlcoholLevel = function (time, level, guest, cb) {
-    var alcoholLevel = new AlcoholLevel({
-        time: time,
-        level: level,
-        guest: guest
-    });
+m.addAlcoholLevel = function (info, cb) {
+    var alcoholLevel = new AlcoholLevel(info);
     alcoholLevel.save(function (err, alcoholLevel) {
         if (err) return console.error(err);
         console.log('saved alcohol level');

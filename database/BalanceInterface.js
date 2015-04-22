@@ -30,6 +30,56 @@ saveBalance = function (data, cb) {
     });
 };
 
+m.deleteBalanceForGuest = function(guest, cb) {
+  Balance.find({
+      guest: guest
+  }, function (err, guests) {
+      if (err) {
+          cb(true);
+      } else {
+        var c = 0;
+        for(var i in guests){
+          c++;
+          guests[i].remove(function(){
+            c--;
+            if(c == 0){
+              cb(true);
+            }
+          });
+        }
+        if(c == 0){
+          cb(true);
+        }
+      }
+  });
+};
+
+m.deleteAllBalanceEntries = function (error, cb) {
+    Balance.find({
+    }, function (err, balances) {
+        if (err) {
+            error(err);
+        } else {
+            var c = 0;
+            for(var i in balances){
+                var balance = balances[i];
+                if (balance) {
+                    balance.remove(function () {
+                        c++;
+                        if(balance.length == c){
+                            cb(c+' from '+balances.length+' deleted good!');
+                        }
+                    });
+                }
+            }
+            if(balances.length < 1){
+                cb(c+' from '+balances.length+' deleted good!');
+            }
+        }
+    });
+};
+
+
 m.getAllEntriesForGuest = function (guest, error, cb) {
     Balance.find({
         guest: guest
@@ -56,7 +106,9 @@ m.getTotalForGuest = function (guest, error, cb) {
         } else {
             var total = 0;
             for (var i in guests) {
+              if(guests[i].balance){
                 total += guests[i].balance;
+              }
             }
             cb(total);
         }
