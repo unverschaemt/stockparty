@@ -30,6 +30,27 @@ m.getPriceEntry = function (error, callBack) {
     })
 };
 
+m.getLatestXPriceHistoryEntries = function (options ,error, callBack) {
+    priceHistoryInterface.getLatestXPriceHistoryEntries(options.x,error, function cb(history) {
+        drinkDatabaseInterface.getAllDrinks(error, function cb(drinks) {
+          if (!history) {
+            history = {
+                  'drinks': {}
+              };
+          }
+          for (var i in drinks) {
+              if (history.drinks && !history.drinks[i]) {
+                history.drinks[i] = {
+                      'id': i,
+                      'price': (drinks[i].priceMax + drinks[i].priceMin) / 2
+                  };
+              }
+          }
+          callBack(history);
+        });
+    })
+};
+
 m.getPriceHistory = function (options ,error, callBack) {
     priceHistoryInterface.getPriceHistory(error, function cb(history) {
         drinkDatabaseInterface.getAllDrinks(error, function cb(drinks) {

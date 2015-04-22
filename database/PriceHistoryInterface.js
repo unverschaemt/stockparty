@@ -65,6 +65,22 @@ m.getPriceHistory = function (error, cb) {
     });
 };
 
+m.getLatestXPriceHistoryEntries = function (n, error, cb) {
+    var query = PriceHistory.find().sort({time:-1}).limit(n);
+    query.exec(function (err, priceHistoryEntries) {
+        if (err) {
+            error(err);
+        } else {
+            var ex = {};
+            for (var i in priceHistoryEntries) {
+                ex[priceHistoryEntries[i].time] = priceHistoryEntries[i];
+            }
+            var temp = JSON.parse(JSON.stringify(ex));
+            cb(temp);
+        }
+    });
+};
+
 m.getLatestEntry = function (error, cb) {
 
     //var query = PriceHistory.sort( { _id : -1 } ).limit(1);
