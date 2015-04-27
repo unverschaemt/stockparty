@@ -23,7 +23,9 @@ m.calculatePrices = function(callBack) {
       /*only for testing*/
       var drinksWithPrices = {};
       var rates = [];
-      rates.push(getAlcoholLevelRate(alcoholLevels));
+      if (config.global.alcoholCalculation) {
+        rates.push(getAlcoholLevelRate(alcoholLevels));
+      }
       for (var i in obj) {
         drinksWithPrices[obj[i]._id] = {
           'id': obj[i]._id,
