@@ -1,8 +1,8 @@
 var priceHistoryInterface = require('./database/PriceHistoryInterface');
 var drinkInterface = require('./database/DrinkInterface');
 var alcoholLevelInterface = require('./database/AlcoholLevelInterface');
+var consumptionInterface = require('./database/ConsumptionInterface');
 var config = require('./config.json');
-var testData = require('./testdata.json');
 var broadcasts = require('./connection/broadcasts.js');
 var oldData = {};
 
@@ -14,28 +14,42 @@ var timeOut;
 var manuallySetPrices = [];
 
 m.calculatePrices = function(callBack) {
-  drinkInterface.getAllDrinks(function error(err) {}, function cb(obj) {
-    alcoholLevelInterface.getAllAlcoholLevelsGreaterThanTime(oldData.time, function err(err) {
-      console.error(err)
-    }, function callB(alcoholLevels) {
-      /*only for testing*/
-      var data = testData.shift();
-      /*only for testing*/
-      var drinksWithPrices = {};
-      var rates = [];
-      if (config.global.alcoholCalculation) {
-        rates.push(getAlcoholLevelRate(alcoholLevels));
-      }
-      for (var i in obj) {
-        drinksWithPrices[obj[i]._id] = {
-          'id': obj[i]._id,
-          'price': setPriceOfDrink(obj[i], data, rates)
-        };
-      }
-      saveNewDrinkPricesToDatabase(drinksWithPrices, callBack);
-      broadcasts.get('priceUpdate')();
+  drinkInterface.getAllDrinks(function error(err) {}, function cb(drinks) {
+    consumptionInterface.getAllConsumptionsGreaterThanTime(oldData.time, function err(err) {
+      console.error(err);
+    }, function(consumptions) {
+      var data = convertConsumptions(drinks, consumptions);
+      alcoholLevelInterface.getAllAlcoholLevelsGreaterThanTime(oldData.time, function err(err) {
+        console.error(err)
+      }, function(alcoholLevels) {
+        var drinksWithPrices = {};
+        var rates = [];
+        if (config.global.alcoholCalculation) {
+          rates.push(getAlcoholLevelRate(alcoholLevels));
+        }
+        for (var i in drinks) {
+          drinksWithPrices[drinks[i]._id] = {
+            'id': drinks[i]._id,
+            'price': setPriceOfDrink(drinks[i], data, rates)
+          };
+          console.log('drink: ' + drinksWithPrices[drinks[i]._id].id, drinksWithPrices[drinks[i]._id].price);
+        }
+        saveNewDrinkPricesToDatabase(drinksWithPrices, callBack);
+        broadcasts.get('priceUpdate')();
+      });
     });
   });
+};
+
+convertConsumptions = function(drinks, consumptions) {
+  var data = {};
+  for (var i in drinks) {
+    data[i] = 0;
+  }
+  for (var i in consumptions) {
+    data[consumptions[i].drink] += consumptions[i].quantity;
+  }
+  return data;
 };
 
 m.setRefreshInterval = function(interval) {
@@ -86,7 +100,7 @@ enableStockCrash = function() {
   m.triggerCalculation(false);
 
   drinkInterface.getAllDrinks(function error(err) {
-    console.log(err)
+    console.error(err)
   }, function cb(obj) {
     var drinksWithPrices = {};
     for (var i in obj) {
@@ -111,24 +125,24 @@ setPriceOfDrink = function(drink, data, rates) {
     price = calcPriceOfDrink(drink, data, rates.slice());
   }
   price = Math.round(price * 100) / 100;
-  if (!oldData[drink.name]) {
-    oldData[drink.name] = {
+  if (!oldData[drink._id]) {
+    oldData[drink._id] = {
       sum: 0,
       times: 0
     };
   }
-  oldData[drink.name].price = price;
-  oldData[drink.name].sum += data[drink.name];
-  oldData[drink.name].times += 1;
-  oldData[drink.name].avg = oldData[drink.name].sum / oldData[drink.name].times;
+  oldData[drink._id].price = price;
+  oldData[drink._id].sum += data[drink._id];
+  oldData[drink._id].times += 1;
+  oldData[drink._id].avg = oldData[drink._id].sum / oldData[drink._id].times;
   return price;
 };
 
 calcPriceOfDrink = function(drink, data, rates) {
   var price;
-  if (oldData[drink.name]) {
+  if (oldData[drink._id]) {
     if (data) {
-      rates.push(getSalesRate(oldData[drink.name], data[drink.name]));
+      rates.push(getSalesRate(oldData[drink._id], data[drink._id]));
       price = applyRatesToPrice(rates, drink);
     }
   } else {
@@ -139,7 +153,7 @@ calcPriceOfDrink = function(drink, data, rates) {
 };
 
 applyRatesToPrice = function(rates, drink) {
-  var price = oldData[drink.name].price;
+  var price = oldData[drink._id].price;
   for (var i in rates) {
     if (rates[i] > 1) {
       price += ((drink.priceMax - price) * rates[i]) / (drink.priceMax - drink.priceMin);
@@ -152,8 +166,12 @@ applyRatesToPrice = function(rates, drink) {
 
 getSalesRate = function(oldData, newData) {
   var rate = 1;
-  var avg = (oldData.sum + newData) / (oldData.times + 1)
-  rate = avg / oldData.avg;
+  var avg = (oldData.sum + newData) / (oldData.times + 1);
+  if (oldData.avg != 0) {
+    rate = avg / oldData.avg;
+  } else {
+    rate = avg;
+  }
   //TODO damping factor -> in the beginning there are not so many datapoints to calculate the avg. There should be a damping factor, so the prices don't fluctuate too much
 
   return rate;
