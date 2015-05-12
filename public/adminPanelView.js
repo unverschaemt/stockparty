@@ -27,8 +27,6 @@ adminPanelView.use = function (socket, data) {
 adminPanelView.show = function () {
     clientSelectionPanel.style.display = "none";
     adminPanel.style.display = "block";
-    settingPanel.style.top = adminPanelMenu.offsetHeight + "px";
-    settingPanel.style.height = (adminPanel.clientHeight) + "px";
     manageDrinkPanel.style.height = (manageDrinkPanel.offsetHeight + 50) + "px";
 };
 

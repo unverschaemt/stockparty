@@ -3,6 +3,7 @@ var url = 'http://localhost:4217/';
 var uiConnector = {};
 
 uiConnector.connect = function (url, cb) {
+   var url = window.location.origin;
     console.log('Starting Connection...');
     siocon(url, views, devices, function error(err) {
         console.log('UI: Show connecting to server loading circle');

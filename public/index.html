@@ -25,7 +25,6 @@
 
     <link rel="stylesheet" href="layout/font/fontAwesome/css/font-awesome.min.css">
     <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,100italic,300italic,400italic' rel='stylesheet' type='text/css'>
-
     <script type="text/javascript" src="javascript/UIHandler.js"></script>
 </head>
 
@@ -40,8 +39,6 @@
         <br>
         <br>
         <form method="post" action="javascript:login()">
-            <input id="server" type="text" placeholder="SERVER" value="/">
-            <br>
             <div id="userLogin">
                 <input id="username" type="text" placeholder="USERNAME">
                 <br>
@@ -118,80 +115,51 @@
                 <div></div>
             </div>
         </label>
-        <div id="adminPanelMenu">
-            <div class="menuItem" onclick="switchNavigationTabs(this, 1)">
-                Configuration
-            </div>
-            <div class="menuItem actuellTab" onclick="switchNavigationTabs(this, 2)">
-                Drinks
-            </div>
-            <div class="menuItem" onclick="switchNavigationTabs(this, 3)">
-                Settings
-            </div>
-            <div class="menuItem" onclick="switchNavigationTabs(this, 4)">
-                Statistics
-            </div>
-        </div>
-        <div id="settingPanel">
-            <div id="tabs">
-                <section id="configurationPanel">
-                    <ul id="clientDeviceList">
-                    </ul>
-                    <div id="clientDevicePreview">
-                    </div>
-                </section>
-                <section id="manageDrinkPanel">
-                    <table width="100%" border="0" cellspacing="0">
-                        <tr>
-                            <th>Name</th>
-                            <th>Size</th>
-                            <th>Current Price</th>
-                            <th>Lowest Price</th>
-                            <th>Highest Price</th>
-                            <th>Sold out</th>
-                        </tr>
-                        <tbody id="adminDrinkList">
+        <section id="manageDrinkPanel">
+            <table width="100%" border="0" cellspacing="0">
+                <tr>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Current Price</th>
+                    <th>Lowest Price</th>
+                    <th>Highest Price</th>
+                    <th>Sold out</th>
+                </tr>
+                <tbody id="adminDrinkList">
 
-                        </tbody>
-                        <tr class="editDrink">
-                            <td>
-                                <input type="text" id="addDrinkName" placeholder="Name" onkeydown="adminPanelView.addDrink()">
-                            </td>
-                            <td>
-                                <input type="text" style="text-align: right;" id="addDrinkSize" placeholder="Size" onkeydown="adminPanelView.addDrink()">
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                                <input type="text" id="addDrinkMinPrice" placeholder="Lowest Price" onkeydown="adminPanelView.addDrink()">
-                            </td>
-                            <td>
-                                <input type="text" id="addDrinkMaxPrice" placeholder="Highest Price" onkeydown="adminPanelView.addDrink()">
-                            </td>
-                            <td>
-                            </td>
-                            <td></td>
-                        </tr>
-                    </table>
-                    <br>
-                    <label><span>enable Stock Crash </span>
-                        <input id="stockCrashEnable" type="checkbox" class="ios-switch bigswitch" onclick="adminPanelView.toggleStockCrash();" />
-                        <div>
-                            <div></div>
-                        </div>
-                    </label>
-                    <div id="importExport">
-                        <a class="button">Export</a>
-                        <a class="button">Import</a>
-                    </div>
-                </section>
-                <section>
-                </section>
-                <section>
-                    GRUN
-                </section>
+                </tbody>
+                <tr class="editDrink">
+                    <td>
+                        <input type="text" id="addDrinkName" placeholder="Name" onkeydown="adminPanelView.addDrink()">
+                    </td>
+                    <td>
+                        <input type="text" style="text-align: right;" id="addDrinkSize" placeholder="Size" onkeydown="adminPanelView.addDrink()">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        <input type="text" id="addDrinkMinPrice" placeholder="Lowest Price" onkeydown="adminPanelView.addDrink()">
+                    </td>
+                    <td>
+                        <input type="text" id="addDrinkMaxPrice" placeholder="Highest Price" onkeydown="adminPanelView.addDrink()">
+                    </td>
+                    <td>
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+            <br>
+            <label><span>enable Stock Crash </span>
+                <input id="stockCrashEnable" type="checkbox" class="ios-switch bigswitch" onclick="adminPanelView.toggleStockCrash();" />
+                <div>
+                    <div></div>
+                </div>
+            </label>
+            <div id="importExport">
+                <a class="button">Export</a>
+                <a class="button">Import</a>
             </div>
-        </div>
+        </section>
     </div>
 </body>
 
