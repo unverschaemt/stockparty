@@ -89,20 +89,10 @@ function updateDrinkList(columns) {
     }
 }
 
-function loadPage() {
-    server.focus();
-    if (document.getElementById("adminPanel")) {
-
-    }
-    if (document.getElementById("monitorPanel")) {
-        loadTheme();
-        showGraph();
-    }
-}
 
 function login() {
     if (!serverConnected) {
-        uiConnector.connect(server.value, function (success) {
+        uiConnector.connect("blablu", function (success) {
             if (success) {
                 serverConnected = true;
                 uiConnector.login(username.value, password.value, function () {
