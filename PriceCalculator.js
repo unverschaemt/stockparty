@@ -12,6 +12,7 @@ var refreshInterval = config.global.interval;
 var calculating = config.global.running;
 var timeOut;
 var manuallySetPrices = [];
+var priceObservers = [];
 
 m.calculatePrices = function(callBack) {
   drinkInterface.getAllDrinks(function error(err) {}, function cb(drinks) {
@@ -36,10 +37,21 @@ m.calculatePrices = function(callBack) {
         }
         saveNewDrinkPricesToDatabase(drinksWithPrices, callBack);
         broadcasts.get('priceUpdate')();
+        updatePriceObservers(drinksWithPrices);
       });
     });
   });
 };
+
+m.registerPriceObserver = function(observer){
+   priceObservers.push(observer);
+};
+
+updatePriceObservers = function(drinksWithPrices) {
+   for(var observer in priceObservers){
+      observer.onPriceUpdate(drinksWithPrices);
+   }
+}
 
 convertConsumptions = function(drinks, consumptions) {
   var data = {};

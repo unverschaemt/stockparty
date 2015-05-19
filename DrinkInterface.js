@@ -5,9 +5,12 @@ var guestInterface = require('./database/GuestInterface');
 var balanceInterface = require('./database/BalanceInterface');
 var priceCalculator = require('./PriceCalculator');
 var broadcasts = require('./connection/broadcasts.js');
+var currentPrices = {};
 
 var m = module.exports = {};
 var priceEntryCache = {};
+
+priceCalculator.registerPriceObserver(m);
 
 m.getPriceEntry = function (error, callBack) {
     priceHistoryInterface.getLatestEntry(error, function cb(entry) {
@@ -28,6 +31,11 @@ m.getPriceEntry = function (error, callBack) {
             callBack(entry);
         });
     })
+};
+
+//Method from Observer Interface
+m.onPriceUpdate = function(drinksWithPrices){
+   currentPrices = drinksWithPrices;
 };
 
 m.getLatestXPriceHistoryEntries = function (options ,error, callBack) {
