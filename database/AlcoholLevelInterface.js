@@ -2,17 +2,13 @@ var AlcoholLevel = require('./models/AlcoholLevel');
 
 var m = module.exports = {};
 
-m.addAlcoholLevel = function(time, level, guest, cb) {
-  var alcoholLevel = new AlcoholLevel({
-    time: time,
-    level: level,
-    guest: guest
-  });
-  alcoholLevel.save(function(err, alcoholLevel) {
-    if (err) return console.error(err);
-    console.log('saved alcohol level');
-    cb(true);
-  });
+m.addAlcoholLevel = function (info, cb) {
+    var alcoholLevel = new AlcoholLevel(info);
+    alcoholLevel.save(function (err, alcoholLevel) {
+        if (err) return console.error(err);
+        console.log('saved alcohol level');
+        cb(true);
+    });
 };
 
 m.deleteAllAlcoholLevels = function(error, cb) {
@@ -88,10 +84,5 @@ m.getAllAlcoholLevelsGreaterThanTime = function(time, error, cb) {
         if (time && alcoholLevelEntries[i].time <= time) {
           break;
         }
-        ex.push(alcoholLevelEntries[i]);
-      }
-      var temp = JSON.parse(JSON.stringify(ex));
-      cb(temp);
-    }
-  });
+    });
 };

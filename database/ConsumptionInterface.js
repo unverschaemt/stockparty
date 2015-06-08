@@ -2,34 +2,59 @@ var Consumption = require('./models/Consumption');
 
 var m = module.exports = {};
 
-m.addConsumption = function(guest, priceID, drink, quantity, time, cb) {
-  var consumption = new Consumption({
-    guest: guest,
-    priceID: priceID,
-    drink: drink,
-    quantity: quantity,
-    time: time
-  });
-  consumption.save(function(err, consumption) {
-    if (err) return console.error(err);
-    console.log('saved consumption');
-    cb(true);
+m.addConsumption = function (info, cb) {
+    var consumption = new Consumption(info);
+    consumption.save(function (err, consumption) {
+        if (err) return console.error(err);
+        console.log('saved consumption');
+        cb(true);
+    });
+};
+
+m.deleteConsumptionForGuest = function(guest, cb) {
+  Consumption.find({
+      guest: guest
+  }, function (err, guests) {
+      if (err) {
+          cb(true);
+      } else {
+        var c = 0;
+        for(var i in guests){
+          c++;
+          guests[i].remove(function(){
+            c--;
+            if(c == 0){
+              cb(true);
+            }
+          });
+        }
+        if(c == 0){
+          cb(true);
+        }
+      }
   });
 };
 
-m.deleteAllConsumptionEntries = function(error, cb) {
-  Consumption.find({}, function(err, consumptions) {
-    if (err) {
-      error(err);
-    } else {
-      var c = 0;
-      for (var i in consumptions) {
-        var consumption = consumptions[i];
-        if (consumption) {
-          consumption.remove(function() {
-            c++;
-            if (consumptions.length == c) {
-              cb(c + ' from ' + consumptions.length + ' deleted good!');
+m.deleteAllConsumptionEntries = function (error, cb) {
+    Consumption.find({
+    }, function (err, consumptions) {
+        if (err) {
+            error(err);
+        } else {
+            var c = 0;
+            for(var i in consumptions){
+                var consumption = consumptions[i];
+                if (consumption) {
+                    consumption.remove(function () {
+                        c++;
+                        if(consumptions.length == c){
+                            cb(c+' from '+consumptions.length+' deleted good!');
+                        }
+                    });
+                }
+            }
+            if(consumptions && consumptions.length < 1){
+                cb(c+' from '+consumptions.length+' deleted good!');
             }
           });
         }

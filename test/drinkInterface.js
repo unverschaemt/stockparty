@@ -3,55 +3,61 @@ var mongoose = require('mongoose');
 var drinkInterface = require('../DrinkInterface');
 var priceCalculator = require('../PriceCalculator');
 var drinkDatabaseInterface = require('../database/DrinkInterface');
+var guestInterface = require('../database/GuestInterface');
 var consumptionInterface = require('../database/ConsumptionInterface');
 var balanceInterface = require('../database/BalanceInterface');
 
 var firstDrink = {
     'name': 'Beer',
+    'size': 0.3,
     'priceMin': 2.00,
-    'priceMax': 4.00
+    'priceMax': 4.00,
+    'soldOut': true
 };
 var secondDrink = {
     'name': 'Wine',
+    'size': 0.3,
     'priceMin': 4.00,
-    'priceMax': 8.00
+    'priceMax': 8.00,
+    'soldOut': true
 };
 var drinkToAdd = {
     'name': 'NewDrink',
+    'size': 0.3,
     'priceMin': 2.00,
-    'priceMax': 4.00
+    'priceMax': 4.00,
+    'soldOut': true
 };
 
 var priceID;
 describe('Drink Interface', function () {
     before(function (done) {
-        var db = mongoose.connect('mongodb://localhost/stockparty');
-
-        drinkInterface.addDrink(firstDrink, function cb(obj) {
-            drinkInterface.addDrink(secondDrink, function cb(obj) {
-                priceCalculator.triggerCalculation(true);
-                done();
-            });
+      var db = mongoose.connect('mongodb://localhost/test');
+      drinkInterface.addDrink(firstDrink, function cb(obj) {
+        drinkInterface.addDrink(secondDrink, function cb(obj) {
+          priceCalculator.triggerCalculation(true);
+          done();
         });
+      });
     })
 
     after(function (done) {
-        mongoose.connection.close();
         priceCalculator.triggerCalculation(false);
+        mongoose.connection.db.dropDatabase();
+        mongoose.connection.close();
         done();
     })
 
     describe('Get Price Entry', function () {
 
         it('should get the latest price entry', function (done) {
-            drinkInterface.getPriceEntry(function error() {
-                assert.equal(true, true);
-                done();
-            }, function cb(entry) {
+            drinkInterface.getPriceEntry(function error() {}, function cb(entry) {
                 priceID = entry._id;
-                //var length = Object.getOwnPropertyNames(entry).length;
-                //TODO: Assert that there is an entry
-                assert.equal(true, true);
+                if(priceID){
+                  assert.equal(true, true);
+                }else{
+                  assert.equal(true,false);
+                }
                 done();
             });
         })
@@ -66,12 +72,22 @@ describe('Drink Interface', function () {
                 for (var i in obj) {
                     drinksToBuy.push({
                         'drinkID': obj[i]._id,
-                        'quantity': 2
+                        'quantity': 2,
+                        'type': 'drink'
                     });
                     break;
                 }
-                done();
+                guestInterface.addGuest({idk:guestID, name:'Peter',birthDate:Date.now()},function error(err){},function cb(obj){
+                  done();
+                });
             });
+
+        })
+
+        after(function (done) {
+          guestInterface.deleteGuest(guestID, function error(err){console.error(err)}, function cb(obj){
+            done();
+          });
         })
 
         it('should not write a new entry to consumption database', function (done) {

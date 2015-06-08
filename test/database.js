@@ -14,11 +14,12 @@ var db;
 describe('Database Interfaces', function () {
 
     before(function (done) {
-        db = mongoose.connect('mongodb://localhost/stockparty');
+        db = mongoose.connect('mongodb://localhost/test');
         done();
     })
 
     after(function (done) {
+        mongoose.connection.db.dropDatabase();
         mongoose.connection.close();
         done();
     })
@@ -90,12 +91,6 @@ describe('Database Interfaces', function () {
             'birthDate': 12.12
         };
 
-        before(function done() {
-            guestInterface.deleteAllGuests(function error(err) {}, function cb(obj) {
-                done();
-            });
-        })
-
         afterEach(function (done) {
             guestInterface.deleteAllGuests(function error(err) {}, function cb(obj) {
                 done();
@@ -103,24 +98,22 @@ describe('Database Interfaces', function () {
         })
 
         it('should add a guest to database', function (done) {
-            guestInterface.addGuest(guestToCreate.idk, guestToCreate.name, guestToCreate.birthDate, function error(err) {
-                done();
-            }, function cb(obj) {
+            guestInterface.addGuest(guestToCreate, function error(err) {}, function cb(obj) {
                 assert.equal(obj, true);
                 done();
             });
         })
 
         it('should not add two guests with the same idk', function (done) {
-            guestInterface.addGuest(guestToCreate.idk, guestToCreate.name, guestToCreate.birthDate, function error(err) {}, function cb() {
-                guestInterface.addGuest(guestToCreate.idk, guestToCreate.name, guestToCreate.birthDate, function error(err) {
+            guestInterface.addGuest(guestToCreate, function error(err) {}, function cb() {
+                guestInterface.addGuest(guestToCreate, function error(err) {
                     done();
                 }, function cb() {});
             });
         })
 
         it('should add a guest, even if it has no idk', function (done) {
-            guestInterface.addGuest('', guestToCreate.name, guestToCreate.birthDate, function error(err) {}, function cb() {
+            guestInterface.addGuest({idk: '', name: guestToCreate.name, birthDate: guestToCreate.birthDate}, function error(err) {}, function cb() {
                 guestInterface.getGuest('', function error(err) {}, function cb(obj) {
                     assert.equal('', obj.idk);
                     assert.equal(guestToCreate.name, obj.name);
@@ -131,7 +124,7 @@ describe('Database Interfaces', function () {
         })
 
         it('should delete a guest', function (done) {
-            guestInterface.addGuest(guestToCreate.idk, guestToCreate.name, guestToCreate.birthDate, function error(err) {}, function cb() {
+            guestInterface.addGuest(guestToCreate, function error(err) {}, function cb() {
                 guestInterface.deleteGuest(guestToCreate.idk, function error(err) {}, function cb(obj) {
                     assert.equal(obj, true);
                     done();
@@ -145,8 +138,8 @@ describe('Database Interfaces', function () {
                 'birthDate': 12.12
             };
 
-            guestInterface.addGuest(guestToCreate.idk, guestToCreate.name, guestToCreate.birthDate, function error(err) {}, function cb() {
-                guestInterface.addGuest(differentGuestToCreate.idk, differentGuestToCreate.name, differentGuestToCreate.birthDate, function error(err) {}, function cb() {
+            guestInterface.addGuest(guestToCreate, function error(err) {}, function cb() {
+                guestInterface.addGuest(differentGuestToCreate, function error(err) {}, function cb() {
                     guestInterface.deleteAllGuests(function error(err) {}, function cb(obj) {
                         assert.equal(obj, true);
                         done();
@@ -159,8 +152,10 @@ describe('Database Interfaces', function () {
     describe('Drink Interface', function () {
         var drinkToCreate = {
             'name': 'Name',
+            'size': 0.3,
             'priceMin': 5.00,
-            'priceMax': 8.00
+            'priceMax': 8.00,
+            'soldOut': false
         };
 
         afterEach(function (done) {
@@ -170,19 +165,21 @@ describe('Database Interfaces', function () {
         })
 
         it('should add a drink to database', function (done) {
-            drinkInterface.addDrink(drinkToCreate.name, drinkToCreate.priceMin, drinkToCreate.priceMax, function cb() {
+            drinkInterface.addDrink(drinkToCreate, function cb() {
                 done();
             });
         })
 
         it('should get all drinks', function (done) {
             var differentDrinkToCreate = {
-                'name': 'DifferentName',
-                'priceMin': 5.00,
-                'priceMax': 8.00
+              'name': 'DifferentName',
+              'size': 0.3,
+              'priceMin': 5.00,
+              'priceMax': 8.00,
+              'soldOut': false
             };
-            drinkInterface.addDrink(drinkToCreate.name, drinkToCreate.priceMin, drinkToCreate.priceMax, function cb() {
-                drinkInterface.addDrink(differentDrinkToCreate.name, differentDrinkToCreate.priceMin, differentDrinkToCreate.priceMax, function cb() {
+            drinkInterface.addDrink(drinkToCreate, function cb() {
+                drinkInterface.addDrink(differentDrinkToCreate, function cb() {
                     drinkInterface.getAllDrinks(function error(err) {}, function cb(obj) {
                         done();
                     });
@@ -191,13 +188,15 @@ describe('Database Interfaces', function () {
         })
 
         it('should delete all drinks', function (done) {
-            var differentDrinkToCreate = {
-                'name': 'DifferentName',
-                'priceMin': 5.00,
-                'priceMax': 8.00
-            };
-            drinkInterface.addDrink(drinkToCreate.name, drinkToCreate.priceMin, drinkToCreate.priceMax, function cb() {
-                drinkInterface.addDrink(differentDrinkToCreate.name, differentDrinkToCreate.priceMin, differentDrinkToCreate.priceMax, function cb() {
+          var differentDrinkToCreate = {
+            'name': 'DifferentName',
+            'size': 0.3,
+            'priceMin': 5.00,
+            'priceMax': 8.00,
+            'soldOut': false
+          };
+            drinkInterface.addDrink(drinkToCreate, function cb() {
+                drinkInterface.addDrink(differentDrinkToCreate, function cb() {
 
                     drinkInterface.deleteAllDrinks(function error(err) {}, function cb(obj) {
                         done();
@@ -221,7 +220,7 @@ describe('Database Interfaces', function () {
         })
 
         it('should add a level to database', function (done) {
-            alcoholLevelInterface.addAlcoholLevel(levelToCreate.time, levelToCreate.level, levelToCreate.guest, function cb() {
+            alcoholLevelInterface.addAlcoholLevel(levelToCreate, function cb() {
 
                 alcoholLevelInterface.getAlcoholLevel(levelToCreate.time, function error(err) {}, function cb(obj) {
                     assert.equal(levelToCreate.time, obj.time);
@@ -243,9 +242,9 @@ describe('Database Interfaces', function () {
                 'level': 2.00,
                 'guest': 'f23ab47d'
             };
-            alcoholLevelInterface.addAlcoholLevel(levelToCreate.time, levelToCreate.level, levelToCreate.guest, function cb() {
-                alcoholLevelInterface.addAlcoholLevel(differentLevelToCreate.time, differentLevelToCreate.level, differentLevelToCreate.guest, function cb() {
-                    alcoholLevelInterface.addAlcoholLevel(differentLevelForGuestToCreate.time, differentLevelForGuestToCreate.level, differentLevelForGuestToCreate.guest, function cb() {
+            alcoholLevelInterface.addAlcoholLevel(levelToCreate, function cb() {
+                alcoholLevelInterface.addAlcoholLevel(differentLevelToCreate, function cb() {
+                    alcoholLevelInterface.addAlcoholLevel(differentLevelForGuestToCreate, function cb() {
                         alcoholLevelInterface.getAlcoholLevelsForOneGuest(levelToCreate.guest, function error(err) {}, function cb(obj) {
                             assert.equal(levelToCreate.time, obj[levelToCreate.time].time);
                             assert.equal(differentLevelToCreate.time, obj[differentLevelToCreate.time].time);
@@ -269,9 +268,9 @@ describe('Database Interfaces', function () {
                 'level': 2.00,
                 'guest': 'f23ab47d'
             };
-            alcoholLevelInterface.addAlcoholLevel(levelToCreate.time, levelToCreate.level, levelToCreate.guest, function cb() {
-                alcoholLevelInterface.addAlcoholLevel(differentLevelToCreate.time, differentLevelToCreate.level, differentLevelToCreate.guest, function cb() {
-                    alcoholLevelInterface.addAlcoholLevel(differentLevelForGuestToCreate.time, differentLevelForGuestToCreate.level, differentLevelForGuestToCreate.guest, function cb() {
+            alcoholLevelInterface.addAlcoholLevel(levelToCreate, function cb() {
+                alcoholLevelInterface.addAlcoholLevel(differentLevelToCreate, function cb() {
+                    alcoholLevelInterface.addAlcoholLevel(differentLevelForGuestToCreate, function cb() {
                         alcoholLevelInterface.getAllAlcoholLevels(function error(err) {}, function cb(obj) {
                             assert.equal(levelToCreate.time, obj[levelToCreate.time].time);
                             assert.equal(differentLevelToCreate.time, obj[differentLevelToCreate.time].time);
@@ -300,7 +299,7 @@ describe('Database Interfaces', function () {
         })
 
         it('should add a consumption to database', function (done) {
-            consumptionInterface.addConsumption(consumptionToCreate.guest, consumptionToCreate.priceID, consumptionToCreate.drink, consumptionToCreate.quantity, consumptionToCreate.time, function cb(obj) {
+            consumptionInterface.addConsumption(consumptionToCreate, function cb(obj) {
                 consumptionInterface.getAllConsumptionEntries(function error(err) {}, function cb(guest) {
                     assert.equal(obj, true);
                     done();
@@ -323,11 +322,9 @@ describe('Database Interfaces', function () {
                 'quantity': 2,
                 'time': 201410231328
             };
-            consumptionInterface.addConsumption(consumptionToCreate.guest, consumptionToCreate.priceID, consumptionToCreate.drink, consumptionToCreate.quantity, consumptionToCreate.time, function cb() {
-                consumptionInterface.addConsumption(differentConsumptionToCreate.guest, differentConsumptionToCreate.priceID, differentConsumptionToCreate.drink, differentConsumptionToCreate.quantity,
-                    differentConsumptionToCreate.time, function cb() {
-                        consumptionInterface.addConsumption(differentConsumptionForGuestToCreate.guest, differentConsumptionForGuestToCreate.priceID, differentConsumptionForGuestToCreate.drink,
-                            differentConsumptionForGuestToCreate.quantity, differentConsumptionForGuestToCreate.time, function cb() {
+            consumptionInterface.addConsumption(consumptionToCreate, function cb() {
+                consumptionInterface.addConsumption(differentConsumptionToCreate, function cb() {
+                        consumptionInterface.addConsumption(differentConsumptionForGuestToCreate, function cb() {
                                 consumptionInterface.getConsumptionForGuest(consumptionToCreate.guest, function error(err) {}, function cb(obj) {
                                     assert.equal(consumptionToCreate.guest, obj[consumptionToCreate.priceID].guest);
                                     assert.equal(differentConsumptionToCreate.guest, obj[differentConsumptionToCreate.priceID].guest);
@@ -354,11 +351,9 @@ describe('Database Interfaces', function () {
                 'quantity': 2,
                 'time': 201410231328
             };
-            consumptionInterface.addConsumption(consumptionToCreate.guest, consumptionToCreate.priceID, consumptionToCreate.drink, consumptionToCreate.quantity, consumptionToCreate.time, function cb() {
-                consumptionInterface.addConsumption(differentConsumptionToCreate.guest, differentConsumptionToCreate.priceID, differentConsumptionToCreate.drink, differentConsumptionToCreate.quantity,
-                    differentConsumptionToCreate.time, function cb() {
-                        consumptionInterface.addConsumption(differentConsumptionForGuestToCreate.guest, differentConsumptionForGuestToCreate.priceID, differentConsumptionForGuestToCreate.drink,
-                            differentConsumptionForGuestToCreate.quantity, differentConsumptionForGuestToCreate.time, function cb() {
+            consumptionInterface.addConsumption(consumptionToCreate, function cb() {
+                consumptionInterface.addConsumption(differentConsumptionToCreate, function cb() {
+                        consumptionInterface.addConsumption(differentConsumptionForGuestToCreate, function cb() {
                                 consumptionInterface.getAllConsumptionEntries(function error(err) {}, function cb(obj) {
                                     var length = 0;
                                     for (i in obj) {

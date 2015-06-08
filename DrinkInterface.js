@@ -144,6 +144,7 @@ m.buyDrinks = function (data, callBack) {
                 l--;
                 price += obj * data.drinks[i].quantity;
                 drinks.push(data.drinks[i]);
+                data.price = price;
                 if (l < 1) {
                     m.buy(data, drinks, callBack);
                 }
@@ -170,7 +171,7 @@ m.buy = function (data, drinks, callBack) {
     guestInterface.getGuest(data.guestID, function error(err) {
         console.log(err);
     }, function cb(obj) {
-        if (price < obj.balance) {
+        if (data.price < obj.balance) {
             addConsumption(drinks, data.guestID, data.priceID, callBack);
         } else {
             callBack(false);
@@ -185,7 +186,7 @@ m.getAllDrinks = function (error, cb) {
 };
 
 m.addDrink = function (drink, cb) {
-    drinkDatabaseInterface.addDrink(drink.name, drink.size, drink.priceMin, drink.priceMax, function callBack(obj) {
+    drinkDatabaseInterface.addDrink(drink, function callBack(obj) {
         broadcasts.get('drinkUpdate')();
         broadcasts.get('priceUpdate')();
         cb(obj);
@@ -233,7 +234,7 @@ addConsumption = function (drinks, guestID, priceID, callBack) {
     var saved = 0;
     var time = new Date().getTime();
     for (var i in drinks) {
-        consumptionInterface.addConsumption(guestID, priceID, drinks[i].drinkID, drinks[i].quantity, time, function cb(obj) {
+        consumptionInterface.addConsumption({guest: guestID, priceID: priceID, drink: drinks[i].drinkID, quantity: drinks[i].quantity, time: time}, function cb(obj) {
             saved++;
             if (drinks.length == saved) {
                 callBack(true);
