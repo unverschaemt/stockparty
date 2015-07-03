@@ -178,7 +178,7 @@ function toggleAddCashPanel(button) {
     }
 }
 
-function showGraph() {
+/*function showGraph() {
     chart = new Highcharts.Chart({
         chart: {
             renderTo: 'graphContainer',
@@ -208,7 +208,7 @@ function addPoint() {
     for (var i = 0; i < chart.series.length; ++i) {
         chart.series[i].addPoint((Math.random() * Math.random() * 5) * 2);
     }
-}
+}*/
 
 window.onload = loadPage;
 window.onresize = loadPage;

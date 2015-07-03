@@ -37,7 +37,7 @@ m.calculatePrices = function(callBack) {
         }
         saveNewDrinkPricesToDatabase(drinksWithPrices, callBack);
         broadcasts.get('priceUpdate')();
-        updatePriceObservers(drinksWithPrices);
+        //updatePriceObservers(drinksWithPrices);
       });
     });
   });
@@ -49,7 +49,7 @@ m.registerPriceObserver = function(observer){
 
 updatePriceObservers = function(drinksWithPrices) {
    for(var observer in priceObservers){
-      observer.onPriceUpdate(drinksWithPrices);
+      priceObservers[observer].onPriceUpdate(drinksWithPrices);
    }
 }
 

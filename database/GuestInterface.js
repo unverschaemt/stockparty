@@ -5,19 +5,19 @@ var priceHistoryInterface = require('./PriceHistoryInterface');
 
 var m = module.exports = {};
 
-m.addGuest = function (info, error, cb) {
-    if (info.idk) {
+m.addGuest = function (idk, name, birthDate, error, cb) {
+    if (idk) {
         Guest.findOne({
-            idk: info.idk
+            idk: idk
         }, function (err, guest) {
             if (!guest) {
-                newGuest(info.idk, info.name, info.birthDate, cb);
+                newGuest(idk, name, birthDate, cb);
             } else {
                 error('Identification for this user already exists');
             }
         });
     } else {
-        newGuest(info.idk, info.name, info.birthDate, cb);
+        newGuest(idk, name, birthDate, cb);
     }
 };
 
@@ -35,27 +35,27 @@ newGuest = function (idk, name, birthDate, cb) {
 }
 
 m.deleteAllGuests = function (error, cb) {
-  Guest.find({}, function (err, guests) {
-      if (err) {
-          error(err);
-      } else {
-          var c = 0;
-          for (var i in guests) {
-              var guest = guests[i];
-              if (guest) {
-                  guest.remove(function () {
-                      c++;
-                      if (guests.length == c) {
-                          cb(true);
-                      }
-                  });
-              }
-          }
-          if (guests.length < 1) {
-              cb(true);
-          }
-      }
-  });
+    Guest.find({}, function (err, guests) {
+        if (err) {
+            error(err);
+        } else {
+            var c = 0;
+            for (var i in guests) {
+                var guest = guests[i];
+                if (guest) {
+                    guest.remove(function () {
+                        c++;
+                        if (guests.length == c) {
+                            cb(true);
+                        }
+                    });
+                }
+            }
+            if (guests.length < 1) {
+                cb(true);
+            }
+        }
+    });
 };
 
 m.deleteGuest = function (idk, error, cb) {
@@ -65,17 +65,13 @@ m.deleteGuest = function (idk, error, cb) {
         if (err) {
             error(err);
         } else {
-          balanceInterface.deleteBalanceForGuest(idk, function callBack(obj){
-            consumptionInterface.deleteConsumptionForGuest(idk, function calBack(obj){
-              if (!guest) {
-                  cb(true);
-              } else {
-                  guest.remove(function () {
-                      cb(true);
-                  });
-              }
-            });
-          });
+            if (!guest) {
+                cb(true);
+            } else {
+                guest.remove(function () {
+                    cb(true);
+                });
+            }
         }
     });
 };
@@ -124,9 +120,6 @@ getBalanceOfGuest = function (guestID, callBack) {
     balanceInterface.getTotalForGuest(guestID, function error(err) {
         console.log(err)
     }, function cb(balance) {
-      if(isNaN(balance)){
-        return callBack(0);
-      }
         totalBalance = balance;
         consumptionInterface.getConsumptionForGuest(guestID, function error(err) {
             console.log(err)

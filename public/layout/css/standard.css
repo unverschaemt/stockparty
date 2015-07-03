@@ -39,6 +39,7 @@ body {
 }
 #cashPanel,
 #adminPanel,
+#monitorPanel,
 #loginPanel {
     color: white;
     height: 100%;
@@ -51,6 +52,7 @@ body {
 }
 #cashPanel,
 #adminPanel,
+#monitorPanel,
 #clientSelectionPanel {
     display: none;
 }

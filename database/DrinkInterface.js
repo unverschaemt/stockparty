@@ -2,8 +2,14 @@ var Drink = require('./models/Drink');
 
 var m = module.exports = {};
 
-m.addDrink = function (info, cb) {
-    var drink = new Drink(info);
+m.addDrink = function (name, size, priceMin, priceMax, cb) {
+    var drink = new Drink({
+        name: name,
+        size: size,
+        priceMin: priceMin,
+        priceMax: priceMax,
+        soldOut: true
+    });
     drink.save(function (err, drink) {
         if (err) return console.error(err);
         console.log('saved drink');

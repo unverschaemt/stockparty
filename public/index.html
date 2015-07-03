@@ -2,165 +2,177 @@
 <html>
 
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <link href="layout/css/standard.css" rel="stylesheet" type="text/css">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<link href="layout/css/standard.css" rel="stylesheet" type="text/css">
 
-    <script src="socket.io.js"></script>
-    <script src="superagent.js"></script>
-    <script src="apis/siocon.js"></script>
-    <!-- First ALL Controllers -->
-    <script src="listView.js"></script>
-    <script src="adminPanelView.js"></script>
-    <script src="cashPanelView.js"></script>
-    <script src="monitorView.js"></script>
-    <!--    <script src="scanner.js"></script>-->
+	<script src="http://code.highcharts.com/adapters/standalone-framework.js"></script>
+	<script type="text/javascript" src="javascript/highcharts-theme.js"></script>
 
-    <!--     Register Devices and Views -->
-    <script src="devices.js"></script>
-    <script src="views.js"></script>
+	<script src="http://code.highcharts.com/highcharts.js"></script>
 
-    <!--     Main Script -->
-    <script src="script.js"></script>
+	<script src="socket.io.js"></script>
+	<script src="superagent.js"></script>
+	<script src="apis/siocon.js"></script>
+	<!-- First ALL Controllers -->
+	<script src="listView.js"></script>
+	<script src="adminPanelView.js"></script>
+	<script src="cashPanelView.js"></script>
+	<script src="monitorView.js"></script>
+	<!--    <script src="scanner.js"></script>-->
+
+	<!--     Register Devices and Views -->
+	<script src="devices.js"></script>
+	<script src="views.js"></script>
+
+	<!--     Main Script -->
+	<script src="script.js"></script>
 
 
-    <link rel="stylesheet" href="layout/font/fontAwesome/css/font-awesome.min.css">
-    <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,100italic,300italic,400italic' rel='stylesheet' type='text/css'>
-    <script type="text/javascript" src="javascript/UIHandler.js"></script>
+	<link rel="stylesheet" href="layout/font/fontAwesome/css/font-awesome.min.css">
+	<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,100italic,300italic,400italic' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="javascript/UIHandler.js"></script>
 </head>
 
 <body>
-    <div id="grayOverlayer"></div>
-    <div id="loginPanel">
-        <center>
-            <img src="layout/image/stockpartylogo.png" width="80" height="80">
-            <br>
-            <span style="font-size: 30px; font-family: UnverschaemtSans">Stock Party</span>
-        </center>
-        <br>
-        <br>
-        <form method="post" action="javascript:login()">
-            <div id="userLogin">
-                <input id="username" type="text" placeholder="USERNAME">
-                <br>
-                <input id="password" type="password" placeholder="PASSWORD">
-                <br>
-                <br>
-                <input id="loginSubmit" type="submit" value="LOGIN">
-            </div>
-        </form>
-        <br>
-        <br>
-    </div>
-    <div id="clientSelectionPanel">
-        <center>
-            <table id="clientSelection"></table>
-        </center>
-    </div>
-    <div id="cashPanel">
-        <div id="orderList">
-            <p id="userBalance" onclick="updateDrinkList(3)">
-                <span id="userAccountBalance">0.00</span>€ <span id="simulatedNewUserBalance">(<span>0.00</span>€)</span><i class="fa fa-calculator" onclick="toggleAddCashPanel(this)"></i>
-            </p>
-            <div id="userAddCash">
-                <p id="addCashAmount">€</p>
-                <table width="100%" border="0" cellspacing="0">
-                    <tr>
-                        <td onclick="addCash('1')">1</td>
-                        <td onclick="addCash('2')">2</td>
-                        <td onclick="addCash('3')">3</td>
-                    </tr>
-                    <tr>
-                        <td onclick="addCash('4')">4</td>
-                        <td onclick="addCash('5')">5</td>
-                        <td onclick="addCash('6')">6</td>
-                    </tr>
-                    <tr>
-                        <td onclick="addCash('7')">7</td>
-                        <td onclick="addCash('8')">8</td>
-                        <td onclick="addCash('9')">9</td>
-                    </tr>
-                    <tr>
-                        <td onclick="addCash('.')">.</td>
-                        <td onclick="addCash(0)">0</td>
-                        <td class="delete" onclick="removeCash()"><i class="fa fa-caret-square-o-left"></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="mode">EIN</td>
-                        <td class="button" onclick="cashPanelView.cancelAddUserCash()">CANCEL</td>
-                        <td class="button" onclick="cashPanelView.addUserCash()">OK</td>
-                    </tr>
-                </table>
-            </div>
-            <div id="userOrderTable">
-                <table id="userOrder" width="100%" cellspacing="0">
-                </table>
-            </div>
-        </div>
-        <div id="orderListControlPanel">
-            <p id="totalPrice">
-                <span>0.00</span>€
-            </p>
-            <button onclick="cashPanelView.payDrinks()">Pay</button>
-            <button onclick="cashPanelView.cleanUserOrder()">Clear</button>
-            <p id="cashPanelId">ID: 2334996862334</p>
-        </div>
-        <div id="drinkListOverlayer"></div>
-        <div id="drinkList"></div>
-    </div>
-    <div id="adminPanel">
-        <label id="partyActive">Party active
-            <input id="partyActiveCheckbox" onclick="adminPanelView.togglePartyActive()" type="checkbox" class="ios-switch bigswitch" />
-            <div>
-                <div></div>
-            </div>
-        </label>
-        <section id="manageDrinkPanel">
-            <table width="100%" border="0" cellspacing="0">
-                <tr>
-                    <th>Name</th>
-                    <th>Size</th>
-                    <th>Current Price</th>
-                    <th>Lowest Price</th>
-                    <th>Highest Price</th>
-                    <th>Sold out</th>
-                </tr>
-                <tbody id="adminDrinkList">
+	<div id="grayOverlayer"></div>
+	<div id="loginPanel">
+		<center>
+			<img src="layout/image/stockpartylogo.png" width="80" height="80">
+			<br>
+			<span style="font-size: 30px; font-family: UnverschaemtSans">Stock Party</span>
+		</center>
+		<br>
+		<br>
+		<form method="post" action="javascript:login()">
+			<div id="userLogin">
+				<input id="username" type="text" placeholder="USERNAME">
+				<br>
+				<input id="password" type="password" placeholder="PASSWORD">
+				<br>
+				<br>
+				<input id="loginSubmit" type="submit" value="LOGIN">
+			</div>
+		</form>
+		<br>
+		<br>
+	</div>
+	<div id="clientSelectionPanel">
+		<center>
+			<table id="clientSelection"></table>
+		</center>
+	</div>
+	<div id="cashPanel">
+		<div id="orderList">
+			<p id="userBalance" onclick="updateDrinkList(3)">
+				<span id="userAccountBalance">0.00</span>€
+				<span id="simulatedNewUserBalance">(
+					<span>0.00</span>€)</span><i class="fa fa-calculator" onclick="toggleAddCashPanel(this)"></i>
+			</p>
+			<div id="userAddCash">
+				<p id="addCashAmount">€</p>
+				<table width="100%" border="0" cellspacing="0">
+					<tr>
+						<td onclick="addCash('1')">1</td>
+						<td onclick="addCash('2')">2</td>
+						<td onclick="addCash('3')">3</td>
+					</tr>
+					<tr>
+						<td onclick="addCash('4')">4</td>
+						<td onclick="addCash('5')">5</td>
+						<td onclick="addCash('6')">6</td>
+					</tr>
+					<tr>
+						<td onclick="addCash('7')">7</td>
+						<td onclick="addCash('8')">8</td>
+						<td onclick="addCash('9')">9</td>
+					</tr>
+					<tr>
+						<td onclick="addCash('.')">.</td>
+						<td onclick="addCash(0)">0</td>
+						<td class="delete" onclick="removeCash()"><i class="fa fa-caret-square-o-left"></i>
+						</td>
+					</tr>
+					<tr>
+						<td class="mode">EIN</td>
+						<td class="button" onclick="cashPanelView.cancelAddUserCash()">CANCEL</td>
+						<td class="button" onclick="cashPanelView.addUserCash()">OK</td>
+					</tr>
+				</table>
+			</div>
+			<div id="userOrderTable">
+				<table id="userOrder" width="100%" cellspacing="0">
+				</table>
+			</div>
+		</div>
+		<div id="orderListControlPanel">
+			<p id="totalPrice">
+				<span>0.00</span>€
+			</p>
+			<button onclick="cashPanelView.payDrinks()">Pay</button>
+			<button onclick="cashPanelView.cleanUserOrder()" ondblclick="cashPanelView.closePad()">Clear</button>
+			<p id="cashPanelId">ID: 2334996862334</p>
+		</div>
+		<div id="drinkListOverlayer"></div>
+		<div id="drinkList"></div>
+	</div>
+	<div id="adminPanel">
+		<label id="partyActive">Party active
+			<input id="partyActiveCheckbox" onclick="adminPanelView.togglePartyActive()" type="checkbox" class="ios-switch bigswitch" />
+			<div>
+				<div></div>
+			</div>
+		</label>
+		<section id="manageDrinkPanel">
+			<table width="100%" border="0" cellspacing="0">
+				<tr>
+					<th>Name</th>
+					<th>Size</th>
+					<th>Current Price</th>
+					<th>Lowest Price</th>
+					<th>Highest Price</th>
+					<th>Sold out</th>
+				</tr>
+				<tbody id="adminDrinkList">
 
-                </tbody>
-                <tr class="editDrink">
-                    <td>
-                        <input type="text" id="addDrinkName" placeholder="Name" onkeydown="adminPanelView.addDrink()">
-                    </td>
-                    <td>
-                        <input type="text" style="text-align: right;" id="addDrinkSize" placeholder="Size" onkeydown="adminPanelView.addDrink()">
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                        <input type="text" id="addDrinkMinPrice" placeholder="Lowest Price" onkeydown="adminPanelView.addDrink()">
-                    </td>
-                    <td>
-                        <input type="text" id="addDrinkMaxPrice" placeholder="Highest Price" onkeydown="adminPanelView.addDrink()">
-                    </td>
-                    <td>
-                    </td>
-                    <td></td>
-                </tr>
-            </table>
-            <br>
-            <label><span>enable Stock Crash </span>
-                <input id="stockCrashEnable" type="checkbox" class="ios-switch bigswitch" onclick="adminPanelView.toggleStockCrash();" />
-                <div>
-                    <div></div>
-                </div>
-            </label>
-            <div id="importExport">
-                <a class="button">Export</a>
-                <a class="button">Import</a>
-            </div>
-        </section>
-    </div>
+				</tbody>
+				<tr class="editDrink">
+					<td>
+						<input type="text" id="addDrinkName" placeholder="Name" onkeydown="adminPanelView.addDrink()">
+					</td>
+					<td>
+						<input type="text" style="text-align: right;" id="addDrinkSize" placeholder="Size" onkeydown="adminPanelView.addDrink()">
+					</td>
+					<td>
+					</td>
+					<td>
+						<input type="text" id="addDrinkMinPrice" placeholder="Lowest Price" onkeydown="adminPanelView.addDrink()">
+					</td>
+					<td>
+						<input type="text" id="addDrinkMaxPrice" placeholder="Highest Price" onkeydown="adminPanelView.addDrink()">
+					</td>
+					<td>
+					</td>
+					<td></td>
+				</tr>
+			</table>
+			<br>
+			<label>
+				<span>enable Stock Crash </span>
+				<input id="stockCrashEnable" type="checkbox" class="ios-switch bigswitch" onclick="adminPanelView.toggleStockCrash();" />
+				<div>
+					<div></div>
+				</div>
+			</label>
+			<div id="importExport">
+				<a class="button">Export</a>
+				<a class="button">Import</a>
+			</div>
+		</section>
+	</div>
+
+	<div id="monitorPanel">
+      <div id="graphContainer" style="height: 100%; width: 100%;"></div>
+	</div>
 </body>
 
 </html>

@@ -12,7 +12,8 @@ m.addConsumption = function (info, cb) {
 };
 
 m.deleteConsumptionForGuest = function(guest, cb) {
-  Consumption.find({
+   cb(true);
+  /*Consumption.find({
       guest: guest
   }, function (err, guests) {
       if (err) {
@@ -32,7 +33,7 @@ m.deleteConsumptionForGuest = function(guest, cb) {
           cb(true);
         }
       }
-  });
+  });*/
 };
 
 m.deleteAllConsumptionEntries = function (error, cb) {
@@ -56,14 +57,11 @@ m.deleteAllConsumptionEntries = function (error, cb) {
             if(consumptions && consumptions.length < 1){
                 cb(c+' from '+consumptions.length+' deleted good!');
             }
-          });
-        }
-      }
+          }
+       });
       if (consumptions.length < 1) {
         cb(c + ' from ' + consumptions.length + ' deleted good!');
       }
-    }
-  });
 };
 
 m.getConsumptionForGuest = function(guest, error, cb) {
